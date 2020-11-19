@@ -1,0 +1,10 @@
+*.css linguist-language=java 
+*.less linguist-language=java
+*.js linguist-language=java
+*.html linguist-language=java
+*.vue linguist-language=java
+*.xml linguist-language=java
+*.yml linguist-language=java
+*.txt linguist-language=java
+*.md linguist-language=java
+*.sql linguist-language=java
