@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lhb.gdms</groupId>
+        <artifactId>lhb-gdms-consumer</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>consumer-blog</artifactId>
+    <packaging>jar</packaging>
+    <name>consumer-blogr</name>
+    <inceptionYear>2020-Now</inceptionYear>
+    <description>博客服务，包括文章，评论，点赞等等</description>
+
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>lianghongbin</id>
+            <name>Herbie Leung</name>
+            <email>782272323@qq.com</email>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <!-- Project Begin -->
+        <!-- 基础包依赖 -->
+        <dependency>
+            <groupId>lhb.gdms</groupId>
+            <artifactId>lhb-gdms-commons</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- 安全认证包依赖 -->
+        <dependency>
+            <groupId>lhb.gdms</groupId>
+            <artifactId>lhb-gdms-configuration</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- dubbo 服务远程调用依赖 -->
+        <dependency>
+            <groupId>lhb.gdms</groupId>
+            <artifactId>lhb-gdms-dubbo</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- feign 服务远程调用依赖 -->
+        <dependency>
+            <groupId>lhb.gdms</groupId>
+            <artifactId>lhb-gdms-feign</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- Project End -->
+
+        <!-- Spring Boot Begin -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Spring Boot End -->
+
+        <!-- Spring Cloud Begin -->
+
+        <!-- Spring Cloud End -->
+
+        <!-- Spring Cloud Alibaba Begin -->
+        <!-- Spring Cloud Alibaba End -->
+
+        <!-- Apache Dubbo Begin -->
+        <!-- Apache Dubbo End -->
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>lhb.gdms.consumer.blog.ConsumerBlogApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>lhb.gdms</groupId>
+        <artifactId>lhb-gdms-backend</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>lhb-gdms-feign</artifactId>
+    <packaging>jar</packaging>
+    <name>lhb-gdms-feign</name>
+    <inceptionYear>2020-Now</inceptionYear>
+    <description>feign远程调用</description>
+
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>lianghongbin</id>
+            <name>Herbie Leung</name>
+            <email>782272323@qq.com</email>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <!-- Project Begin -->
+        <!-- 基础包依赖 -->
+        <dependency>
+            <groupId>lhb.gdms</groupId>
+            <artifactId>lhb-gdms-commons</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- 资源服务依赖 -->
+        <dependency>
+            <groupId>lhb.gdms</groupId>
+            <artifactId>lhb-gdms-configuration</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- Project End -->
+
+        <!-- Spring Boot Begin -->
+        <!-- Spring Boot End -->
+
+        <!-- Spring Cloud Begin -->
+
+        <!-- Spring Cloud End -->
+
+        <!-- Spring Cloud Alibaba Begin -->
+        <!-- Spring Cloud Alibaba End -->
+
+        <!-- Apache Dubbo Begin -->
+        <!-- Apache Dubbo End -->
+
+    </dependencies>
+
+
+</project>

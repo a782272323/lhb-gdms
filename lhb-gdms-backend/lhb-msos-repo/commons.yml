@@ -1,0 +1,59 @@
+spring:
+  # 解决远程调用上传文件的bug
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  main:
+    # 解决bean重复定义，设置为true时，后定义的bean会覆盖之前定义的相同名称的bean
+    allow-bean-definition-overriding: true
+  mvc:
+    date-format: yyyy-MM-dd HH:mm:ss
+  aop:
+    auto: true
+  # jackson 日期格式化
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+
+management:
+  health: #健康检查
+    dubbo:
+      status:
+        defaults: memory
+        extras: threadpool
+  endpoints: #暴露所有web端点
+    web:
+      exposure:
+        include: "*"
+
+# 获取身份认证地址
+security:
+  oauth2:
+    client:
+      # todo 后续改为从网关获取
+      access-token-uri: http://localhost:20000/oauth/token
+      # 获取授权码
+      user-authorization-uri: http://localhost:20000/oauth/authorize
+      authentication-scheme: header
+    resource:
+      # todo 后续改为从网关获取
+      user-info-uri: http://localhost:20000/oauth2/info
+      token-info-uri: http://localhost:20000/oauth/check_token
+      prefer-token-info: true
+
+# 日志级别
+logging:
+  level:
+    # 通用包日志打印
+    lhb:
+      gdms:
+        commons: debug
+    # springboot 日志打印
+    org:
+      springframework:
+        boot:
+          autoconfigure: error
+
+
+

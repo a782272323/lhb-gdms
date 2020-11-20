@@ -1,0 +1,26 @@
+spring:
+  # nacos 服务注册中心
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.16.253.110:8848
+
+dubbo:
+  scan:
+    # dubbo 实现类所在包
+    base-packages: lhb.gdms.consumer.blog
+  # 协议配置，用于配置提供服务的协议信息，协议由提供方指定，消费方被动接受
+  protocol:
+    name: dubbo
+    port: -1 # 端口为-1时，即是让dubbo自动分配端口
+    serialization: kryo # 使用kryo序列化/反序列化工具
+  registry:
+    address: nacos://172.16.253.110:8848 #注册中心地址，格式为 注册中心组件名://注册中心访问地址
+    timeout: 10000 # 10s的超时时间
+
+# 日志级别
+logging:
+  level:
+    lhb.gdms.consumer.blog: debug
+
+
