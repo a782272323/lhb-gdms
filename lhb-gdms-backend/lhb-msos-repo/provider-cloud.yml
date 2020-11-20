@@ -25,6 +25,16 @@ mybatis:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: lhb.gdms.commons.domain, lhb.gdms.provider.cloud.domain
 
+qiniu:
+  accessKey: 259AULjEKP59GIukAP3FLhXgwFLW6-QpkHIqlqJH
+  secretKey: Ojc6iA4DVmk-dtNa2_moXp6OzAkVW-qcSsOW9RDj
+  # 存储空间名称
+  bucket: lhb-msos
+  # 访问,根据机房位置从官网获取
+  prefix: http://up-z2.qiniup.com
+  # 外链域名
+  domain: http://img.782272323.cn
+
 # 日志级别
 logging:
   level:

@@ -1,0 +1,32 @@
+package lhb.gdms.provider.cloud.service;
+
+import com.qiniu.common.QiniuException;
+import com.qiniu.http.Response;
+
+import java.io.InputStream;
+
+/**
+ * @Description  七牛云文件上传服务
+ * @author Herbie Leung(梁鸿斌)
+ * @date 2020/11/21
+ * @time 00:25
+ */
+public interface QiniuService {
+
+    /**
+     * 单文件上传
+     * @param inputStream
+     * @param key
+     * @return
+     * @throws Exception
+     */
+    String uploadFile(InputStream inputStream, String key) throws Exception;
+
+    /**
+     * 删除单个文件
+     * @param key
+     * @return
+     * @throws Exception
+     */
+    Response deleteFile(String key) throws Exception;
+}

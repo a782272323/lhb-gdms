@@ -68,6 +68,14 @@
 
         <!-- Apache Dubbo Begin -->
         <!-- Apache Dubbo End -->
+
+        <!-- Other Begin -->
+        <!-- 七牛依赖 -->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+        </dependency>
+        <!-- Other End -->
     </dependencies>
 
     <build>
