@@ -20,6 +20,13 @@ dubbo:
     # 开启轮询负载均衡
     loadbalance: roundrobin
 
+# 设置 feign 客户端超时时间（OpenFeign 默认支持 ribbon）
+ribbon:
+  # 值的是建立连接所用的时间，使用与网络状态正常的情况，两端连接所用的时间
+  ReadTimeout: 5000
+  # 指的是建立连接后从服务器读取到可用资源所用的时间
+  ConnectionTimeout: 5000
+
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: lhb.gdms.commons.domain, lhb.gdms.provider.oauth2.domain

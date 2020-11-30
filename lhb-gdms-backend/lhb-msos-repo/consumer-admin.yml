@@ -8,7 +8,7 @@ spring:
 dubbo:
   scan:
     # dubbo 实现类所在包
-    base-packages: lhb.gdms.provider.user
+    base-packages: lhb.gdms.consumer.admin
   # 协议配置，用于配置提供服务的协议信息，协议由提供方指定，消费方被动接受
   protocol:
     name: dubbo
@@ -17,13 +17,6 @@ dubbo:
   registry:
     address: nacos://172.16.253.110:8848 #注册中心地址，格式为 注册中心组件名://注册中心访问地址
     timeout: 10000 # 10s的超时时间
-  provider:
-    # 开启轮询负载均衡
-    loadbalance: roundrobin
-
-mybatis:
-  mapper-locations: classpath*:mapper/*.xml
-  type-aliases-package: lhb.gdms.commons.domain, lhb.gdms.provider.user.domain
 
 # 设置 feign 客户端超时时间（OpenFeign 默认支持 ribbon）
 ribbon:
@@ -32,9 +25,13 @@ ribbon:
   # 指的是建立连接后从服务器读取到可用资源所用的时间
   ConnectionTimeout: 5000
 
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: lhb.gdms.commons.domain, lhb.gdms.consumer.admin.domain
+
 # 日志级别
 logging:
   level:
-    lhb.gdms.provider.user: debug
+    lhb.gdms.consumer.admin: debug
 
 

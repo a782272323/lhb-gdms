@@ -24,13 +24,22 @@ spring:
           predicates:
             # 路径匹配，以 api 开头，直接配置是不生效的，看 filters 配置
             - Path=/user/**
+            - Path=/web/user/**
         # 认证服务网关配置
         - id: provider-oauth2
           uri: lb://provider-oauth2
           predicates:
             - Path=/auth/**
+            - Path=/web/auth/**
         # 通用服务网关配置
         - id: provider-cloud
           uri: lb://provider-cloud
           predicates:
             - Path=/cloud/**
+            - Path=/web/cloud/**
+        # 后台管理服务网关配置
+        - id: consumer-admin
+          uri: lb://consumer-admin
+          predicates:
+            - Path=/admin/**
+            - Path=/web/admin/**

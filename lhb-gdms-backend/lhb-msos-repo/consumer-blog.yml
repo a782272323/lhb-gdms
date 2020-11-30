@@ -18,6 +18,17 @@ dubbo:
     address: nacos://172.16.253.110:8848 #注册中心地址，格式为 注册中心组件名://注册中心访问地址
     timeout: 10000 # 10s的超时时间
 
+# 设置 feign 客户端超时时间（OpenFeign 默认支持 ribbon）
+ribbon:
+  # 值的是建立连接所用的时间，使用与网络状态正常的情况，两端连接所用的时间
+  ReadTimeout: 5000
+  # 指的是建立连接后从服务器读取到可用资源所用的时间
+  ConnectionTimeout: 5000
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: lhb.gdms.commons.domain, lhb.gdms.consumer.blog.domain
+
 # 日志级别
 logging:
   level:

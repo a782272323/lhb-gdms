@@ -11,3 +11,11 @@ spring:
       test-on-borrow: true
       # MySQL 8.x: com.mysql.cj.jdbc.Driver
       driver-class-name: com.mysql.jdbc.Driver
+
+#pagehelper 分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: false #此功能开启，若页数大于加载的数量返回最后一页的数据量，若页数小于1，则返回第一页的数量。前后端分离应关闭。
+  supportMethodsArguments: true
+  params: count=countSql
+  returnPageInfo: check

@@ -34,6 +34,8 @@ qiniu:
   prefix: http://up-z2.qiniup.com
   # 外链域名
   domain: http://img.782272323.cn
+  # 存储区域
+  zone: huanan
 
 # 日志级别
 logging:
