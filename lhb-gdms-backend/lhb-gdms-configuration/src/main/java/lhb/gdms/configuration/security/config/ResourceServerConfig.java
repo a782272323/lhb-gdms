@@ -52,6 +52,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
                 // 不需要权限的接口/放行的接口
                 .antMatchers("/web/**").permitAll()
+                .antMatchers("/user/login/**").permitAll()
+                .antMatchers("/user/registered/**").permitAll()
                 .and()
                 // 统一自定义异常
                 .exceptionHandling()

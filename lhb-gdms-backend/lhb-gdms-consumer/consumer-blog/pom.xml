@@ -11,7 +11,7 @@
 
     <artifactId>consumer-blog</artifactId>
     <packaging>jar</packaging>
-    <name>consumer-blogr</name>
+    <name>consumer-blog</name>
     <inceptionYear>2020-Now</inceptionYear>
     <description>博客服务，包括文章，评论，点赞等等</description>
 

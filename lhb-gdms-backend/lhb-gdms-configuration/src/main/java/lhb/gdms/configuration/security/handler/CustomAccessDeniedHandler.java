@@ -39,11 +39,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Cache-Control","no-cache");
-        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
-        response.addHeader("Access-Control-Max-Age", "1800");
+//        response.addHeader("Access-Control-Allow-Origin", "*");
+//        response.addHeader("Cache-Control","no-cache");
+//        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+//        response.addHeader("Access-Control-Max-Age", "1800");
         ObjectMapper mapper = new ObjectMapper();
         log.error("权限不足");
         response.getWriter().write(mapper.writeValueAsString(BaseResult.error(HttpConstant.ACCESS_DENIED,HttpConstant.ACCESS_DENIED_MESSAGE)));

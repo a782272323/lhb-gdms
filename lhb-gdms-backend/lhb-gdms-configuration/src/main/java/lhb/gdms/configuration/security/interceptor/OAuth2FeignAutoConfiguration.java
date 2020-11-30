@@ -1,13 +1,13 @@
 package lhb.gdms.configuration.security.interceptor;
 
 
-import feign.RequestInterceptor;
-import feign.RequestTemplate;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+        import feign.RequestInterceptor;
+        import feign.RequestTemplate;
+        import org.springframework.context.annotation.Configuration;
+        import org.springframework.security.core.Authentication;
+        import org.springframework.security.core.context.SecurityContext;
+        import org.springframework.security.core.context.SecurityContextHolder;
+        import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
 /**
  * @Description  feign配置类
@@ -19,7 +19,7 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 public class OAuth2FeignAutoConfiguration implements RequestInterceptor {
 
     private final String AUTHORIZATION_HEADER = "Authorization";
-    private final String BEARER_TOKEN_TYPE = "Bearer";
+    private final String BEARER_TOKEN_TYPE = "Bearer ";
 
     @Override
     public void apply(RequestTemplate requestTemplate) {

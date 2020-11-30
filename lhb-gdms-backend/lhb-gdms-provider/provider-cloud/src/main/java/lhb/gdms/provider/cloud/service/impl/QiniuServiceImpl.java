@@ -8,6 +8,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.utils.MapperUtils;
 import lhb.gdms.provider.cloud.service.QiniuService;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class QiniuServiceImpl implements QiniuService {
     @Value("${qiniu.prefix}")
     private String prefix;
     /**
-     * 域名前缀
+     * 域名
      */
     @Value("${qiniu.domain}")
     private String domain;
@@ -76,6 +77,22 @@ public class QiniuServiceImpl implements QiniuService {
      * @param inputStream
      * @return
      */
+//    @Override
+//    public String uploadFile(InputStream inputStream, String key) throws Exception {
+//        Response response = this.uploadManager.put(inputStream, key, getUploadToken(), null, null);
+//        // 重试次数
+//        int retry = 0;
+//        while (response.needRetry() && retry < 3) {
+//            response = this.uploadManager.put(inputStream, key, getUploadToken(), null, null);
+//            retry++;
+//        }
+//        // 解析结果
+//        DefaultPutRet putRet = MapperUtils.json2pojo(response.bodyString(), DefaultPutRet.class);
+//        logger.debug("putRet = " + putRet);
+//        String url = domain + "/" + putRet.key;
+//        logger.debug("上传成功，图片url = " + url);
+//        return url;
+//    }
     @Override
     public String uploadFile(InputStream inputStream, String key) throws Exception {
         Response response = this.uploadManager.put(inputStream, key, getUploadToken(), null, null);
@@ -85,12 +102,40 @@ public class QiniuServiceImpl implements QiniuService {
             response = this.uploadManager.put(inputStream, key, getUploadToken(), null, null);
             retry++;
         }
-        // 解析结果
-        DefaultPutRet putRet = MapperUtils.json2pojo(response.bodyString(), DefaultPutRet.class);
-        logger.debug("putRet = " + putRet);
-        String url = domain + "/" + putRet.key;
-        logger.debug("上传成功，图片url = " + url);
-        return url;
+        String url = "";
+        if (response.statusCode == 200) {
+            url = domain + "/" + key;
+            logger.debug(HttpConstant.UPLOAD_MESSAGE + ", 图片url = " + url);
+            return url;
+        }
+
+        return HttpConstant.UPLOAD_ERROR_MESSAGE;
+    }
+
+    /**
+     * 文件上传
+     * 以文件的形式上传
+     * @param file
+     * @param key
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public String uploadFile(File file, String key) throws Exception {
+        Response response = this.uploadManager.put(file, key, getUploadToken());
+        // 重试次数
+        int retry = 0;
+        while (response.needRetry() && retry < 3) {
+            response = this.uploadManager.put(file, key, getUploadToken());
+            retry++;
+        }
+        String url = "";
+        if (response.statusCode == 200) {
+            url = domain + "/" + key;
+            logger.debug("上传成功，图片url = " + url);
+            return url;
+        }
+        return HttpConstant.UPLOAD_ERROR_MESSAGE;
     }
 
     /**
@@ -100,14 +145,17 @@ public class QiniuServiceImpl implements QiniuService {
      * @throws QiniuException
      */
     @Override
-    public Response deleteFile(String key) throws Exception {
+    public String deleteFile(String key) throws QiniuException {
         Response response = this.bucketManager.delete(bucket, key);
         int retry = 0;
         while (response.needRetry() && retry < 3) {
             response = bucketManager.delete(bucket, key);
             retry++;
         }
-        return response;
+        logger.debug(response.toString());
+        return response.statusCode == 200
+                ? HttpConstant.DELETE_MESSAGE
+                : HttpConstant.DELETE_ERROR_MESSAGE;
     }
 
     /**

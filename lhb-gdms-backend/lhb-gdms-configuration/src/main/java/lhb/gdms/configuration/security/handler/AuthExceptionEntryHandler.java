@@ -36,16 +36,17 @@ public class AuthExceptionEntryHandler implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws ServletException {
 
-
+        log.error("token校验异常");
         Map<String, Object> map = new HashMap<String, Object>();
         Throwable cause = authException.getCause();
         if (cause instanceof InvalidTokenException) {
             log.error("token无效,InvalidTokenException : {}", cause.getMessage());
-            map.put(ResponseConstant.CODE, HttpConstant.INVALID_TOKEN);//40
+            map.put(ResponseConstant.CODE, HttpConstant.INVALID_TOKEN);
             map.put(ResponseConstant.MESSAGE, HttpConstant.INVALID_TOKEN_MESSAGE);
-        } else {
+        }
+        else {
             log.error("没有登录");
-            map.put(ResponseConstant.CODE, HttpConstant.NOT_LOGIN);//401
+            map.put(ResponseConstant.CODE, HttpConstant.NOT_LOGIN);
             map.put(ResponseConstant.MESSAGE, HttpConstant.NOT_LOGIN_MESSAGE);
         }
         map.put("timestamp", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));

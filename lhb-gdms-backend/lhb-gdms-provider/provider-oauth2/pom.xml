@@ -44,6 +44,12 @@
             <artifactId>lhb-gdms-configuration</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <!-- feign 远程调用 -->
+        <dependency>
+            <groupId>lhb.gdms</groupId>
+            <artifactId>lhb-gdms-feign</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <!-- Project End -->
 
         <!-- Spring Boot Begin -->

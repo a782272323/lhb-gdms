@@ -1,0 +1,31 @@
+server:
+  port: 20050
+
+spring:
+  application:
+    name: consumer-admin
+  cloud:
+    nacos:
+      config:
+        server-addr: 172.16.253.110:8848
+        # 远程配置文件后缀名
+        file-extension: yml
+        # 命名空间
+        namespace: 96e392ca-2da7-4631-b530-0f463c3db799
+        shared-configs:
+          - commons.yml
+          - database-mysql-5-7.yml
+          - database-redis.yml
+
+# 获取身份认证
+security:
+  oauth2:
+    resource:
+      id: ${spring.application.name}
+
+
+
+
+
+
+

@@ -13,7 +13,6 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"lhb.gdms"})
 public class ConsumerBlogApplication {
     public static void main(String[] args) {
         SpringApplication.run(ConsumerBlogApplication.class, args);

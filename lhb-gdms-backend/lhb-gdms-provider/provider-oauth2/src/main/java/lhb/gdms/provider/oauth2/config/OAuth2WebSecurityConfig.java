@@ -71,7 +71,8 @@ public class OAuth2WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/actuator/**",
                 "/oauth/user",
                 "/oauth/check_token",
-                "/static/**"
+                "/static/**",
+                "/user/login/**"
         );
     }
 

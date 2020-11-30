@@ -22,4 +22,15 @@ public class UserFeignFallback implements UserFeign {
         logger.debug("管理网站用户服务feign远程调用失败");
         return BaseResult.error("系统繁忙,请稍后重试");
     }
+
+    /**
+     * 根据用户名查询用户信息
+     * @param username
+     * @return
+     */
+    @Override
+    public BaseResult selectOneByUsername(String username) {
+        logger.debug("管理网站用户服务feign远程调用失败");
+        return BaseResult.error("系统繁忙,请稍后重试");
+    }
 }

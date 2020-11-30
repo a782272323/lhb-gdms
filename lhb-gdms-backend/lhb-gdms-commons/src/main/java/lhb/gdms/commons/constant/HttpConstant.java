@@ -16,6 +16,8 @@ public class HttpConstant {
     public static final Integer OK = 200;
     public static final String OK_MESSAGE = "请求成功";
     public static final String UPLOAD_MESSAGE = "上传成功";
+    public static final String LOGIN_OK_MESSAGE = "登录成功";
+    public static final String LOGOUT_OK_MESSAGE = "成功退出";
 
     /**
      * 201
@@ -66,6 +68,7 @@ public class HttpConstant {
      */
     public static final Integer ILLEGAL_TOKEN = 404;
     public static final String ILLEGAL_TOKEN_MESSAGE = "非法token/token不正确";
+    public static final String LOGIN_ERROR_MESSAGE = "用户名或者密码错误，请重新登录!";
 
     /**
      * 405
@@ -73,6 +76,18 @@ public class HttpConstant {
      */
     public static final Integer HAVE_LOGIN = 405;
     public static final String HAVE_LOGIN_MESSAGE = "其他设备已经登录,是否挤下线";
+
+    /**
+     * 406
+     * 请求参数相关的异常处理
+     * 1. 前端请求接口，缺少参数
+     * 2. 参数格式不正确
+     * 3. 参数类型错误
+     */
+    public static final Integer LOST_PARAMETER = 406;
+    public static final String LOST_PARAMETER_MESSAGE = "前端请求该接口时，缺少必要参数导致系统异常";
+    public static final String PARAMETER_FORMAT_ERROR_MESSAGE = "参数格式不正确";
+    public static final String PARAMETER_TYPE_ERROR_MESSAGE = "参数类型错误";
 
     /**
      * 410
@@ -101,8 +116,9 @@ public class HttpConstant {
      * 上传失败
      */
     public static final Integer ERROR = 500;
-    public static final String ERROR_MESSAGE = "服务器内部异常，请联系管理员";
+    public static final String ERROR_MESSAGE = "系统异常，请联系管理员";
     public static final String UPLOAD_ERROR_MESSAGE = "上传失败";
+    public static final String NULL_POINTER_MESSAGE = "空指针异常";
 
     /**
      * 501

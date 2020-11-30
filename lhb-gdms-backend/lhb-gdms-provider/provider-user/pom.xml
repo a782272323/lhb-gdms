@@ -50,6 +50,12 @@
             <artifactId>lhb-gdms-dubbo</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <!-- feign远程调用 -->
+        <dependency>
+            <groupId>lhb.gdms</groupId>
+            <artifactId>lhb-gdms-feign</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <!-- Project End -->
 
         <!-- Spring Boot Begin -->

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lhb.gdms.provider.oauth2.mapper.SysUserMapper">
+
+    <resultMap id="sysUserMap1" type="lhb.gdms.commons.domain.entity.SysUserEntity">
+        <id column="sys_user_id" property="sysUserId"/>
+        <result column="sys_user_nickname" property="sysUserNickname" />
+        <result column="sys_user_phone" property="sysUserPhone" />
+        <result column="sys_user_email" property="sysUserEmail" />
+        <result column="sys_user_area_code" property="sysUserAreaCode" />
+        <result column="sys_user_sex" property="sysUserSex" />
+        <result column="sys_user_status" property="sysUserStatus" />
+        <result column="sys_user_username" property="sysUserUsername" />
+        <result column="sys_user_password" property="sysUserPassword" />
+        <result column="sys_user_type" property="sysUserType" />
+        <result column="sys_user_icon" property="sysUserIcon" />
+        <result column="sys_user_key" property="sysUserKey" />
+        <result column="sys_user_introduction" property="sysUserIntroduction" />
+        <result column="created" property="created" />
+        <result column="updated" property="updated" />
+    </resultMap>
+
+    <sql id="allColumn">
+
+    </sql>
+
+    <!-- 根据属性查询单条数据 -->
+    <select id="selectOneByKeyWord" resultMap="sysUserMap1">
+        SELECT sys_user_id,
+               sys_user_nickname,
+               sys_user_phone,
+               sys_user_email,
+               sys_user_area_code,
+               sys_user_sex,
+               sys_user_status,
+               sys_user_username,
+               sys_user_password,
+               sys_user_type,
+               sys_user_icon,
+               sys_user_key,
+               sys_user_introduction,
+               created,
+               updated
+        FROM sys_user
+        WHERE sys_user_username = #{entity.sysUserUsername}
+    </select>
+</mapper>

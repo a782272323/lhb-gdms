@@ -16,6 +16,14 @@ spring:
           - commons.yml
           - database-mysql-5-7.yml
           - database-redis.yml
+
+# 开启 Feign 的 OKHttp 模式
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+
 # 获取身份认证
 security:
   oauth2:

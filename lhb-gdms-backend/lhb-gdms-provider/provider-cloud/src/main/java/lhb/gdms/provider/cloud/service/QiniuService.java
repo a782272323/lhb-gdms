@@ -3,6 +3,7 @@ package lhb.gdms.provider.cloud.service;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 
+import java.io.File;
 import java.io.InputStream;
 
 /**
@@ -15,6 +16,7 @@ public interface QiniuService {
 
     /**
      * 单文件上传
+     * 以流的形式上传
      * @param inputStream
      * @param key
      * @return
@@ -23,10 +25,20 @@ public interface QiniuService {
     String uploadFile(InputStream inputStream, String key) throws Exception;
 
     /**
-     * 删除单个文件
+     * 文件上传
+     * 以文件的形式上传
+     * @param file
      * @param key
      * @return
      * @throws Exception
      */
-    Response deleteFile(String key) throws Exception;
+    String uploadFile(File file, String key) throws Exception;
+
+    /**
+     * 删除单个文件
+     * @param key
+     * @return
+     * @throws QiniuException
+     */
+    String deleteFile(String key) throws QiniuException;
 }

@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: provider-gateway
+  main:
+    # 解决bean重复定义，设置为true时，后定义的bean会覆盖之前定义的相同名称的bean
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       config:

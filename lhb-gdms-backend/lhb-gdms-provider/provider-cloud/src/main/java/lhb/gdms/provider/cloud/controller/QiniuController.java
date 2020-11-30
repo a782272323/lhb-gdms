@@ -5,10 +5,12 @@ import com.qiniu.http.Response;
 import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.constant.ResponseConstant;
 import lhb.gdms.commons.utils.BaseResult;
+import lhb.gdms.configuration.aop.config.PrintlnLog;
 import lhb.gdms.provider.cloud.service.QiniuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +33,7 @@ public class QiniuController {
 
     /**
      * 单文件上传
+     * 以流的形式上传
      * @param file
      * @return
      */
@@ -53,11 +56,16 @@ public class QiniuController {
      * @param key
      * @return
      */
-    @GetMapping("/cloud/qiniu/delete/one/{key}")
-    public Response deleteOne(@PathVariable("key") String key) throws Exception{
-        Map<String, Object> map = Maps.newHashMap();
-        Response response = qiniuService.deleteFile(key);
-        map.put("response", response);
-        return response;
+    @PrintlnLog(description = "根据key删除七牛云的图片-controller")
+    @PostMapping("/cloud/qiniu/delete/one")
+    public BaseResult deleteOne(@RequestParam("key")String key) throws Exception {
+        return HttpConstant.DELETE_MESSAGE.equals(qiniuService.deleteFile(key))
+                ? BaseResult.ok(HttpConstant.OK, HttpConstant.DELETE_MESSAGE)
+                : BaseResult.error(HttpConstant.ERROR, HttpConstant.DELETE_ERROR_MESSAGE);
+    }
+
+    @GetMapping("/cloud/test")
+    public BaseResult test() {
+        return BaseResult.ok();
     }
 }
