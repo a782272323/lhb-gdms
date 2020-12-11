@@ -1,5 +1,7 @@
 package lhb.gdms.provider.oauth2.config;
 
+import lhb.gdms.provider.oauth2.granter.EmailTokenGranter;
+import lhb.gdms.provider.oauth2.granter.SmsTokenGranter;
 import lhb.gdms.provider.oauth2.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,12 +16,17 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
+import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @Description  授权/认证服务器配置
@@ -118,9 +125,9 @@ public class OAuth2AuthServiceConfig extends AuthorizationServerConfigurerAdapte
                 .tokenStore(tokenStore())
                 //authenticationManager校验传递进来的用户是否合法
                 .authenticationManager(authenticationManager)
-                // 运行post请求访问令牌
-//                .allowedTokenEndpointRequestMethods(HttpMethod.POST)
                 ;
+        // 添加自定义授权方式
+        endpoints.tokenGranter(tokenGranter(endpoints));
     }
 
     /**
@@ -143,5 +150,24 @@ public class OAuth2AuthServiceConfig extends AuthorizationServerConfigurerAdapte
                 // 允许表单验证(前端),申请令牌
                 .allowFormAuthenticationForClients()
         ;
+    }
+
+    /**
+     * 获取已有的五种授权，然后添加自定义授权sms,email
+     * todo 邮箱也在这里添加
+     * @param endpoints
+     * @return
+     */
+    private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {
+        List<TokenGranter> granters = new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
+        granters.add(new SmsTokenGranter(endpoints.getTokenServices(),
+                endpoints.getClientDetailsService(),
+                endpoints.getOAuth2RequestFactory(),
+                userDetailsService));
+        granters.add(new EmailTokenGranter(endpoints.getTokenServices(),
+                endpoints.getClientDetailsService(),
+                endpoints.getOAuth2RequestFactory(),
+                userDetailsService));
+        return new CompositeTokenGranter(granters);
     }
 }

@@ -80,9 +80,9 @@ public class QQMailController {
         String checkCode = (String) redisUtils.getValueByKey(key);
         if (StringUtils.isNotBlank(checkCode) && checkCode.equals(code)) {
             redisUtils.deleteCache(key);
-            return BaseResult.ok("校验成功");
+            return BaseResult.ok(HttpConstant.CODE_OK_MESSAGE);
         }
-        return BaseResult.ok("当前邮箱验证码已经失效，请重新获取");
+        return BaseResult.error(HttpConstant.INVALID_CODE_MESSAGE);
     }
 
 }

@@ -1,9 +1,11 @@
 package lhb.gdms.provider.user.controller;
 
+import com.google.common.collect.Maps;
 import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.domain.entity.SysUserEntity;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.dubbo.user.UserDubbo;
+import lhb.gdms.feign.cloud.Oauth2Feign;
 import lhb.gdms.feign.cloud.QiniuFeign;
 import lhb.gdms.provider.user.mapper.SysUserMapper;
 import lhb.gdms.provider.user.service.SysUserService;
@@ -14,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 @RestController
 public class TestController {
@@ -37,16 +41,21 @@ public class TestController {
     @Autowired
     private QiniuFeign qiniuFeign;
 
-    @GetMapping("/web/user/test")
+    @Autowired
+    private Oauth2Feign oauth2Feign;
+
+    @PostMapping("/web/user/test")
     public BaseResult test(HttpServletRequest request) {
-        String access_token = request.getParameter("access_token");
-
-        logger.debug(access_token);
-
-
-        OAuth2AccessToken oAuth2AccessToken = tokenStore.readAccessToken(access_token);
-        logger.debug("查看token相关信息 = " + oAuth2AccessToken.toString());
-        return BaseResult.ok(HttpConstant.OK, HttpConstant.LOGOUT_OK_MESSAGE);
+        // 拼接参数，请求token
+        Map<String, Object> paramsEmail = Maps.newHashMap();
+        paramsEmail.put("grant_type", "email");
+        paramsEmail.put("email", "1919470138@qq.com");
+        paramsEmail.put("scope", "web-portal");
+        paramsEmail.put("client_id", "portal");
+        paramsEmail.put("client_secret", "123456");
+        // 请求token
+        BaseResult resultEmail = oauth2Feign.getToken(paramsEmail);
+        return BaseResult.ok().put(200, "成功", "data", resultEmail);
     }
 
     /**

@@ -21,6 +21,7 @@ public class HttpConstant {
     public static final String MAIL_OK_MESSAGE = "邮件发送成功";
     public static final String SMS_OK_MESSAGE = "短信发送成功";
     public static final String REGISTERED_OK_MESSAGE = "注册成功,请登录系统!";
+    public static final String CODE_OK_MESSAGE = "验证码校验成功";
 
     /**
      * 201
@@ -125,6 +126,8 @@ public class HttpConstant {
     public static final String MAIL_ERROR_MESSAGE = "邮件发送失败";
     public static final String SMS_ERROR_MESSAGE = "短信发送失败";
     public static final String REGISTERED_ERROR_MESSAGE = "注册失败，请稍后重试";
+    public static final String INVALID_CODE_MESSAGE = "验证码失效，请重新获取";
+    public static final String CODE_NULL_MESSAGE = "验证码不能为空";
 
     /**
      * 501

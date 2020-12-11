@@ -45,5 +45,7 @@
                updated
         FROM sys_user
         WHERE sys_user_username = #{entity.sysUserUsername}
+        OR sys_user_phone = #{entity.sysUserUsername}
+        OR sys_user_email = #{entity.sysUserUsername}
     </select>
 </mapper>

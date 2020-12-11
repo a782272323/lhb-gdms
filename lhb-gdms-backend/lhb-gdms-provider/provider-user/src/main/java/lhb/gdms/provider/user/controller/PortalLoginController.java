@@ -1,21 +1,31 @@
 package lhb.gdms.provider.user.controller;
 
+import com.google.common.collect.Maps;
+import lhb.gdms.commons.constant.HttpConstant;
+import lhb.gdms.commons.constant.ResponseConstant;
 import lhb.gdms.commons.domain.entity.SysUserEntity;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.commons.utils.RegularExpressionUtil;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
+import lhb.gdms.provider.user.domain.vo.LoginInfoVO;
 import lhb.gdms.provider.user.domain.vo.LoginPortalParamVO;
 import lhb.gdms.provider.user.mapper.SysUserMapper;
 import lhb.gdms.provider.user.service.PortalLoginService;
+import lhb.gdms.provider.user.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @Description  门户网站登录处理
@@ -38,6 +48,12 @@ public class PortalLoginController {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private SysUserService sysUserService;
+
+    @Autowired
+    private RedisTokenStore tokenStore;
+
     /**
      * 门户网站用户登录
      * @param loginPortalParamVO
@@ -56,24 +72,66 @@ public class PortalLoginController {
                 } else if(StringUtils.isBlank(loginPortalParamVO.getPassword())) {
                     return BaseResult.error(RegularExpressionUtil.REGEX_PASSWORD_NULL);
                 }
+                break;
             // 手机登录
             case 2:
                 if (StringUtils.isBlank(loginPortalParamVO.getPhone())) {
                     return BaseResult.error(RegularExpressionUtil.REGEX_MOBILE_NULL);
                 } else if (!RegularExpressionUtil.isMobile(loginPortalParamVO.getPhone())) {
                     return BaseResult.error(RegularExpressionUtil.REGEX_MOBILE_ERROR);
+                } else if (StringUtils.isBlank(loginPortalParamVO.getPhoneCode())) {
+                    return BaseResult.error(HttpConstant.CODE_NULL_MESSAGE);
                 }
+                break;
             // 邮箱登录
             case 3:
                 if (StringUtils.isBlank(loginPortalParamVO.getEmail())) {
                     return BaseResult.error(RegularExpressionUtil.REGEX_EMAIL_NULL);
-                } else if (!RegularExpressionUtil.isMobile(loginPortalParamVO.getPhone())) {
+                } else if (!RegularExpressionUtil.isEmail(loginPortalParamVO.getPhone())) {
                     return BaseResult.error(RegularExpressionUtil.REGEX_EMAIL_ERROR);
+                } else if (StringUtils.isBlank(loginPortalParamVO.getEmailCode())) {
+                    return BaseResult.error(HttpConstant.CODE_NULL_MESSAGE);
                 }
+                break;
             default: break;
         }
 
         return portalLoginService.portalLogin(loginPortalParamVO);
+    }
+
+    /**
+     * 获取用户信息，用于登录成功后跳转首页
+     * @param authentication
+     * @return
+     */
+    @PrintlnLog(description = "获取用户信息，用于登录成功后跳转首页--controller")
+    @PostMapping("/user/info/portal")
+    public BaseResult portalInfo(Authentication authentication) {
+        SysUserEntity sysUserEntity = new SysUserEntity();
+        sysUserEntity.setSysUserUsername(authentication.getName());
+        SysUserEntity entity = sysUserService.selectOneByKeyWord(sysUserEntity);
+        logger.debug(entity.toString());
+        LoginInfoVO loginInfoVO = new LoginInfoVO();
+        loginInfoVO.setName(authentication.getName());
+        loginInfoVO.setAvatar(entity.getSysUserIcon());
+        loginInfoVO.setRoles("Average User");
+        return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, loginInfoVO);
+    }
+
+    /**
+     * 门户网站注销
+     * @param request
+     * @return
+     */
+    @PostMapping("/user/logout/portal")
+    public BaseResult portalLogout(HttpServletRequest request) {
+        String access_token = request.getParameter("access_token");
+        logger.debug(access_token);
+        if (StringUtils.isNotBlank(access_token)) {
+            logger.debug("删除token");
+            tokenStore.removeAccessToken(tokenStore.readAccessToken(access_token));
+        }
+        return BaseResult.ok(HttpConstant.LOGOUT_OK_MESSAGE);
     }
 
     /**
@@ -131,7 +189,6 @@ public class PortalLoginController {
         }
         return portalLoginService.portalRegistered(sysUserEntity);
     }
-
 
 
 }

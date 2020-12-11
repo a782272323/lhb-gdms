@@ -75,8 +75,8 @@ public class AliyunSmsController {
         String codeRedis =(String) redisUtils.getValueByKey(key);
         if (StringUtils.isNotBlank(codeRedis) && codeRedis.equals(code)) {
             redisUtils.deleteCache(key);
-            return BaseResult.ok("校验成功");
+            return BaseResult.ok(HttpConstant.CODE_OK_MESSAGE);
         }
-        return BaseResult.error("验证码失效，请重新获取");
+        return BaseResult.error(HttpConstant.INVALID_CODE_MESSAGE);
     }
 }

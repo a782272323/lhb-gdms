@@ -35,6 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         // 判断是什么来源的用户，1-门户网站，2-后台管理网站，3-小程序（小程序还不知道要不要）
+        log.debug("username" + username);
         SysUserEntity sysUserEntity = new SysUserEntity();
         sysUserEntity.setSysUserUsername(username);
         SysUserEntity entity = sysUserService.selectOneByKeyWord(sysUserEntity);

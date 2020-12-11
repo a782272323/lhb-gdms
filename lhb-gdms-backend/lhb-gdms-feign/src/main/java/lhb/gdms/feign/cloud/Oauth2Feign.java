@@ -30,4 +30,7 @@ public interface Oauth2Feign {
     @PostMapping("/oauth/token")
     public BaseResult getToken(@RequestParam Map<String, Object> map);
 
+//    @PostMapping("/oauth/token")
+//    public BaseResult getToken(@RequestParam(""))
+
 }
