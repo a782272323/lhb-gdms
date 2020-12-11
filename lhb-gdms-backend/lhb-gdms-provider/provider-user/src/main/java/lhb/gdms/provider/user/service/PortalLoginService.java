@@ -2,6 +2,7 @@ package lhb.gdms.provider.user.service;
 
 import lhb.gdms.commons.domain.entity.SysUserEntity;
 import lhb.gdms.commons.utils.BaseResult;
+import lhb.gdms.provider.user.domain.vo.LoginPortalParamVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -18,5 +19,12 @@ public interface PortalLoginService {
      * @return
      */
     public BaseResult portalRegistered(SysUserEntity sysUserEntity);
+
+    /**
+     * 门户网站用户登录
+     * @param loginPortalParamVO
+     * @return
+     */
+    public BaseResult portalLogin(LoginPortalParamVO loginPortalParamVO);
 
 }

@@ -18,6 +18,9 @@ public class HttpConstant {
     public static final String UPLOAD_MESSAGE = "上传成功";
     public static final String LOGIN_OK_MESSAGE = "登录成功";
     public static final String LOGOUT_OK_MESSAGE = "成功退出";
+    public static final String MAIL_OK_MESSAGE = "邮件发送成功";
+    public static final String SMS_OK_MESSAGE = "短信发送成功";
+    public static final String REGISTERED_OK_MESSAGE = "注册成功,请登录系统!";
 
     /**
      * 201
@@ -119,6 +122,9 @@ public class HttpConstant {
     public static final String ERROR_MESSAGE = "系统异常，请联系管理员";
     public static final String UPLOAD_ERROR_MESSAGE = "上传失败";
     public static final String NULL_POINTER_MESSAGE = "空指针异常";
+    public static final String MAIL_ERROR_MESSAGE = "邮件发送失败";
+    public static final String SMS_ERROR_MESSAGE = "短信发送失败";
+    public static final String REGISTERED_ERROR_MESSAGE = "注册失败，请稍后重试";
 
     /**
      * 501

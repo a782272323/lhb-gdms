@@ -92,8 +92,7 @@ public class AdminLoginController {
         LoginInfoVO loginInfoVO = new LoginInfoVO();
         loginInfoVO.setName(authentication.getName());
         loginInfoVO.setAvatar(entity.getSysUserIcon());
-//        loginInfoVO.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-        loginInfoVO.setRoles("USER");
+        loginInfoVO.setRoles("System Admin");
         return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, loginInfoVO);
     }
 

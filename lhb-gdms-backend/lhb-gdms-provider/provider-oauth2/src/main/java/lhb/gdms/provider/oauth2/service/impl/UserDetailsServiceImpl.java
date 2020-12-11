@@ -47,7 +47,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     User.withUsername(entity.getSysUserUsername())
                             .password(entity.getSysUserPassword())
                             // 授权
-                            .authorities("USER")
+                            .authorities("Average User")
                             .build();
 
             return userDetails;
@@ -55,38 +55,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         // 后台管理网站用户登录处理
         if (entity.getSysUserType() == 2) {
-            log.debug("后台管理网站用户登录");
+            log.debug("后台管理网站用户登录,oauth2");
             UserDetails userDetails =
                     User.withUsername(entity.getSysUserUsername())
                             .password(entity.getSysUserPassword())
                             // 授权
-                            .authorities("ROLE_USER1")
+                            .authorities("System Admin")
                             .build();
 
             return userDetails;
         }
 
         return null;
-
-//        String password = passwordEncoder.encode("123456");
-//        log.trace("password = {}", password );
-//        System.out.println("password = " + password + "username = " + username);
-//        UserDetails userDetails =
-//                User.withUsername("lhb")
-//                        .password(password)
-//                        .authorities("ROLE_USER1")
-//                        .build();
-//        return userDetails;
-
-//        String password = passwordEncoder.encode("123456");
-//        log.trace("password = {}", password);
-//        System.out.println("password = " + password);
-//        UserDetails userDetails =
-//                User.withUsername("lhb")
-//                        .password(password)
-//                        .authorities("ROLE_USER1")
-//                        .build();
-//        return userDetails;
     }
 
 }

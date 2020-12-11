@@ -1,0 +1,12 @@
+# 开启 Feign 的 OKHttp 模式
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  # 配置超时时间
+  client:
+    config:
+      defualt:
+        connectTimeout: 60000
+        readTimeout: 60000

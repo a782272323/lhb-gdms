@@ -1,5 +1,6 @@
 package lhb.gdms.commons.utils;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -34,5 +35,19 @@ public class UUIDUtils {
         String uuidString = UUID.randomUUID().toString();
         // 去掉 -
         return uuidString.replaceAll("-", "");
+    }
+
+    /**
+     * 生成六位随机码
+     * @return
+     */
+    public static String vCode() {
+        String code = "";
+        Random random = new Random();
+        for (int i = 0; i < 6; i++) {
+            int r = random.nextInt(10);
+            code += r;
+        }
+        return code;
     }
 }

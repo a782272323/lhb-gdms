@@ -62,7 +62,7 @@
     </select>
 
     <!-- 新增 -->
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="sysUserId" keyColumn="sys_user_id">
         INSERT INTO sys_user
             (
              sys_user_nickname,
@@ -81,7 +81,7 @@
              updated
             ) VALUES
             (
-             #{entity.sysUserNickName},
+             #{entity.sysUserNickname},
              #{entity.sysUserPhone},
              #{entity.sysUserEmail},
              #{entity.sysUserAreaCode},
@@ -97,4 +97,55 @@
              #{entity.updated}
             )
     </insert>
+
+    <!-- 添加用户角色关系,平台用户暂定一个角色关系 -->
+    <insert id="insertSysUserRole">
+        INSERT INTO sys_user_role
+            (
+             sys_user_id,
+             role_id,
+             created,
+             updated
+            ) VALUES
+            (
+             #{entity.sysUserId},
+             #{entity.roleId},
+             #{entity.created},
+             #{entity.updated}
+            )
+    </insert>
+
+    <!-- 添加角色手机邮箱绑定关系表 -->
+    <insert id="insertSysUserPhoneEmail">
+        INSERT INTO sys_user_phone_email
+            (
+             is_phone,
+             is_email,
+             sys_user_id
+            ) VALUES
+            (
+             #{entity.isPhone},
+             #{entity.isEmail},
+             #{entity.sysUserId}
+            )
+    </insert>
+
+    <!-- 校验手机号码是否重复 -->
+    <select id="checkSysUserPhone" resultMap="sysUserMap1">
+        SELECT DISTINCT * FROM sys_user
+        WHERE sys_user_phone = #{sysUserPhone}
+        AND sys_user_area_code = #{sysUserAreaCode}
+    </select>
+
+    <!-- 校验用户名是否重复 -->
+    <select id="checkSysUsername" resultMap="sysUserMap1">
+        SELECT DISTINCT * FROM sys_user
+        WHERE sys_user_username = #{sysUserUsername}
+    </select>
+
+    <!-- 校验用户邮箱是否重复 -->
+    <select id="checkSysUserEmail" resultMap="sysUserMap1">
+        SELECT DISTINCT * FROM sys_user
+        WHERE sys_user_email = #{sysUserEmail}
+    </select>
 </mapper>

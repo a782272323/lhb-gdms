@@ -1,9 +1,31 @@
 spring:
+  mail:
+    # 配置 SMTP 服务器地址
+    host: smtp.qq.com
+    # SMTP 服务器端口
+    port: 587
+    # 邮箱用户名
+    username: 782272323@qq.com
+    # qq邮箱授权码
+    password: szlldqxboucjbcff
+    # 编码方式
+    default-encoding: UTF-8
+    # 配置 SSL 加密工厂
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        # 开启日志打印debug
+        debug: true
   # nacos 服务注册中心
   cloud:
     nacos:
       discovery:
         server-addr: 172.16.253.110:8848
+# 以谁来发送邮件
+mail:
+  fromMail:
+    addr: 782272323@qq.com
 
 dubbo:
   scan:
@@ -36,6 +58,29 @@ qiniu:
   domain: http://img.782272323.cn
   # 存储区域
   zone: huanan
+
+# 阿里云短信配置
+aliyun:
+  sms:
+    accessKeyId: LTAI4G41jXBbTTfdv2EF37U9
+    accessKeySecret: 5xdDuoptWjKykui2BkpsspTSijn2tL
+    # 云通信产品api
+    product: Dysmsapi
+    # 产品域名
+    domain: dysmsapi.aliyuncs.com
+    # 请求api的名称
+    action: SendSms
+    regionId: cn-hangzhou
+    # 短信签名
+    signName: Bin博客
+    # 签名算法版本 固定
+    version: 2017-05-25
+    # 发送日期 支持30天内记录查询 格式yyyyMMdd
+    dateFormat: yyyyMMdd
+    # 服务结点
+    endpointName: cn-hangzhou
+    # 短信认证模版code
+    templateCode01: SMS_205810298
 
 # 日志级别
 logging:

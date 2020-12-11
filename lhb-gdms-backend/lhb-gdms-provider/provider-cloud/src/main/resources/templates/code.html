@@ -1,0 +1,64 @@
+<!-- 发送邮箱验证码 -->
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bin 博客平台 | 邮箱验证</title>
+</head>
+<body>
+    <div class="main">
+        <div class="borderstyle">
+            <div class="title">尊敬的用户,您好!</div>
+            <div class="authcodetext">感谢您选择Bin 博客平台！您的验证码是：</div>
+            <div class="authcode">
+                <span th:text="${code}"></span>
+            </div>
+        </div><br>
+        <div style="font-size: 16px;color: #999999; margin-bottom: 94px">
+            *该验证码有效时间为5分钟<br>
+            *如果这不是您的邮件请忽略，很抱歉打扰您，请原谅
+        </div>
+        <div style="margin-top: 34px;margin-bottom: 22px" align="right">
+            <img src="http://img.782272323.cn/lhb/gdms/sys/logo00"/>
+        </div>
+        <div style="font-size: 16px;color: #333333;float: right">-Bin 博客平台开发团队-</div>
+    </div>
+</body>
+<style>
+    .main{
+        padding: 60px;
+        width: 800px;
+    }
+    .title{
+        font-size: 30px;
+        color: #2ECC71;
+        padding-bottom: 22px;
+    }
+    .authcodetext{
+        font-size: 20px;
+        color: #333333;
+        padding-bottom: 28px;
+    }
+    .authcode{
+        width: 200px;
+        height: 60px;
+        font-size: 30px;
+        color: #ffffff;
+        background-color: #2ECC71;
+        margin-left: auto;
+        margin-right: auto;
+        text-align:center;
+        overflow: hidden;
+        margin-bottom: 60px;
+        line-height: 60px;
+    }
+    .borderstyle{
+        border-bottom:1px dashed;
+        border-collor:#999999
+    }
+    img{
+        width: 128px;
+        height: 60px;
+    }
+</style>
+</html>
