@@ -8,7 +8,11 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
+// todo 我的主页 和 消息暂时进入白名单后续再移除
+const whiteList = ['/login',
+  '/auth-redirect', '/', '/home', '/home/index',
+  '/registered', '/registered/index',
+  '/forgetPassword', '/password/forgetPassword', '/resetPassword', '/password/resetPassword'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar 开始进度条
@@ -21,6 +25,7 @@ router.beforeEach(async(to, from, next) => {
   const hasToken = getToken()
 
   if (hasToken) {
+    console.log('路径 = ' + to.path)
     if (to.path === '/login') {
       // if is logged in, redirect to the home page 如果已登录，则重定向到主页
       next({ path: '/' })
@@ -54,7 +59,9 @@ router.beforeEach(async(to, from, next) => {
           // 删除令牌，转到登录页面重新登录
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
+
           next(`/login?redirect=${to.path}`)
+          // next(`/`)
           NProgress.done()
         }
       }
@@ -63,12 +70,13 @@ router.beforeEach(async(to, from, next) => {
     /* has no token*/
 
     if (whiteList.indexOf(to.path) !== -1) {
-      // in the free login whitelist, go directly 在免费登录白名单中，直接登录
+      // in the free login whitelist, go directly 在免登录白名单中，直接进入
       next()
     } else {
       // other pages that do not have permission to access are redirected to the login page.
       // 其他没有访问权限的页面被重定向到登录页面。
       next(`/login?redirect=${to.path}`)
+      // next(`/`)
       NProgress.done()
     }
   }

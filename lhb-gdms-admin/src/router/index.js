@@ -126,16 +126,10 @@ export const asyncRoutes = [
     meta: { title: '用户管理', requireAuth: true, icon: 'user' },
     children: [
       {
-        path: 'adminUser',
-        component: () => import('@/views/user/adminUser'),
-        name: 'adminUser',
-        meta: { title: '普通用户', requireAuth: true }
-      },
-      {
         path: 'ordinaryUser',
         component: () => import('@/views/user/ordinaryUser'),
         name: 'ordinaryUser',
-        meta: { title: '系统管理员', requireAuth: true }
+        meta: { title: '普通用户', requireAuth: true }
       }
     ]
   },

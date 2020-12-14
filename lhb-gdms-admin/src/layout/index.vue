@@ -1,3 +1,4 @@
+<!-- 除了顶部导航栏的所以区域 -->
 <template>
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />

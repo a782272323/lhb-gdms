@@ -59,6 +59,7 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
+    name: 'Login',
     hidden: true
   },
   {
@@ -85,12 +86,36 @@ export const constantRoutes = [
         path: 'home',
         component: () => import('@/views/home/index'),
         name: 'Home',
-        meta: { title: '首页', icon: 'dashboard', affix: true}
+        meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
-
   },
-
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/blog',
+    children: [
+      {
+        path: 'blog',
+        component: () => import('@/views/blog/index'),
+        name: 'Blog',
+        meta: { title: '我的主页', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/message',
+    children: [
+      {
+        path: 'message',
+        component: () => import('@/views/message/index'),
+        name: 'Message',
+        meta: { title: '消息', affix: true }
+      }
+    ]
+  },
   {
     path: '/profile',
     component: Layout,
@@ -104,6 +129,34 @@ export const constantRoutes = [
         meta: { title: '个人信息', icon: 'user', noCache: true }
       }
     ]
+  },
+  // 注册
+  {
+    path: '/registered',
+    component: () => import('@/views/login/registered'),
+    name: 'Registered',
+    hidden: true
+  },
+  // 写文章
+  {
+    path: '/article',
+    component: () => import('@/views/article/index'),
+    name: 'Article',
+    hidden: true
+  },
+  // 忘记密码
+  {
+    path: '/forgetPassword',
+    component: () => import('@/views/login/forgetPassword'),
+    name: 'ForgetPassword',
+    hidden: true
+  },
+  // 重置密码
+  {
+    path: '/resetPassword',
+    component: () => import('@/views/login/resetPassword'),
+    name: 'ResetPassword',
+    hidden: true
   }
 ]
 

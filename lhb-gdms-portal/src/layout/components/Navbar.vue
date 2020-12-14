@@ -1,62 +1,92 @@
 <template>
-  <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
-
-    <div class="right-menu">
-      <template v-if="device!=='mobile'">
-<!--        <search id="header-search" class="right-menu-item" />-->
-
-        <error-log class="errLog-container right-menu-item hover-effect" />
-
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
-        <el-tooltip content="Global Size" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-      </template>
-
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+  <el-row class="navbar">
+    <el-col :span="5">
+      <!-- logo区域 -->
+      <div class="logo">
+        <img class="logo-img" src="../../img/Blog02.png" @click="linkToHome"/>
+        <p style="float: right" @click="linkToHome">Bin 博客平台</p>
+      </div>
+    </el-col>
+    <el-col :span="14">
+      <!-- 导航栏功能模块区域 -->
+      <div class="switch">
+        <div style="float: left">
+          <el-menu
+            class="switch-menu"
+            mode="horizontal"
+            :default-active="this.$route.path"
+            active-text-color="#2ECC71"
+            >
+            <el-menu-item index="/home" @click="linkToHome">
+              <i class="el-icon-s-home"></i> 首页
+            </el-menu-item>
+            <el-menu-item index="/blog" @click="linkToBlog">
+              <div v-if="this.$route.path === '/blog' ">
+                <svg-icon icon-class="Blog03-#2ECC71"></svg-icon> 我的主页
+              </div>
+              <div v-if="this.$route.path != '/blog' ">
+                <svg-icon icon-class="Blog03"></svg-icon> 我的主页
+              </div>
+            </el-menu-item>
+            <el-menu-item index="/message" @click="linkToMessage">
+              <i class="el-icon-bell"></i> 消息
+            </el-menu-item>
+          </el-menu>
         </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/profile/index">
-            <el-dropdown-item>个人信息</el-dropdown-item>
-          </router-link>
-          <router-link to="/">
-            <el-dropdown-item>首页</el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">注销</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
-  </div>
+        <div class="switch-input">
+          <el-input
+            placeholder="探索Bin博客"
+            clearable
+            >
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-input>
+        </div>
+        <!-- 个人中心区域 -->
+        <!--    <div class="person-center" >-->
+        <div class="right-menu" >
+          <el-button class="right-menu-button" @click="linkToArticle" type="success" plain round>写文章</el-button>
+          <!-- 未登录 -->
+          <div v-if="!login" style="float:left;">
+            <el-button class="right-menu-button" @click="linkToLogin" type="success" plain round>登录</el-button>
+            <el-button class="right-menu-button" @click="linkToRegistered" type="success" plain round>注册</el-button>
+          </div>
+          <!-- 已经登录 -->
+          <el-dropdown v-if="login" class="avatar-container right-menu-item hover-effect" trigger="click">
+            <!--      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">-->
+            <!-- 头像 -->
+            <div class="avatar-wrapper">
+              <!--          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">-->
+              <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" class="user-avatar">
+              <i class="el-icon-caret-bottom" />
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <router-link to="/profile/index">
+                <el-dropdown-item>个人信息</el-dropdown-item>
+              </router-link>
+              <router-link to="/">
+                <el-dropdown-item>首页</el-dropdown-item>
+              </router-link>
+              <el-dropdown-item divided @click.native="logout">
+                <span style="display:block;">注销</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
+    </el-col>
+<!--    <el-col :span="5">-->
+
+<!--    </el-col>-->
+  </el-row>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-// import Search from '@/components/HeaderSearch'
+// eslint-disable-next-line no-unused-vars
+import { getToken } from '@/utils/auth' // get token from cookie
+// import '@/src/icons/my/Blog2.svg'
 
 export default {
-  components: {
-    Breadcrumb,
-    Hamburger,
-    ErrorLog,
-    Screenfull,
-    SizeSelect
-    // Search
-  },
   computed: {
     ...mapGetters([
       'sidebar',
@@ -64,98 +94,170 @@ export default {
       'device'
     ])
   },
+  data() {
+    return {
+      login: '',
+      // 当前激活菜单
+      activeIndex: '1'
+    }
+  },
+  created() {
+    this.isLogin()
+  },
   methods: {
-    toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
-    },
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    isLogin() {
+      const hashToken = getToken()
+      if (hashToken) {
+        console.log('已经登录')
+        this.login = true
+      } else {
+        console.log('未登录')
+        this.login = false
+      }
+    },
+    // 跳转到我的主页
+    linkToBlog() {
+      console.log('我的主页 activeIndex = ' + this.activeIndex)
+      this.activeIndex = '2'
+      this.$router.push({ path: '/blog' })
+    },
+    // 跳转到首页
+    linkToHome() {
+      console.log('首页 activeIndex = ' + this.activeIndex)
+      this.activeIndex = '1'
+      this.$router.push({ path: '/home' })
+    },
+    // 跳转到消息
+    linkToMessage() {
+      console.log('消息 activeIndex = ' + this.$route.path)
+      this.activeIndex = '3'
+      this.$router.push({ path: '/message' })
+    },
+    // 跳转到登录
+    linkToLogin() {
+      this.$router.push({ path: '/login' })
+    },
+    // 跳转到注册
+    linkToRegistered() {
+      this.$router.push({ path: '/registered' })
+    },
+    // 跳转到写文章页面
+    linkToArticle() {
+      this.$router.push({ path: '/article' })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.navbar {
-  height: 50px;
-  overflow: hidden;
-  position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  .navbar {
+    height: 70px;
+    overflow: hidden;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
-  .hamburger-container {
-    line-height: 46px;
-    height: 100%;
-    float: left;
-    cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    .logo {
+      float: right;
+      width: 150px;
+      height: 50px;
+      margin-top: 15px;
+      margin-right: 10px;
+      font-weight: bold;
+      color: #2ECC71;
+      /*background-color: #623615;*/
 
-    &:hover {
-      background: rgba(0, 0, 0, .025)
-    }
-  }
-
-  .breadcrumb-container {
-    float: left;
-  }
-
-  .errLog-container {
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  .right-menu {
-    float: right;
-    height: 100%;
-    line-height: 50px;
-
-    &:focus {
-      outline: none;
-    }
-
-    .right-menu-item {
-      display: inline-block;
-      padding: 0 8px;
-      height: 100%;
-      font-size: 18px;
-      color: #5a5e66;
-      vertical-align: text-bottom;
-
-      &.hover-effect {
-        cursor: pointer;
-        transition: background .3s;
-
-        &:hover {
-          background: rgba(0, 0, 0, .025)
-        }
+      .logo-img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
       }
     }
 
-    .avatar-container {
-      margin-right: 30px;
+    .switch {
+      margin-top: 10px;
+      /*background-color: #C03639;*/
+      width: 980px;
+      height: 60px;
 
-      .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
+      .switch-menu {
+        /*background-color: #ECF0F1;*/
+        margin-right: 20px;
+        max-width: 330px;
+      }
 
-        .user-avatar {
+      .switch-input {
+        float: left;
+        margin-top: 13px;
+        width: 250px;
+      }
+
+    }
+
+    .right-menu {
+      margin-left: 120px;
+      float: left;
+      height: 70px;
+      width: auto;
+      line-height: 50px;
+      /*background-color: #2c3e50;*/
+
+      &:focus {
+        outline: none;
+      }
+
+      .right-menu-button {
+        float: left;
+        margin-top: 15px;
+        margin-left: 15px;
+      }
+
+      .right-menu-item {
+        display: inline-block;
+        padding: 0 8px;
+        height: 100%;
+        font-size: 18px;
+        color: #5a5e66;
+        vertical-align: text-bottom;
+
+        &.hover-effect {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          transition: background .3s;
+
+          &:hover {
+            background: rgba(0, 0, 0, .025)
+          }
         }
+      }
 
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+      .avatar-container {
+        margin-right: 30px;
+
+        .avatar-wrapper {
+          float: right;
+          margin-top: 15px;
+          position: relative;
+
+          .user-avatar {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+          }
+
+          .el-icon-caret-bottom {
+            cursor: pointer;
+            position: absolute;
+            right: -20px;
+            top: 25px;
+            font-size: 12px;
+          }
         }
       }
     }
   }
-}
 </style>

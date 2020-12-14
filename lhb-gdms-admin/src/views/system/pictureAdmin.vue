@@ -256,8 +256,9 @@
                 // 清空信息
                 // this.$refs[formData].resetFields()
                 this.dialogAdd = false
-                window.location.reload()
+                // window.location.reload()
                 this.$message.success(result.message)
+                this.refreshPage()
               } else {
                 this.$message.error(result.message)
               }

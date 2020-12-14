@@ -32,12 +32,31 @@ const actions = {
   // user login
   // 登录
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { loginType, username, password, phone, phoneCode, email, emailCode } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({
+        loginType: loginType,
+        username: username.trim(),
+        password: password,
+        phone: phone.trim(),
+        phoneCode: phoneCode,
+        email: email.trim(),
+        emailCode: emailCode
+      }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
+        if (loginType === 1) {
+          console.log('账户密码登录!!!')
+        }
+        if (loginType === 2) {
+          console.log('手机登录')
+        }
+        if (loginType === 2) {
+          console.log('邮箱登录')
+        }
+        // 跳转首页
+        // this.$router.push({ path: '/home' })
         resolve()
       }).catch(error => {
         reject(error)

@@ -1,23 +1,31 @@
+<!-- 除了顶部导航栏的所以区域 -->
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" />
-    <div :class="{hasTagsView:needTagsView}" class="main-container">
-      <div :class="{'fixed-header':fixedHeader}">
-        <navbar />
-        <tags-view v-if="needTagsView" />
-      </div>
-      <app-main />
-      <right-panel v-if="showSettings">
-        <settings />
-      </right-panel>
+<!--  <div :class="classObj" class="app-wrapper" >-->
+<!--    <div  v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />-->
+<!--    &lt;!&ndash; 侧边栏 &ndash;&gt;-->
+<!--&lt;!&ndash;    <sidebar class="sidebar-container" />&ndash;&gt;-->
+<!--    <div :class="{hasTagsView:needTagsView}" class="main-container">-->
+<!--      <div :class="{'fixed-header':fixedHeader}">-->
+<!--        <navbar />-->
+<!--      </div>-->
+<!--      <app-main />-->
+<!--    </div>-->
+<!--  </div>-->
+
+  <!-- 自定义页面布局 -->
+  <div>
+    <!-- 顶部导航栏 -->
+    <div>
+      <navbar />
     </div>
+
+    <!-- 主页 -->
+    <app-main />
   </div>
 </template>
 
 <script>
-import RightPanel from '@/components/RightPanel'
-import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
+import { AppMain, Navbar } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
 
@@ -25,11 +33,7 @@ export default {
   name: 'Layout',
   components: {
     AppMain,
-    Navbar,
-    RightPanel,
-    Settings,
-    Sidebar,
-    TagsView
+    Navbar
   },
   mixins: [ResizeMixin],
   computed: {
