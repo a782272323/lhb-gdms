@@ -65,7 +65,7 @@ public class SystemIconAdminController {
      * @param file 图片，格式为git,png,jpg三种之一,大小不能超过5M
      * @return
      */
-    @PostMapping("admin/system/icon")
+    @PostMapping("/admin/system/icon")
     public BaseResult insertSystemIcon(String userIconName,
                                        @RequestPart("file") MultipartFile file) throws Exception {
 

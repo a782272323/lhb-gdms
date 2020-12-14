@@ -9,6 +9,7 @@ import lhb.gdms.commons.utils.RegularExpressionUtil;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
 import lhb.gdms.provider.user.domain.vo.LoginInfoVO;
 import lhb.gdms.provider.user.domain.vo.LoginPortalParamVO;
+import lhb.gdms.provider.user.domain.vo.RegisteredParamsVO;
 import lhb.gdms.provider.user.mapper.SysUserMapper;
 import lhb.gdms.provider.user.service.PortalLoginService;
 import lhb.gdms.provider.user.service.SysUserService;
@@ -19,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -105,7 +103,7 @@ public class PortalLoginController {
      * @return
      */
     @PrintlnLog(description = "获取用户信息，用于登录成功后跳转首页--controller")
-    @PostMapping("/user/info/portal")
+    @GetMapping("/user/info/portal")
     public BaseResult portalInfo(Authentication authentication) {
         SysUserEntity sysUserEntity = new SysUserEntity();
         sysUserEntity.setSysUserUsername(authentication.getName());
@@ -136,12 +134,18 @@ public class PortalLoginController {
 
     /**
      * 门户网站用户注册
-     * @param sysUserEntity
+     * @param registeredParamsVO
      * @return
      */
     @PrintlnLog(description = "门户网站用户注册详情-controller")
     @PostMapping("/user/registered/portal")
-    public BaseResult portalRegistered(@RequestBody SysUserEntity sysUserEntity) {
+    public BaseResult portalRegistered(@RequestBody RegisteredParamsVO registeredParamsVO) {
+        SysUserEntity sysUserEntity = new SysUserEntity();
+        sysUserEntity.setSysUserUsername(registeredParamsVO.getUsername());
+        // 密码加密
+        sysUserEntity.setSysUserPassword(passwordEncoder.encode(registeredParamsVO.getPassword()));
+        sysUserEntity.setSysUserPhone(registeredParamsVO.getPhone());
+        sysUserEntity.setSysUserEmail(registeredParamsVO.getEmail());
 
         // 有效性校验
         // 用户名不能为空
@@ -153,14 +157,13 @@ public class PortalLoginController {
             return BaseResult.error(RegularExpressionUtil.REGEX_USERNAME_ERROR);
         }
         // 密码不能为空
-        if (StringUtils.isBlank(sysUserEntity.getSysUserPassword())) {
+        if (StringUtils.isBlank(registeredParamsVO.getPassword())) {
             return BaseResult.error(RegularExpressionUtil.REGEX_PASSWORD_NULL);
         }
         // 密码格式错误
-        if (!RegularExpressionUtil.isPassword(sysUserEntity.getSysUserPassword())) {
+        if (!RegularExpressionUtil.isPassword(registeredParamsVO.getPassword())) {
             return BaseResult.error(RegularExpressionUtil.REGEX_PASSWORD_ERROR);
         }
-        sysUserEntity.setSysUserPassword(passwordEncoder.encode(sysUserEntity.getSysUserPassword()));
         // 手机不能为空
         if (StringUtils.isBlank(sysUserEntity.getSysUserPhone())) {
             return BaseResult.error(RegularExpressionUtil.REGEX_MOBILE_NULL);
