@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import lhb.gdms.commons.domain.vo.QueryVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
@@ -16,6 +18,8 @@ import java.util.List;
  * @time 19:34
  */
 public class BaseServiceImpl<T extends BaseDateEntity, M extends BaseMapper<T>> implements BaseService<T>{
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 注入mapper
@@ -51,13 +55,26 @@ public class BaseServiceImpl<T extends BaseDateEntity, M extends BaseMapper<T>> 
     }
 
     /**
-     * 校验名字，昵称，用户名等等是否重复
+     * 校验名字，昵称，用户名等等是否重复(添加数据时用)
      * @param name
      * @return
      */
     @Override
     public Boolean checkName(String name) {
-        return StringUtils.isNotBlank(mapper.checkName(name)) ? true : false;
+        String string = mapper.checkName(name);
+        logger.debug("string = " + string);
+        return StringUtils.isNotBlank(string) ? true : false;
+    }
+
+    /**
+     * 校验名字，昵称，用户名等等是否重复(修改数据时用)
+     * @param name
+     * @param id
+     * @return
+     */
+    @Override
+    public Boolean checkNameByUpdate(String name, Long id) {
+        return StringUtils.isNotBlank(mapper.checkNameByUpdate(name, id)) ? true : false;
     }
 
     /**

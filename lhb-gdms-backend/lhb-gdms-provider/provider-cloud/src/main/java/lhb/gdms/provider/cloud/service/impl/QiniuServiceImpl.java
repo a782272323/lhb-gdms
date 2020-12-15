@@ -4,13 +4,17 @@ package lhb.gdms.provider.cloud.service.impl;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
+import com.qiniu.storage.Configuration;
+import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.utils.MapperUtils;
+import lhb.gdms.provider.cloud.config.QiniuUploadConfig;
 import lhb.gdms.provider.cloud.service.QiniuService;
+import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,6 +160,28 @@ public class QiniuServiceImpl implements QiniuService {
         return response.statusCode == 200
                 ? HttpConstant.DELETE_MESSAGE
                 : HttpConstant.DELETE_ERROR_MESSAGE;
+    }
+
+    /**
+     * 重命名文件
+     * @param oldKey
+     * @param newKey
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public String renameFile(String oldKey, String newKey) throws Exception {
+        Configuration cfg = new Configuration(Region.region0());
+        String fromBucket = bucket;
+        String toBucket = bucket;
+        // 旧文件名
+        String fromKey = oldKey;
+        // 新文件名
+        String toKey = newKey;
+        BucketManager bucketManager = new BucketManager(auth, cfg);
+        bucketManager.move(fromBucket, fromKey, toBucket, toKey);
+
+        return "修改成功";
     }
 
     /**

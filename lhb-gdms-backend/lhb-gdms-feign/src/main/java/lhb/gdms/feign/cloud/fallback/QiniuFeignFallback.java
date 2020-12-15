@@ -32,6 +32,12 @@ public class QiniuFeignFallback implements QiniuFeign {
     }
 
     @Override
+    public BaseResult rename(String oldKey, String newKey) throws Exception {
+        logger.debug("通用服务-七牛云,feign远程调用失败");
+        return BaseResult.error("系统繁忙,请稍后重试");
+    }
+
+    @Override
     public BaseResult test() {
         logger.debug("通用服务测试,feign远程调用失败");
         return BaseResult.error("系统繁忙,请稍后重试");

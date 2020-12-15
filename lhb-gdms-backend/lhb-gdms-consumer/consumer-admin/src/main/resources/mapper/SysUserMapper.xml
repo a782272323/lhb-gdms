@@ -29,5 +29,4 @@
         WHERE sys_user_key = #{entity.sysUserKey}
     </select>
 
-
 </mapper>

@@ -45,7 +45,18 @@ public interface QiniuFeign {
     public BaseResult deleteOne(@RequestParam("key")String key) throws Exception;
 
     /**
-     * 参数通用服务feign远程调用
+     * 重命名七牛云文件名
+     * @param oldKey
+     * @param newKey
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/cloud/qiniu/rename")
+    public BaseResult rename(@RequestParam("oldKey") String oldKey,
+                             @RequestParam("newKey") String newKey) throws Exception;
+
+    /**
+     * 测试通用服务feign远程调用
      * @param
      * @return
      */

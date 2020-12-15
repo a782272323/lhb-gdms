@@ -64,6 +64,21 @@ public class QiniuController {
                 : BaseResult.error(HttpConstant.ERROR, HttpConstant.DELETE_ERROR_MESSAGE);
     }
 
+    /**
+     * 重命名文件
+     * @param oldKey
+     * @param newKey
+     * @return
+     * @throws Exception
+     */
+    @PrintlnLog(description = "重命名文件-controller")
+    @PostMapping("/cloud/qiniu/rename")
+    public BaseResult rename(@RequestParam("oldKey") String oldKey,
+                             @RequestParam("newKey") String newKey) throws Exception{
+        logger.debug("oldKey = " + oldKey, ",,,newKey = " + newKey);
+        return BaseResult.ok(qiniuService.renameFile(oldKey, newKey));
+    }
+
     @GetMapping("/cloud/test")
     public BaseResult test() {
         return BaseResult.ok();

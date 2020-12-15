@@ -41,6 +41,7 @@
         <qiniu.version>7.2.28</qiniu.version>
         <aliyun-java-sdk-core>4.5.3</aliyun-java-sdk-core>
         <aliyun-java-sdk-dysmsapi>2.1.0</aliyun-java-sdk-dysmsapi>
+        <mapstruct-processor>1.2.0.Final</mapstruct-processor>
 
     </properties>
 
@@ -269,6 +270,12 @@
                 <version>${aliyun-java-sdk-dysmsapi}</version>
             </dependency>
             <!--阿里云的短信服务SDK end-->
+            <!-- mapStruct 属性拷贝 -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct-processor}</version>
+            </dependency>
             <!-- Others End -->
 
         </dependencies>

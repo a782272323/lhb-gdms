@@ -36,11 +36,19 @@ public interface BaseMapper<T extends BaseDateEntity> {
     Integer selectPageHelperCount();
 
     /**
-     * 校验名字，昵称，用户名等等是否重复
+     * 校验名字，昵称，用户名等等是否重复(添加数据时用)
      * @param name
      * @return
      */
     String checkName(@Param("name") String name);
+
+    /**
+     * 校验名字，昵称，用户名等等是否重复(修改数据时用)
+     * @param name
+     * @param id
+     * @return
+     */
+    String checkNameByUpdate(@Param("name") String name, @Param("id") Long id);
 
     /**
      * 根据实体类属性查询单条信息

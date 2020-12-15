@@ -41,4 +41,13 @@ public interface QiniuService {
      * @throws QiniuException
      */
     String deleteFile(String key) throws QiniuException;
+
+    /**
+     * 重命名文件
+     * @param oldKey
+     * @param newKey
+     * @return
+     * @throws Exception
+     */
+    String renameFile(String oldKey, String newKey) throws Exception;
 }

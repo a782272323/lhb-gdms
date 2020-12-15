@@ -52,6 +52,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 // 仅门户网站能访问的
                 // 仅后台管理网站能访问的
                 .antMatchers("/admin/system/icon/**").hasAnyAuthority("System Admin")
+                .antMatchers("/admin/system/label/**").hasAnyAuthority("System Admin")
                 .antMatchers("/user/info/admin").hasAnyAuthority("System Admin")
                 // 不需要权限的接口/放行的接口
                 .antMatchers("/web/**").permitAll()

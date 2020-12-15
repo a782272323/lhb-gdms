@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lhb.gdms.consumer.admin.mapper.SysLabelMapper">
+
+    <resultMap id="sysLabelMap1" type="lhb.gdms.commons.domain.entity.SysLabelEntity">
+        <id column="label_id" property="labelId"/>
+        <result column="label_name" property="labelName" />
+        <result column="label_icon_url" property="labelIconUrl" />
+        <result column="label_icon_key" property="labelIconKey" />
+        <result column="created" property="created" />
+        <result column="updated" property="updated" />
+    </resultMap>
+
+    <!-- 校验名字是否重复 -->
+    <select id="checkName" resultType="java.lang.String">
+        SELECT label_name FROM sys_label
+        WHERE label_name = #{name}
+    </select>
+
+    <!-- 校验名称是否重复，修改时 -->
+    <select id="checkNameByUpdate" resultType="java.lang.String">
+        SELECT label_name FROM sys_label
+        WHERE label_name = #{name}
+        AND label_id &lt;&gt; ${id}
+    </select>
+
+    <!-- 添加 -->
+    <insert id="insert">
+        INSERT INTO sys_label
+        (
+         label_name,
+         label_icon_url,
+         label_icon_key,
+         created,
+         updated
+        ) VALUES
+        (
+         #{entity.labelName},
+         #{entity.labelIconUrl},
+         #{entity.labelIconKey},
+         #{entity.created},
+         #{entity.updated}
+        )
+    </insert>
+
+    <!-- 根据id查询单条数据 -->
+    <select id="selectOneById" resultMap="sysLabelMap1">
+        SELECT DISTINCT * FROM sys_label
+        WHERE label_id = #{entity.labelId}
+    </select>
+
+    <!-- 修改头像 -->
+    <update id="update">
+        UPDATE sys_label SET
+            label_icon_url = #{entity.labelIconUrl},
+            label_icon_key = #{entity.labelIconKey},
+            updated = #{entity.updated}
+        WHERE label_id = #{entity.labelId}
+    </update>
+
+    <!-- 修改标签名称 -->
+    <update id="updateLabelName">
+        UPDATE sys_label SET
+            label_name = #{entity.labelName},
+            label_icon_url = #{entity.labelIconUrl},
+            label_icon_key = #{entity.labelIconKey},
+            updated = #{entity.updated}
+        WHERE label_id = #{entity.labelId}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteOneByKeyWord">
+        DELETE FROM sys_label
+        WHERE label_id = #{entity.labelId}
+    </delete>
+
+    <!-- 查询列表全部信息-分页排序 -->
+    <select id="selectPageHelper" resultMap="sysLabelMap1">
+        SELECT * FROM sys_label
+        ORDER BY ${queryVO.keyWord} ${queryVO.orderBy}
+    </select>
+
+    <!-- 查询列表全部信息的数据总和 -->
+    <select id="selectPageHelperCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_label
+    </select>
+
+    <!-- 模糊查询 -->
+    <select id="query" resultMap="sysLabelMap1">
+        SELECT * FROM sys_label
+        WHERE label_name LIKE CONCAT(concat('%', #{labelName}),'%')
+        ORDER BY ${vo.keyWord} ${vo.orderBy}
+    </select>
+
+    <!-- 模糊查询数据总和 -->
+    <select id="queryCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_label
+        WHERE label_name LIKE CONCAT(concat('%', #{labelName}),'%')
+    </select>
+</mapper>

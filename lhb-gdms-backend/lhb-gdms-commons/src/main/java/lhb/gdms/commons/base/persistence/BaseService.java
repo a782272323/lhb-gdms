@@ -34,11 +34,19 @@ public interface BaseService<T extends BaseDateEntity> {
     public Integer selectPageHelperCount();
 
     /**
-     * 校验名字，昵称，用户名等等是否重复
+     * 校验名字，昵称，用户名等等是否重复(添加数据时用)
      * @param name
      * @return 返回true 代表重复
      */
     public Boolean checkName(String name);
+
+    /**
+     * 校验名字，昵称，用户名等等是否重复(修改数据时用)
+     * @param name
+     * @param id
+     * @return
+     */
+    public Boolean checkNameByUpdate(String name, Long id);
 
     /**
      * 根据实体类属性查询单条信息
