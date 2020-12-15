@@ -43,10 +43,10 @@
               </template>
             </el-table-column>
             <el-table-column fixed label="创建时间" prop="created" align="center" width="180">
-              <template slot-scope="scope">
-                <span>{{ scope.row.created }}</span>
-              </template>
-            </el-table-column>
+            <template slot-scope="scope">
+              <span>{{ scope.row.created }}</span>
+            </template>
+          </el-table-column>
             <el-table-column fixed label="更新时间" prop="updated" align="center" width="180">
               <template slot-scope="scope">
                 <span>{{ scope.row.updated }}</span>
@@ -83,7 +83,7 @@
               >
                 <i class="el-icon-upload" style="color:#409EFF"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过5M</div>
+                <div class="el-upload__tip" slot="tip">只能上传jpg/png格式文件，且不超过5M</div>
               </el-upload>
               <div>
                 <img class="showImg" v-if="uploadImgParams.url" :src="uploadImgParams.url" />

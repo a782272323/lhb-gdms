@@ -5,6 +5,8 @@
       top="70px"
       center
       >
+      <h1 style="" align="center">图片预览</h1>
+      <br>
       <img :src="url" @load="onLoad"/>
       <span slot="footer">
         <el-button type="primary" @click="cancel">关闭</el-button>

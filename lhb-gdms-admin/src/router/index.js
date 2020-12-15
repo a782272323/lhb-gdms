@@ -158,19 +158,19 @@ export const asyncRoutes = [
       {
         path: 'pictureAdmin',
         component: () => import('@/views/system/pictureAdmin'),
-        name: 'pictureAdmin',
+        name: 'PictureAdmin',
         meta: { title: '头像管理', requireAuth: true }
       },
       {
         path: 'labelAdmin',
         component: () => import('@/views/system/labelAdmin'),
-        name: 'labelAdmin',
+        name: 'LabelAdmin',
         meta: { title: '标签管理', requireAuth: true }
       },
       {
         path: 'sysMessage',
         component: () => import('@/views/system/sysMessage'),
-        name: 'sysMessage',
+        name: 'SysMessage',
         meta: { title: '系统通知', requireAuth: true }
       }
     ]
