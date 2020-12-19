@@ -20,7 +20,8 @@ service.interceptors.request.use(
       // let each request carry token 让每个请求携带令牌
       // ['X-Token'] is a custom headers key ['X-Token']是自定义标题键,可以修改
       // please modify it according to the actual situation 请根据实际情况进行修改
-      config.headers['Authorization'] = 'Bearer ' + getToken()
+      config.headers['Authorization'] = 'bearer ' + getToken()
+      // console.log('config.url == ' + config.url + 'access_token=' + getToken())
     }
     return config
   },

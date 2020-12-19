@@ -207,7 +207,7 @@
             this.flag = 1
             this.type = 'png'
           } else {
-            this.$message.error('上传图片只能说jpg或png格式!')
+            this.$message.error('上传图片只能是jpg或png格式!')
             this.flag = 0
           }
           if (!isLt5M) {

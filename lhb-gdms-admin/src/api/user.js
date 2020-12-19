@@ -16,7 +16,7 @@ export function getInfo(token) {
   })
 }
 
-export function logout(token) {
+export function adminLogout(token) {
   return request({
     url: '/provider-user/user/logout/admin',
     method: 'post',

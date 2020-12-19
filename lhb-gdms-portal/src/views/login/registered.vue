@@ -231,8 +231,8 @@
 
 <style lang="scss" scoped>
   .main {
-    background-color: #DEDEDE;
-    /*background-color: #ECF0F1;*/
+    /*background-color: #DEDEDE;*/
+    background-color: #ECF0F1;
     /*background-color: #BDC3C7;*/
     min-height: 100%;
     width: 100%;

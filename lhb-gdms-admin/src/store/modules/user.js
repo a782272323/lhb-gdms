@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, adminLogout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -77,9 +77,9 @@ const actions = {
 
   // user logout
   // 注销
-  logout({ commit, state, dispatch }) {
+  adminLogout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      adminLogout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         removeToken()

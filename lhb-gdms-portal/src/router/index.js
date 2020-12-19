@@ -122,11 +122,28 @@ export const constantRoutes = [
     redirect: '/profile/index',
     hidden: true,
     children: [
+      // 设置
       {
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: '个人信息', icon: 'user', noCache: true }
+        meta: { title: '设置', noCache: true }
+      },
+      // 关注
+      {
+        path: '/focus',
+        component: () => import('@/views/profile/focus'),
+        name: 'Focus',
+        hidden: true,
+        meta: { title: '关注', noCache: true }
+      },
+      // 收藏集
+      {
+        path: '/collection',
+        component: () => import('@/views/profile/collection'),
+        name: 'Collection',
+        hidden: true,
+        meta: { title: '收藏集', noCache: true }
       }
     ]
   },
@@ -135,28 +152,63 @@ export const constantRoutes = [
     path: '/registered',
     component: () => import('@/views/login/registered'),
     name: 'Registered',
-    hidden: true
+    hidden: true,
+    meta: { title: '注册', noCache: true }
   },
   // 写文章
   {
     path: '/article',
     component: () => import('@/views/article/index'),
     name: 'Article',
-    hidden: true
+    hidden: true,
+    meta: { title: '写文章', noCache: true }
+  },
+  // 草稿箱
+  {
+    path: '/caoGao',
+    component: () => import('@/views/article/caoGao'),
+    name: 'CaoGao',
+    hidden: true,
+    meta: { title: '草稿箱', noCache: true }
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/labelFocus',
+    children: [
+      // 已关注标签
+      {
+        path: '/labelFocus',
+        component: () => import('@/views/label/labelFocus'),
+        name: 'LabelFocus',
+        hidden: true,
+        meta: { title: '标签管理', noCache: true }
+      },
+      // 所有标签
+      {
+        path: '/labelAll',
+        component: () => import('@/views/label/labelAll'),
+        name: 'LabelAll',
+        hidden: true,
+        meta: { title: '标签管理', noCache: true }
+      }
+    ]
   },
   // 忘记密码
   {
     path: '/forgetPassword',
     component: () => import('@/views/login/forgetPassword'),
     name: 'ForgetPassword',
-    hidden: true
+    hidden: true,
+    meta: { title: '忘记密码', noCache: true }
   },
   // 重置密码
   {
     path: '/resetPassword',
     component: () => import('@/views/login/resetPassword'),
     name: 'ResetPassword',
-    hidden: true
+    hidden: true,
+    meta: { title: '重置密码', noCache: true }
   }
 ]
 
@@ -166,7 +218,6 @@ export const constantRoutes = [
  * 需要根据用户角色动态加载的路由
  */
 export const asyncRoutes = [
-
 
   /** when your routing map is too long, you can split it into small modules **/
 

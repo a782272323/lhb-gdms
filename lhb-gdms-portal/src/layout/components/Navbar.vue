@@ -44,30 +44,52 @@
         <!-- 个人中心区域 -->
         <!--    <div class="person-center" >-->
         <div class="right-menu" >
-          <el-button class="right-menu-button" @click="linkToArticle" type="success" plain round>写文章</el-button>
+<!--          <el-button  class="right-menu-button" type="success" plain round>写文章</el-button>-->
+          <el-button class="right-menu-button" type="success" plain round @click="linkToArticle">写文章</el-button>
           <!-- 未登录 -->
           <div v-if="!login" style="float:left;">
             <el-button class="right-menu-button" @click="linkToLogin" type="success" plain round>登录</el-button>
             <el-button class="right-menu-button" @click="linkToRegistered" type="success" plain round>注册</el-button>
           </div>
           <!-- 已经登录 -->
-          <el-dropdown v-if="login" class="avatar-container right-menu-item hover-effect" trigger="click">
-            <!--      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">-->
+          <el-dropdown v-if="login" class="avatar-container right-menu-item hover-effect" slot="dropdown">
             <!-- 头像 -->
             <div class="avatar-wrapper">
-              <!--          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">-->
-              <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" class="user-avatar">
-              <i class="el-icon-caret-bottom" />
+<!--              <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">-->
+              <img :src="this.imageUrl+'?imageView2/1/w/80/h/80'" class="user-avatar">
+              <span style="float: right;margin-left: 10px;margin-top: -5px;color: #2ECC71">个人中心
+              </span>
             </div>
             <el-dropdown-menu slot="dropdown">
-              <router-link to="/profile/index">
-                <el-dropdown-item>个人信息</el-dropdown-item>
-              </router-link>
               <router-link to="/">
-                <el-dropdown-item>首页</el-dropdown-item>
+                <el-dropdown-item><i class="el-icon-s-home"></i>首页</el-dropdown-item>
               </router-link>
-              <el-dropdown-item divided @click.native="logout">
-                <span style="display:block;">注销</span>
+              <router-link to="/blog">
+                <el-dropdown-item><svg-icon icon-class="Blog03"></svg-icon> 我的主页</el-dropdown-item>
+              </router-link>
+              <router-link to="/message">
+                <el-dropdown-item><i class="el-icon-bell"></i>消息</el-dropdown-item>
+              </router-link>
+              <router-link to="/article">
+                <el-dropdown-item divided><i class="el-icon-edit"></i>写文章</el-dropdown-item>
+              </router-link>
+              <router-link to="/caoGao">
+                <el-dropdown-item><svg-icon icon-class="caoGao01"></svg-icon> 草稿箱</el-dropdown-item>
+              </router-link>
+              <router-link to="/focus">
+                <el-dropdown-item><svg-icon icon-class="focus00"></svg-icon> 关注</el-dropdown-item>
+              </router-link>
+              <router-link to="/collection">
+                <el-dropdown-item><svg-icon icon-class="collection00"></svg-icon> 收藏集</el-dropdown-item>
+              </router-link>
+              <router-link to="/labelFocus">
+                <el-dropdown-item><svg-icon icon-class="label00"></svg-icon> 标签管理</el-dropdown-item>
+              </router-link>
+              <router-link to="/profile/index">
+                <el-dropdown-item divided><svg-icon icon-class="system00"></svg-icon> 设置</el-dropdown-item>
+              </router-link>
+              <el-dropdown-item @click.native="logout">
+                <span style="display:block;"><svg-icon icon-class="logout00"></svg-icon> 注销</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -85,6 +107,7 @@ import { mapGetters } from 'vuex'
 // eslint-disable-next-line no-unused-vars
 import { getToken } from '@/utils/auth' // get token from cookie
 // import '@/src/icons/my/Blog2.svg'
+import { getUserDetails } from '../../api/system'
 
 export default {
   computed: {
@@ -98,13 +121,22 @@ export default {
     return {
       login: '',
       // 当前激活菜单
-      activeIndex: '1'
+      activeIndex: '1',
+      imageUrl: '',
+      userList: []
     }
   },
   created() {
     this.isLogin()
+    this.refreshPage()
   },
   methods: {
+    refreshPage() {
+      getUserDetails().then(res => {
+        this.userList = res.data.getList
+        this.imageUrl = res.data.getList.sysUserIcon
+      })
+    },
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
@@ -199,7 +231,7 @@ export default {
     }
 
     .right-menu {
-      margin-left: 120px;
+      margin-left: 60px;
       float: left;
       height: 70px;
       width: auto;
