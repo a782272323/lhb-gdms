@@ -74,13 +74,14 @@ public class PortalLoginServiceImpl implements PortalLoginService {
             uuid = UUID.randomUUID().toString();
             uuid = uuid.replace("-", "").substring(0,12);
         }
-        String sysUserNickname = "Bin" + uuid;
+        String sysUserNickname = "Bin-" + uuid;
         sysUserEntity.setSysUserAreaCode("+86");
         sysUserEntity.setSysUserNickname(sysUserNickname);
         sysUserEntity.setSysUserStatus(1);
         sysUserEntity.setSysUserType(1);
         sysUserEntity.setCreated(new Date());
         sysUserEntity.setUpdated(new Date());
+        sysUserEntity.setSysUserIntroduction("该用户很懒，没有写简介");
         // 获取系统默认头像
         SysUserIconEntity sysUserIconEntity = sysUserIconMapper.findDefaultUrlInfo();
         sysUserEntity.setSysUserIcon(sysUserIconEntity.getUserIconUrl());

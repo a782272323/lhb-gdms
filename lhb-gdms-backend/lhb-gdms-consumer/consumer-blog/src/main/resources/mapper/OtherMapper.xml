@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lhb.gdms.consumer.blog.mapper.OtherMapper">
+
+    <resultMap id="sysUserIconMap1" type="lhb.gdms.commons.domain.entity.SysUserIconEntity">
+        <id column="sys_user_icon_id" property="sysUserIconId"/>
+        <result column="user_icon_url" property="userIconUrl" />
+        <result column="user_icon_name" property="userIconName" />
+        <result column="key" property="key" />
+        <result column="is_default" property="isDefault" />
+        <result column="created" property="created" />
+        <result column="updated" property="updated" />
+    </resultMap>
+
+
+
+    <!-- 获取全部系统头像信息 -->
+    <select id="getIconLists" resultMap="sysUserIconMap1">
+        SELECT DISTINCT * FROM sys_user_icon
+    </select>
+
+    <!-- 根据id查询系统头像信息 -->
+    <select id="getIconInfoById" resultMap="sysUserIconMap1">
+        SELECT DISTINCT * FROM sys_user_icon WHERE sys_user_icon_id = ${sysUserIconId}
+    </select>
+</mapper>

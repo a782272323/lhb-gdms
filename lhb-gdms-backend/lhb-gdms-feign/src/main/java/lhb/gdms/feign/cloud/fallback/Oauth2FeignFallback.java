@@ -1,5 +1,6 @@
 package lhb.gdms.feign.cloud.fallback;
 
+import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.domain.dto.Oauth2DTO;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.feign.cloud.Oauth2Feign;
@@ -28,6 +29,6 @@ public class Oauth2FeignFallback implements Oauth2Feign {
     @Override
     public BaseResult getToken(Map<String, Object> map) {
         logger.error("认证服务异常");
-        return BaseResult.error("系统异常，请联系管理员");
+        return BaseResult.error(HttpConstant.SYSTEM_BUSY_MESSAGE);
     }
 }

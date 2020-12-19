@@ -150,4 +150,52 @@
         SELECT DISTINCT * FROM sys_user
         WHERE sys_user_email = #{sysUserEmail}
     </select>
+
+    <!-- 修改用户头像信息 -->
+    <update id="updateUserSysIcon">
+        UPDATE sys_user
+        SET sys_user_icon = #{entity.sysUserIcon},
+            sys_user_key = #{entity.sysUserKey},
+            updated = #{entity.updated}
+        WHERE sys_user_id = #{entity.sysUserId}
+    </update>
+
+    <!-- 根据id查询用户信息，不包括年月日 -->
+    <select id="selectOneById" resultMap="sysUserMap1">
+        SELECT DISTINCT sys_user_id,
+                        sys_user_nickname,
+                        sys_user_phone,
+                        sys_user_email,
+                        sys_user_area_code,
+                        sys_user_sex,
+                        sys_user_status,
+                        sys_user_username,
+                        sys_user_password,
+                        sys_user_type,
+                        sys_user_icon,
+                        sys_user_key,
+                        sys_user_introduction
+        FROM sys_user WHERE sys_user_id = ${entity.sysUserId}
+    </select>
+
+    <!-- 门户网站个人中心-修改用户基础信息 -->
+    <update id="update">
+        UPDATE sys_user SET updated = #{entity.updated}
+        <if test="entity.sysUserNickname != null and entity.sysUserNickname != ''">
+            ,sys_user_nickname = #{entity.sysUserNickname}
+        </if>
+        <if test="entity.sysUserSex != null and entity.sysUserSex != ''">
+            ,sys_user_sex = #{entity.sysUserSex}
+        </if>
+        <if test="entity.sysUserEmail != null and entity.sysUserEmail != ''">
+            ,sys_user_email = #{entity.sysUserEmail}
+        </if>
+        <if test="entity.sysUserPhone != null and entity.sysUserPhone != ''">
+            ,sys_user_phone = #{entity.sysUserPhone}
+        </if>
+        <if test="entity.sysUserIntroduction != null and entity.sysUserIntroduction != '该用户很懒，没有写简介'">
+            ,sys_user_introduction = #{entity.sysUserIntroduction}
+        </if>
+        WHERE sys_user_id = #{entity.sysUserId}
+    </update>
 </mapper>

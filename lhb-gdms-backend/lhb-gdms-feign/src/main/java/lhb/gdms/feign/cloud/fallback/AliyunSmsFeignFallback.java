@@ -1,5 +1,6 @@
 package lhb.gdms.feign.cloud.fallback;
 
+import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.feign.cloud.AliyunSmsFeign;
 import org.slf4j.Logger;
@@ -20,12 +21,12 @@ public class AliyunSmsFeignFallback implements AliyunSmsFeign {
     @Override
     public BaseResult checkCode(String phone) throws Exception {
         logger.debug("阿里云短信服务,feign远程调用失败");
-        return BaseResult.error("系统繁忙,请稍后重试");
+        return BaseResult.error(HttpConstant.SYSTEM_BUSY_MESSAGE);
     }
 
     @Override
     public BaseResult getCode(String phone, String code) {
         logger.debug("阿里云短信服务,feign远程调用失败");
-        return BaseResult.error("系统繁忙,请稍后重试");
+        return BaseResult.error(HttpConstant.SYSTEM_BUSY_MESSAGE);
     }
 }

@@ -17,6 +17,7 @@ spring:
           - database-mysql-5-7.yml
           - database-redis.yml
           - feign.yml
+
 # 获取身份认证
 security:
   oauth2:

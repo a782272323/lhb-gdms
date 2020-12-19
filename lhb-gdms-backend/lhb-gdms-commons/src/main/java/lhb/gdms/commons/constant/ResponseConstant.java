@@ -14,9 +14,13 @@ public class ResponseConstant {
      */
     public static final String DATA = "data";
     /**
-     * 返回表单需要的表格形式的数据
+     * 返回表单需要的表格形式的数据(单条数据)
      */
     public static final String GET_LIST = "getList";
+    /**
+     * 返回表单需要的表格形式的数据(多条数据)
+     */
+    public static final String GET_LISTS = "getLists";
     /**
      * 返回表单的数据条数
      */

@@ -5,6 +5,7 @@ import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.constant.ResponseConstant;
 import lhb.gdms.commons.domain.entity.SysUserEntity;
 import lhb.gdms.commons.utils.BaseResult;
+import lhb.gdms.commons.utils.MapperUtils;
 import lhb.gdms.commons.utils.RegularExpressionUtil;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
 import lhb.gdms.provider.user.domain.vo.LoginInfoVO;
@@ -104,10 +105,12 @@ public class PortalLoginController {
      */
     @PrintlnLog(description = "获取用户信息，用于登录成功后跳转首页--controller")
     @GetMapping("/user/info/portal")
-    public BaseResult portalInfo(Authentication authentication) {
-        SysUserEntity sysUserEntity = new SysUserEntity();
-        sysUserEntity.setSysUserUsername(authentication.getName());
-        SysUserEntity entity = sysUserService.selectOneByKeyWord(sysUserEntity);
+    public BaseResult portalInfo(Authentication authentication) throws Exception{
+//        SysUserEntity sysUserEntity = new SysUserEntity();
+//        sysUserEntity.setSysUserUsername(authentication.getName());
+//        SysUserEntity entity = sysUserService.selectOneByKeyWord(sysUserEntity);
+
+        SysUserEntity entity = MapperUtils.json2pojo(authentication.getName(), SysUserEntity.class);
         logger.debug(entity.toString());
         LoginInfoVO loginInfoVO = new LoginInfoVO();
         loginInfoVO.setName(authentication.getName());
@@ -126,7 +129,8 @@ public class PortalLoginController {
         String access_token = request.getParameter("access_token");
         logger.debug(access_token);
         if (StringUtils.isNotBlank(access_token)) {
-            logger.debug("删除token");
+            logger.debug("门户网站用户,删除token");
+            logger.debug(tokenStore.readAccessToken(access_token).getValue());
             tokenStore.removeAccessToken(tokenStore.readAccessToken(access_token));
         }
         return BaseResult.ok(HttpConstant.LOGOUT_OK_MESSAGE);

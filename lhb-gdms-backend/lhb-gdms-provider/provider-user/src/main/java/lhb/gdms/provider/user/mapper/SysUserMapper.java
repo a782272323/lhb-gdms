@@ -55,4 +55,11 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
      * @return
      */
     public SysUserEntity checkSysUserEmail(@Param("sysUserEmail") String sysUserEmail);
+
+    /**
+     * 修改用户头像信息
+     * @param entity
+     * @return
+     */
+    Integer updateUserSysIcon(@Param("entity") SysUserEntity entity);
 }

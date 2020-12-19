@@ -1,9 +1,12 @@
 package lhb.gdms.provider.user.controller;
 
+import com.google.common.collect.Maps;
+import io.lettuce.core.RedisURI;
 import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.constant.ResponseConstant;
 import lhb.gdms.commons.domain.entity.SysUserEntity;
 import lhb.gdms.commons.utils.BaseResult;
+import lhb.gdms.commons.utils.RedisUtils;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
 import lhb.gdms.provider.user.domain.vo.LoginInfoVO;
 import lhb.gdms.provider.user.domain.vo.LoginParamVO;
@@ -18,10 +21,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.Map;
 
 /**
  * @Description  后台管理网站登录 controller
@@ -50,7 +56,8 @@ public class AdminLoginController {
         return new BCryptPasswordEncoder();
     }
 
-
+    @Autowired
+    private RedisUtils redisUtils;
 
     @Autowired
     private AdminLoginService adminLoginService;
@@ -108,9 +115,48 @@ public class AdminLoginController {
 
         if (StringUtils.isNotBlank(access_token)) {
             logger.debug("删除token");
+            logger.debug(tokenStore.readAccessToken(access_token).getValue());
             tokenStore.removeAccessToken(tokenStore.readAccessToken(access_token));
 
         }
         return BaseResult.ok(HttpConstant.OK, HttpConstant.LOGOUT_OK_MESSAGE);
+    }
+
+    /**
+     * todo 测试
+     * @param request
+     * @param principal
+     * @return
+     */
+    @GetMapping("/user/token")
+    public BaseResult testToken(HttpServletRequest request, Principal principal) {
+        String access_token = request.getParameter("access_token");
+        logger.debug(access_token);
+
+        String accessKey = "access:" + access_token;
+        String accessToRefreshKey = "access_to_refresh:" + access_token;
+        String authKey = "auth:" + access_token;
+        String clientIdToAccessKey = "client_id_to_access:" + "admin";
+        String unameToAccessKey = "uname_to_access:" + principal.getName();
+
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("access", redisUtils.getValueByKey(accessKey));
+        map.put("access_to_refresh", redisUtils.getValueByKey(accessToRefreshKey));
+        map.put("auth", redisUtils.getValueByKey(authKey));
+        map.put("client_id_to_access", redisUtils.getValueByKey(clientIdToAccessKey));
+        map.put("uname_to_access", redisUtils.getValueByKey(unameToAccessKey));
+        logger.debug(map.toString());
+
+//        redisUtils.deleteCache(accessKey);
+//        redisUtils.deleteCache(accessToRefreshKey);
+//        redisUtils.deleteCache(authKey);
+//        redisUtils.deleteCache(clientIdToAccessKey);
+//        redisUtils.deleteCache(unameToAccessKey);
+
+//        return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, "data", map);
+//        if (redisUtils.exists(accessKey)) {
+//            return null;
+//        }
+        return BaseResult.ok();
     }
 }

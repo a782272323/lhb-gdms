@@ -128,6 +128,7 @@ public class HttpConstant {
     public static final String REGISTERED_ERROR_MESSAGE = "注册失败，请稍后重试";
     public static final String INVALID_CODE_MESSAGE = "验证码失效，请重新获取";
     public static final String CODE_NULL_MESSAGE = "验证码不能为空";
+    public static final String SYSTEM_BUSY_MESSAGE = "系统繁忙,稍后重试！";
 
     /**
      * 501

@@ -50,6 +50,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 // 需要具体权限的接口
                 // 仅门户网站能访问的
+                .antMatchers("/blog/person/center/**").hasAnyAuthority("Average User")
+                .antMatchers("/user/info/portal").hasAnyAuthority("Average User")
                 // 仅后台管理网站能访问的
                 .antMatchers("/admin/system/icon/**").hasAnyAuthority("System Admin")
                 .antMatchers("/admin/system/label/**").hasAnyAuthority("System Admin")

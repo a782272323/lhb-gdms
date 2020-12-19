@@ -1,5 +1,6 @@
 package lhb.gdms.feign.cloud.fallback;
 
+import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.feign.cloud.QiniuFeign;
 import org.slf4j.Logger;
@@ -22,24 +23,24 @@ public class QiniuFeignFallback implements QiniuFeign {
     @Override
     public BaseResult uploadOne(MultipartFile file, String key) throws Exception {
         logger.debug("通用服务-七牛云,feign远程调用失败");
-        return BaseResult.error("系统繁忙,请稍后重试");
+        return BaseResult.error(HttpConstant.SYSTEM_BUSY_MESSAGE);
     }
 
     @Override
     public BaseResult deleteOne(String key) throws Exception {
         logger.debug("通用服务-七牛云,feign远程调用失败");
-        return BaseResult.error("系统繁忙,请稍后重试");
+        return BaseResult.error(HttpConstant.SYSTEM_BUSY_MESSAGE);
     }
 
     @Override
     public BaseResult rename(String oldKey, String newKey) throws Exception {
         logger.debug("通用服务-七牛云,feign远程调用失败");
-        return BaseResult.error("系统繁忙,请稍后重试");
+        return BaseResult.error(HttpConstant.SYSTEM_BUSY_MESSAGE);
     }
 
     @Override
     public BaseResult test() {
         logger.debug("通用服务测试,feign远程调用失败");
-        return BaseResult.error("系统繁忙,请稍后重试");
+        return BaseResult.error(HttpConstant.SYSTEM_BUSY_MESSAGE);
     }
 }
