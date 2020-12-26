@@ -7,6 +7,7 @@ import lhb.gdms.commons.domain.entity.SysLabelEntity;
 import lhb.gdms.commons.domain.vo.QueryVO;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.commons.utils.ImageUtils;
+import lhb.gdms.commons.utils.TimeUtils;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
 import lhb.gdms.consumer.admin.mapper.SysLabelMapper;
 import lhb.gdms.consumer.admin.service.SysLabelService;
@@ -79,7 +80,7 @@ public class SystemLabelAdminController {
         }
 
         // 生成七牛云key规则
-        String date = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss").format(LocalDateTime.now());
+        String date = DateTimeFormatter.ofPattern(TimeUtils.YYYY_MM_DD_AND_HH_MM_SS).format(LocalDateTime.now());
         String labelIconKey = "lhb-gdms/sys-label/" + date + "/" + labelName;
 
         // 上传图片到七牛云
@@ -145,7 +146,7 @@ public class SystemLabelAdminController {
             return BaseResult.error(HttpConstant.ERROR_MESSAGE);
         }
         logger.debug("删除成功");
-        String date = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss").format(LocalDateTime.now());
+        String date = DateTimeFormatter.ofPattern(TimeUtils.YYYY_MM_DD_AND_HH_MM_SS).format(LocalDateTime.now());
         String key = "lhb-gdms/sys-label/test/" + date + "/" + sysLabelEntity.getLabelName();
         // 上传图片到七牛云
         BaseResult qiniuResult = qiniuFeign.uploadOne(file, key);
@@ -189,7 +190,7 @@ public class SystemLabelAdminController {
         // 旧的文件名
         String oldKey = entity.getLabelIconKey();
         // 新的文件名
-        String date = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss").format(LocalDateTime.now());
+        String date = DateTimeFormatter.ofPattern(TimeUtils.YYYY_MM_DD_AND_HH_MM_SS).format(LocalDateTime.now());
         String newKey = "lhb-gdms/sys-label/" + date + "/" + labelName;
         String url = "http://img.782272323.cn/" + newKey;
         // 封装参数
@@ -232,6 +233,9 @@ public class SystemLabelAdminController {
     @PrintlnLog(description = "获取全部列表信息-controller")
     @GetMapping("/admin/system/label/lists")
     public BaseResult getLists(QueryVO queryVO) {
+        if (("labelName").equals(queryVO.getKeyWord().trim())) {
+            queryVO.setKeyWord("label_name");
+        }
         if (StringUtils.isBlank(queryVO.getKeyWord())) {
             queryVO.setKeyWord("label_name");
         }
@@ -253,6 +257,9 @@ public class SystemLabelAdminController {
     @PrintlnLog(description = "模糊查询-controller")
     @GetMapping("/admin/system/label/lists/query")
     public BaseResult query(QueryVO queryVO, String labelName) {
+        if (("labelName").equals(queryVO.getKeyWord().trim())) {
+            queryVO.setKeyWord("label_name");
+        }
         if (StringUtils.isBlank(queryVO.getKeyWord())) {
             queryVO.setKeyWord("label_name");
         }

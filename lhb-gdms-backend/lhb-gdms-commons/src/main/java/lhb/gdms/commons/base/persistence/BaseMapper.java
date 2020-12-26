@@ -24,6 +24,7 @@ public interface BaseMapper<T extends BaseDateEntity> {
     /**
      * 查询列表全部信息
      * 分页
+     * @param queryVO
      * @return
      */
     List<T> selectPageHelper(@Param("queryVO")QueryVO queryVO);

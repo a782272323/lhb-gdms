@@ -28,6 +28,7 @@ public class TimeUtils {
     public final static String YYYY_MM = "yyyy-MM";
     public final static String YYYY = "yyyy";
     public final static String CN_YYYY_MM_DD = "yyyy年MM月dd日";
+    public static final String YYYY_MM_DD_AND_HH_MM_SS = "yyyy-MM-dd/HH:mm:ss";
 
     /**
      * 获取指定时间 （中国时区）

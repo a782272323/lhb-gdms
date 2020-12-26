@@ -8,6 +8,7 @@ import lhb.gdms.commons.domain.entity.SysUserIconEntity;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.commons.utils.ImageUtils;
 import lhb.gdms.commons.utils.RegularExpressionUtil;
+import lhb.gdms.commons.utils.TimeUtils;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
 import lhb.gdms.configuration.utils.SecurityOauth2Utils;
 import lhb.gdms.consumer.blog.mapper.OtherMapper;
@@ -126,7 +127,7 @@ public class SystemController {
         // 查询用户数据
         SysUserEntity sysUserEntity = userFeignUtils.getSysUserInfo(userFeign.getList(sysUserId));
 
-        String date = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss").format(LocalDateTime.now());
+        String date = DateTimeFormatter.ofPattern(TimeUtils.YYYY_MM_DD_AND_HH_MM_SS).format(LocalDateTime.now());
         String key = "lhb-gdms/sys-user/" + sysUserId + "/" + date;
         logger.debug(file.getOriginalFilename() + "新的 key = " + key);
         if (deleteOldUserIconKey(sysUserEntity.getSysUserKey(), qiniuFeign, "用户自定义头像") == false) {

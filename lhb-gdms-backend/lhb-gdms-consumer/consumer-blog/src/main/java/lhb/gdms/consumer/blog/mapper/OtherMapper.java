@@ -1,5 +1,6 @@
 package lhb.gdms.consumer.blog.mapper;
 
+import lhb.gdms.commons.domain.entity.SysLabelEntity;
 import lhb.gdms.commons.domain.entity.SysUserEntity;
 import lhb.gdms.commons.domain.entity.SysUserIconEntity;
 import org.apache.ibatis.annotations.Param;
@@ -30,4 +31,17 @@ public interface OtherMapper {
      * @return
      */
     SysUserIconEntity getIconInfoById(@Param("sysUserIconId") Long sysUserIconId);
+
+    /**
+     * 获取全部标签信息
+     * @return
+     */
+    List<SysLabelEntity> getLabelLists();
+
+    /**
+     * 搜索标签信息
+     * @param keyWord
+     * @return
+     */
+    List<SysLabelEntity> queryLabelLists(@Param("keyWord") String keyWord);
 }

@@ -12,6 +12,15 @@
         <result column="updated" property="updated" />
     </resultMap>
 
+    <resultMap id="sysLabelMap1" type="lhb.gdms.commons.domain.entity.SysLabelEntity">
+        <id column="label_id" property="labelId"/>
+        <result column="label_name" property="labelName" />
+        <result column="label_icon_url" property="labelIconUrl" />
+        <result column="label_icon_key" property="labelIconKey" />
+        <result column="created" property="created" />
+        <result column="updated" property="updated" />
+    </resultMap>
+
 
 
     <!-- 获取全部系统头像信息 -->
@@ -23,4 +32,16 @@
     <select id="getIconInfoById" resultMap="sysUserIconMap1">
         SELECT DISTINCT * FROM sys_user_icon WHERE sys_user_icon_id = ${sysUserIconId}
     </select>
+
+    <!-- 获取全部标签信息 -->
+    <select id="getLabelLists" resultMap="sysLabelMap1">
+        SELECT DISTINCT * FROM sys_label
+    </select>
+
+    <!-- 搜索标签信息 -->
+    <select id="queryLabelLists" resultMap="sysLabelMap1">
+        SELECT DISTINCT * FROM sys_label
+        WHERE label_name LIKE CONCAT(concat('%', #{keyWord}), '%')
+    </select>
+
 </mapper>

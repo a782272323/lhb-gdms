@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lhb.gdms.consumer.blog.mapper.SysDraftMapper">
+    <resultMap id="sysDraftMap1" type="lhb.gdms.commons.domain.entity.SysDraftEntity">
+        <id column="sys_draft_id" property="sysDraftId" />
+        <result column="draft_content" property="draftContent" />
+        <result column="draft_type" property="draftType" />
+        <result column="draft_img_url" property="draftImgUrl" />
+        <result column="draft_img_key" property="draftImgKey" />
+        <result column="sys_user_id" property="sysUserId" />
+        <result column="draft_title" property="draftTitle" />
+        <result column="created" property="created" />
+        <result column="updated" property="updated" />
+    </resultMap>
+
+    <!-- 添加 -->
+    <insert id="insert">
+        INSERT INTO sys_draft
+            (
+             draft_title,
+             draft_content,
+             draft_type,
+             draft_img_url,
+             draft_img_key,
+             sys_user_id,
+             created,
+             updated
+            ) value (
+                #{entity.draftTitle},
+                #{entity.draftContent},
+                #{entity.draftType},
+                #{entity.draftImgUrl},
+                #{entity.draftImgKey},
+                #{entity.sysUserId},
+                #{entity.created},
+                #{entity.updated}
+            )
+    </insert>
+
+    <!-- 获取草稿箱信息 -->
+    <select id="getDraftLists" resultMap="sysDraftMap1">
+        SELECT * FROM sys_draft
+        WHERE sys_user_id = #{sysUserId}
+        ORDER BY updated DESC
+    </select>
+
+    <!-- 根据id查询单条数据 -->
+    <select id="selectOneById" resultMap="sysDraftMap1">
+        SELECT DISTINCT * FROM sys_draft
+        WHERE sys_draft_id = #{entity.sysDraftId}
+        AND sys_user_id = #{entity.sysUserId}
+    </select>
+
+    <!-- 单个删除 -->
+    <delete id="deleteOneByKeyWord">
+        DELETE FROM sys_draft
+        WHERE sys_draft_id = #{entity.sysDraftId}
+    </delete>
+
+    <!-- 编辑 -->
+    <update id="update">
+        UPDATE sys_draft
+        SET
+            updated = #{entity.updated},
+            draft_title = #{entity.draftTitle},
+            draft_content= #{entity.draftContent},
+            draft_type = #{entity.draftType}
+        <if test="entity.draftImgUrl != '' and entity.draftImgUrl != null">
+            ,draft_img_url = #{entity.draftImgUrl}
+        </if>
+        <if test="entity.draftImgKey != '' and entity.draftImgKey != null">
+            ,draft_img_key = #{entity.draftImgKey}
+        </if>
+        WHERE sys_draft_id = #{entity.sysDraftId}
+        AND sys_user_id = #{entity.sysUserId}
+    </update>
+</mapper>

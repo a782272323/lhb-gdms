@@ -88,6 +88,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+        <!-- mapStruct 属性拷贝 -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <!-- jdk8以下就使用mapstruct -->
+            <artifactId>mapstruct-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+        </dependency>
         <!-- Others End -->
 
         <!-- Database Begin -->

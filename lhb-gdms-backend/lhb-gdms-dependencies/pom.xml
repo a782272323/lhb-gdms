@@ -273,6 +273,12 @@
             <!-- mapStruct 属性拷贝 -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
+                <!-- jdk8以下就使用mapstruct -->
+                <artifactId>mapstruct-jdk8</artifactId>
+                <version>${mapstruct-processor}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${mapstruct-processor}</version>
             </dependency>

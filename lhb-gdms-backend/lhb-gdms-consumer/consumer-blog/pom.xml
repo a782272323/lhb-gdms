@@ -76,6 +76,9 @@
         <!-- Apache Dubbo Begin -->
         <!-- Apache Dubbo End -->
 
+        <!-- Other Begin -->
+        <!-- Other End -->
+
     </dependencies>
 
     <build>

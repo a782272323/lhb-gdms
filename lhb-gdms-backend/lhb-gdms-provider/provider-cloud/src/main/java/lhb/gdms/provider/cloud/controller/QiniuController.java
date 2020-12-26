@@ -59,9 +59,11 @@ public class QiniuController {
     @PrintlnLog(description = "根据key删除七牛云的图片-controller")
     @PostMapping("/cloud/qiniu/delete/one")
     public BaseResult deleteOne(@RequestParam("key")String key) throws Exception {
-        return HttpConstant.DELETE_MESSAGE.equals(qiniuService.deleteFile(key))
-                ? BaseResult.ok(HttpConstant.OK, HttpConstant.DELETE_MESSAGE)
-                : BaseResult.error(HttpConstant.ERROR, HttpConstant.DELETE_ERROR_MESSAGE);
+        qiniuService.deleteFile(key);
+        return BaseResult.ok(HttpConstant.OK, HttpConstant.DELETE_MESSAGE);
+//        return HttpConstant.DELETE_MESSAGE.equals(qiniuService.deleteFile(key))
+//                ? BaseResult.ok(HttpConstant.OK, HttpConstant.DELETE_MESSAGE)
+//                : BaseResult.error(HttpConstant.ERROR, HttpConstant.DELETE_ERROR_MESSAGE);
     }
 
     /**
