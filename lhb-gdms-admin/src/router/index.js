@@ -138,7 +138,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/blog/index',
     alwaysShow: true,
-    meta: { title: '博客管理', requireAuth: true, icon: 'user' },
+    meta: { title: '博客管理', requireAuth: true, icon: 'Blog03-#ffffff' },
     children: [
       {
         path: 'index',
@@ -153,7 +153,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/system/pictureAdmin',
     alwaysShow: true,
-    meta: { title: '系统设置', requireAuth: true, icon: 'user' },
+    meta: { title: '系统设置', requireAuth: true, icon: 'system00-#ffffff' },
     children: [
       {
         path: 'pictureAdmin',

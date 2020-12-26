@@ -163,13 +163,35 @@ export const constantRoutes = [
     hidden: true,
     meta: { title: '写文章', noCache: true }
   },
+  // 文章发布成功页面
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/articleFaBu',
+    children: [
+      {
+        path: '/articleFaBu',
+        component: () => import('@/views/article/articleFaBu'),
+        name: 'ArticleFaBu',
+        hidden: true,
+        meta: { title: '发布成功', noCache: true }
+      }
+    ]
+  },
   // 草稿箱
   {
-    path: '/caoGao',
-    component: () => import('@/views/article/caoGao'),
-    name: 'CaoGao',
-    hidden: true,
-    meta: { title: '草稿箱', noCache: true }
+    path: '/',
+    component: Layout,
+    redirect: '/caoGao',
+    children: [
+      {
+        path: 'caoGao',
+        component: () => import('@/views/article/caoGao'),
+        name: 'CaoGao',
+        hidden: true,
+        meta: { title: '草稿箱', noCache: true }
+      }
+    ]
   },
   {
     path: '/',

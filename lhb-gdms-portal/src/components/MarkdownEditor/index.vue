@@ -1,5 +1,7 @@
 <template>
-  <div :id="id" />
+  <div>
+    <div :id="id" />
+  </div>
 </template>
 
 <script>
@@ -10,6 +12,7 @@ import 'tui-editor/dist/tui-editor-contents.css' // editor content
 
 import Editor from 'tui-editor'
 import defaultOptions from './default-options'
+import { articleContentImg } from '@/api/writeArticle'
 
 export default {
   name: 'MarkdownEditor',
@@ -38,7 +41,7 @@ export default {
     height: {
       type: String,
       required: false,
-      default: '300px'
+      default: '500px'
     },
     language: {
       type: String,
@@ -48,7 +51,9 @@ export default {
   },
   data() {
     return {
-      editor: null
+      editor: null,
+      imgUrl: '',
+      imgKey: ''
     }
   },
   computed: {

@@ -43,6 +43,7 @@
           <el-table
             v-loading="loading"
             element-loading-text="拼命加载中......"
+            :default-sort="{ prop: 'label_name', order: 'ascending'}"
             :data="getList"
             class="table"
             border
@@ -269,11 +270,11 @@
         },
         // 全部列表数据
         refreshPage() {
-          getLists().then(res => {
+          getLists(this.tableParams).then(res => {
             this.getList = res.data.getLists
             this.tableParams.count = res.data.count
             this.loading = false
-          })
+          });
         },
         // 改变一页显示的数据条数
         handleChangeSize(val) {

@@ -1,6 +1,6 @@
 <template>
   <el-row class="navbar">
-    <el-col :span="5">
+    <el-col :span="4">
       <!-- logo区域 -->
       <div class="logo">
         <img class="logo-img" src="../../img/Blog02.png" @click="linkToHome"/>
@@ -128,7 +128,10 @@ export default {
   },
   created() {
     this.isLogin()
-    this.refreshPage()
+    // 如果已经登录系统则使用刷新详情的数据
+    if (this.login) {
+      this.refreshPage()
+    }
   },
   methods: {
     refreshPage() {

@@ -1,20 +1,20 @@
 import request from '@/utils/request'
 
 // 获取列表全部信息
-export function getLists() {
+export function getLists(params) {
   return request({
     url: '/consumer-admin/admin/system/label/lists',
-    method: 'get'
+    method: 'get',
+    params: { offSet: params.offSet, limit: params.limit, keyWord: params.keyWord, orderBy: params.orderBy }
   })
 }
 
 // 模糊查询
-export function query(data, params) {
+export function query(params, labelName) {
   return request({
     url: '/consumer-admin/admin/system/label/lists/query',
     method: 'get',
-    params: { labelName: params },
-    data
+    params: { offSet: params.offSet, limit: params.limit, keyWord: params.keyWord, orderBy: params.orderBy, labelName: labelName }
   })
 }
 

@@ -2,7 +2,9 @@
   <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
     <textarea :id="tinymceId" class="tinymce-textarea" />
     <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
+<!--      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />-->
+    </div>
+    <div>
     </div>
   </div>
 </template>
@@ -16,6 +18,8 @@ import editorImage from './components/EditorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
 import load from './dynamicLoadScript'
+import { getUserDetails } from '@/api/system'
+import { articleContentImg } from '@/api/writeArticle'
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
 const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
@@ -39,11 +43,13 @@ export default {
       required: false,
       default() {
         return []
+        // return ['removeformat undo redo |  bullist numlist | outdent indent | forecolor | fullscreen code', 'bold italic blockquote | h2 p  media link | alignleft aligncenter alignright | fontsizeselect | fontselect']
       }
     },
     menubar: {
       type: String,
-      default: 'file edit insert view format table'
+      default: 'file edit insert view format table tools help'
+      // default: '文件编辑插入查看格式表'
     },
     height: {
       type: [Number, String],
@@ -56,6 +62,9 @@ export default {
       default: 'auto'
     }
   },
+  created() {
+    this.getUserInfo()
+  },
   data() {
     return {
       hasChange: false,
@@ -67,6 +76,13 @@ export default {
         'zh': 'zh_CN',
         'es': 'es_MX',
         'ja': 'ja'
+      },
+      // 上传图片弹窗
+      dialogImg: false,
+      // 用户信息详情
+      userList: {
+        sysUserId: '',
+        sysUserNickName: ''
       }
     }
   },
@@ -102,6 +118,61 @@ export default {
     this.destroyTinymce()
   },
   methods: {
+    // 获取用户信息详情
+    getUserInfo() {
+      getUserDetails().then(res => {
+        this.userList = res.data.getList
+      })
+    },
+    // 打开上传图片弹窗
+    openImgDialog() {
+      console.log('用户id = ' + this.userList.sysUserId)
+      this.dialogImg = true
+    },
+    // 上传图片前格式校验
+    handleBeforeUpload(file) {
+      this.flag = 0
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      const isLt5M = file.size / 1024 / 1024 < 5
+      this.size = (file.size / 1024 / 1024).toFixed(2) + 'M'
+      if (isJPG) {
+        this.flag = 1
+        this.type = 'jpg'
+      } else if (isPNG) {
+        this.flag = 1
+        this.type = 'png'
+      } else {
+        this.$message.error('文件格式只能为jpg或png类型文件式')
+      }
+      if (!isLt5M) {
+        this.$message.error('上传图片大小不能超过5M')
+        this.flag = 0
+      }
+      return false
+    },
+    onChanges(file, fileList) {
+      var _this = this
+      var event = event || window.event
+      var reader = new FileReader()
+      file = event.target.files[0]
+      // 转 base64
+      reader.onload = function(e) {
+        if (_this.flag === 1) {
+          _this.uploadImgParams.url = e.target.result
+          const image = new Image()
+          image.onload = function() {
+            const width = image.width
+            const height = image.height
+            console.log('参数 宽高: ' + width + 'x' + height)
+          }
+          image.scr = e.target.result
+        }
+      }
+      this.uploadImgParams.img = file
+      reader.readAsDataURL(file)
+    },
+    // 下面是官方的代码
     init() {
       // dynamic load tinymce from cdn
       load(tinymceCDN, (err) => {
@@ -115,8 +186,11 @@ export default {
     initTinymce() {
       const _this = this
       window.tinymce.init({
+        // selector: `#${this.tinymceId}`,
         selector: `#${this.tinymceId}`,
-        language: this.languageTypeList['en'],
+        // 设置富文本编译器语言
+        language: this.languageTypeList['zh'],
+        // language: this.languageTypeList['en'],
         height: this.height,
         body_class: 'panel-body ',
         object_resizing: false,
@@ -136,6 +210,7 @@ export default {
         init_instance_callback: editor => {
           if (_this.value) {
             editor.setContent(_this.value)
+            console.log('富文本内容 = ' + editor.setContent(_this.value))
           }
           _this.hasInit = true
           editor.on('NodeChange Change KeyUp SetContent', () => {
@@ -146,6 +221,25 @@ export default {
         setup(editor) {
           editor.on('FullscreenStateChanged', (e) => {
             _this.fullscreen = e.state
+          })
+        },
+        // 自定义上传图片
+        images_upload_handler: function(blobInfo, succFun, failFun) {
+          var formData = new FormData()
+          var imgUrl = ''
+          var file = blobInfo.blob()
+          formData.append('file', file)
+          articleContentImg(formData).then(res => {
+            if (res.code === 200) {
+              imgUrl = res.data.url
+              // this.uploadImgParams.url = imgUrl
+              console.log('url = ' + imgUrl)
+              succFun(imgUrl)
+            } else {
+              console.log(res.message)
+            }
+          }).catch(err => {
+            failFun(err + ',图片格式只能为jpg者png')
           })
         }
         // 整合七牛上传
@@ -197,6 +291,7 @@ export default {
       window.tinymce.get(this.tinymceId).setContent(value)
     },
     getContent() {
+      console.log('富文本内容 = ' + window.tinymce.get(this.tinymceId).getContent())
       window.tinymce.get(this.tinymceId).getContent()
     },
     imageSuccessCBK(arr) {

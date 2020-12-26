@@ -440,6 +440,7 @@
         }
         this.uploadImgParams.img = file
         reader.readAsDataURL(file)
+
       },
       // 用户自定义上传头像确认按钮
       submitUserIcon() {
@@ -501,7 +502,8 @@
   .main {
     background-color: #ECF0F1;
     width: 100%;
-    height: 10000px;
+    min-height: 1200px;
+    /*height: 1400px;*/
     padding-top: 25px;
 
     /deep/.el-input__inner {
