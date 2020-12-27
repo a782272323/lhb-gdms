@@ -502,9 +502,9 @@
   .main {
     background-color: #ECF0F1;
     width: 100%;
-    min-height: 1200px;
-    /*height: 1400px;*/
+    /*min-height: 1200px;*/
     padding-top: 25px;
+    margin-bottom: 50px;
 
     /deep/.el-input__inner {
       background-color: transparent !important;

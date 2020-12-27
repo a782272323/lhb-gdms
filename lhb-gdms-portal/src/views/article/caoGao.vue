@@ -120,7 +120,6 @@
   .caoGao {
     background-color: #ECF0F1;
     width: 100%;
-    min-height: 10000px;
     padding-top: 25px;
 
     .caoGao-content {

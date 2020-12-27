@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color: #fff">
     <!-- 导航栏区域 -->
     <div class="navbar" align="center">
       <el-row :gutter="24">
@@ -527,7 +527,7 @@
   .navbar {
     height: 70px;
     width: 100%;
-    /*background-color: #2c3e50;*/
+    background-color: #fff;
 
     .logo {
       float: right;
@@ -551,7 +551,7 @@
       height: 70px;
       width: auto;
       line-height: 50px;
-      /*background-color: #2c3e50;*/
+      background-color: #fff;
 
       &:focus {
         outline: none;
@@ -605,8 +605,9 @@
   }
 
   .compiler-Markdown {
+    background-color: #fff;
     width: 960px;
-    height: 780px;
+    /*height: 480px;*/
     margin-top: 20px;
   }
 </style>
