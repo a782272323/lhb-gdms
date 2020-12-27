@@ -34,7 +34,8 @@ public interface SysArticleCover {
             @Mapping(target = "coverImgUrl", source = "articleImgUrl"),
             @Mapping(target = "key", source = "articleImgKey"),
             @Mapping(target = "sysUserId", source = "sysUserId"),
-            @Mapping(target = "type", source = "articleType")
+            @Mapping(target = "type", source = "articleType"),
+            @Mapping(target = "sum", source = "articleBrowseSum")
     })
     ArticleVO toCoverVO(SysArticleEntity entity);
 
@@ -50,7 +51,8 @@ public interface SysArticleCover {
             @Mapping(source = "coverImgUrl", target = "articleImgUrl"),
             @Mapping(source = "key", target = "articleImgKey"),
             @Mapping(source = "sysUserId", target = "sysUserId"),
-            @Mapping(source = "type", target = "articleType")
+            @Mapping(source = "type", target = "articleType"),
+            @Mapping(source = "sum", target = "articleBrowseSum")
     })
     SysArticleEntity fromCoverEntity(ArticleVO vo);
 }

@@ -5,6 +5,8 @@ spring:
       discovery:
         server-addr: 172.16.253.110:8848
 dubbo:
+  application:
+    id: provider-oauth2
   scan:
     # dubbo 实现类所在包
     base-packages: lhb.gdms.provider.oauth2

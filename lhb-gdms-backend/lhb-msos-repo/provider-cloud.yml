@@ -28,6 +28,8 @@ mail:
     addr: 782272323@qq.com
 
 dubbo:
+  application:
+    id: provider-cloud
   scan:
     # dubbo 实现类所在包
     base-packages: lhb.gdms.provider.cloud

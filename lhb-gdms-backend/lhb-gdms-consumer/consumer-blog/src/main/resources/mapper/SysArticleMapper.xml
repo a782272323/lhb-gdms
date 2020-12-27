@@ -6,6 +6,7 @@
         <result column="article_title" property="articleTitle" />
         <result column="article_content" property="articleContent" />
         <result column="article_type" property="articleType" />
+        <result column="article_browse_sum" property="articleBrowseSum" />
         <result column="article_img_url" property="articleImgUrl" />
         <result column="article_img_key" property="articleImgKey" />
         <result column="sys_user_id" property="sysUserId" />
@@ -21,6 +22,7 @@
              article_title,
              article_content,
              article_type,
+             article_browse_sum,
              article_img_url,
              article_img_key,
              sys_user_id,
@@ -32,6 +34,7 @@
              #{entity.articleTitle},
              #{entity.articleContent},
              #{entity.articleType},
+             0,
              #{entity.articleImgUrl},
              #{entity.articleImgKey},
              #{entity.sysUserId},

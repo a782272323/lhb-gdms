@@ -31,6 +31,10 @@ public class ArticleVO extends BaseDateEntity {
      */
     private String type;
     /**
+     * 被阅览数量
+     */
+    private Integer sum;
+    /**
      * 封面图片
      */
     private String coverImgUrl;
@@ -50,10 +54,19 @@ public class ArticleVO extends BaseDateEntity {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", type='" + type + '\'' +
+                ", sum=" + sum +
                 ", coverImgUrl='" + coverImgUrl + '\'' +
                 ", key='" + key + '\'' +
                 ", sysUserId=" + sysUserId +
                 '}';
+    }
+
+    public Integer getSum() {
+        return sum;
+    }
+
+    public void setSum(Integer sum) {
+        this.sum = sum;
     }
 
     public String getType() {

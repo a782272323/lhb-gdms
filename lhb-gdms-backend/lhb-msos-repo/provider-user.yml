@@ -6,6 +6,8 @@ spring:
         server-addr: 172.16.253.110:8848
 
 dubbo:
+  application:
+    id: provider-user
   scan:
     # dubbo 实现类所在包
     base-packages: lhb.gdms.provider.user

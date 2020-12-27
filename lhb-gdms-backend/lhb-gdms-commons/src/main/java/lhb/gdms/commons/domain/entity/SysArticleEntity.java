@@ -30,6 +30,10 @@ public class SysArticleEntity extends BaseDateEntity {
      */
     private String articleType;
     /**
+     * 文章被阅览数量
+     */
+    private Integer articleBrowseSum;
+    /**
      * 文章封面大图url
      */
     private String articleImgUrl;
@@ -52,12 +56,21 @@ public class SysArticleEntity extends BaseDateEntity {
                 "articleId=" + articleId +
                 ", articleTitle='" + articleTitle + '\'' +
                 ", articleContent='" + articleContent + '\'' +
-                ", articleType=" + articleType +
+                ", articleType='" + articleType + '\'' +
+                ", articleBrowseSum=" + articleBrowseSum +
                 ", articleImgUrl='" + articleImgUrl + '\'' +
                 ", articleImgKey='" + articleImgKey + '\'' +
                 ", sysUserId=" + sysUserId +
                 ", labelId=" + labelId +
                 '}';
+    }
+
+    public Integer getArticleBrowseSum() {
+        return articleBrowseSum;
+    }
+
+    public void setArticleBrowseSum(Integer articleBrowseSum) {
+        this.articleBrowseSum = articleBrowseSum;
     }
 
     public Long getLabelId() {

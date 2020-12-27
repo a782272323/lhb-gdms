@@ -7,7 +7,7 @@ import lhb.gdms.commons.domain.entity.SysArticleEntity;
  * @Description  
  * @author Herbie Leung(梁鸿斌)
  * @date 2020/12/25 
- * @time 17:17
+ * @time 13:19
  */
 public interface SysArticleService extends BaseService<SysArticleEntity> {
 }
