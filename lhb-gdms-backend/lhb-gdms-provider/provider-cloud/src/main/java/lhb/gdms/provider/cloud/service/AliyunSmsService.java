@@ -13,6 +13,13 @@ import java.util.Base64;
 public interface AliyunSmsService {
 
     /**
+     * 发送注册短信验证码
+     * @param phone
+     * @return
+     */
+    public BaseResult sendRegisteredCodeSms(String phone);
+
+    /**
      * 发送验证码短信
      * @param phone
      * @return

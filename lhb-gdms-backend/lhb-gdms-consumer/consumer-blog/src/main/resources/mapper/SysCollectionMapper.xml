@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lhb.gdms.consumer.blog.mapper.SysCollectionMapper">
+    <resultMap id="sysCollectionMap1" type="lhb.gdms.commons.domain.entity.SysCollectionEntity">
+        <id column="sys_collection_id" property="sysCollectionId" />
+        <result column="sys_collection_name" property="sysCollectionName" />
+        <result column="sys_user_id" property="sysUserId" />
+        <result column="created" property="created" />
+        <result column="updated" property="updated" />
+    </resultMap>
+
+    <!-- 添加 -->
+    <insert id="insert">
+        INSERT INTO sys_collection
+            (
+             sys_collection_name,
+             sys_user_id,
+             created,
+             updated
+            ) VALUES
+            (
+             #{entity.sysCollectionName},
+             #{entity.sysUserId},
+             #{entity.created},
+             #{entity.updated}
+            )
+    </insert>
+
+    <!-- 校验收藏集名称是否重复-编辑 -->
+    <select id="checkNameByIdToUpdate" resultType="java.lang.String">
+        SELECT DISTINCT sys_collection_name
+        FROM sys_collection
+        WHERE sys_user_id = #{sysUserId}
+        AND sys_collection_name = #{sysCollectionName}
+        AND sys_collection_id &lt;&gt; ${sysCollectionId}
+    </select>
+
+    <!-- 校验收藏集名称是否重复-新增 -->
+    <select id="checkNameByIdToInsert" resultType="java.lang.String">
+        SELECT DISTINCT sys_collection_name
+        FROM sys_collection
+        WHERE sys_collection_name = #{sysCollectionName}
+        AND sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 修改 -->
+    <update id="update">
+        UPDATE sys_collection
+        SET sys_collection_name = #{entity.sysCollectionName}
+        WHERE sys_collection_id = #{entity.sysCollectionId}
+    </update>
+
+    <!-- 查询列表全部信息 -->
+    <select id="getCollectionLists" resultMap="sysCollectionMap1">
+        SELECT * FROM sys_collection
+        WHERE sys_user_id = #{sysUserId}
+    </select>
+
+</mapper>

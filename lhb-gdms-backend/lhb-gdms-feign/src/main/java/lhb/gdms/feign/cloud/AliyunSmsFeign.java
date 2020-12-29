@@ -22,6 +22,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface AliyunSmsFeign {
 
     /**
+     * 阿里云发送注册验证码短信
+     * @param phone
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/web/cloud/aliyun/registered/sms/code")
+    public BaseResult sendRegisteredCode(@RequestParam("phone") String phone) throws Exception;
+
+    /**
      * 阿里云发送验证码短信
      * @param phone
      * @return

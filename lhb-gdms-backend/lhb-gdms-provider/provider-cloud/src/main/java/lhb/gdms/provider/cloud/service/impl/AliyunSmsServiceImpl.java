@@ -43,13 +43,42 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
 
 
     /**
+     * 发送注册短信验证码
+     * @param phone
+     * @return
+     */
+    @Override
+    public BaseResult sendRegisteredCodeSms(String phone) {
+        logger.debug("发送注册短信验证码");
+        String code = UUIDUtils.vCode();
+        String key = "lhb:gdms:aliyun:registered:sms:code:" + phone;
+        return this.sendSms(phone, key, code);
+    }
+
+    /**
      * 发送验证码短信
      * @param phone
      * @return
      */
     @Override
     public BaseResult sendCheckCodeSms(String phone) {
+        logger.debug("发送验证码短信");
+        // 这里的code就是后台自动生成的code
+        String code = UUIDUtils.vCode();
+        // 短信验证码存入redis,存入缓存保存5分钟
+        String key = "lhb:gdms:aliyun:sms:code:" + phone;
 
+        return this.sendSms(phone, key, code);
+    }
+
+    /**
+     * 发送短信
+     * @param phone 手机号码
+     * @param key redis key
+     * @param code 短信随机码
+     * @return
+     */
+    private BaseResult sendSms(String phone, String key, String code) {
         // 指定地域名称
         DefaultProfile profile = DefaultProfile.getProfile(aliyunSMSConfig.getRegionId(),aliyunSMSConfig.getAccessKeyId(), aliyunSMSConfig.getAccessKeySecret());
         IAcsClient client = new DefaultAcsClient(profile);
@@ -74,14 +103,12 @@ public class AliyunSmsServiceImpl implements AliyunSmsService {
         // 指定签名模版
         request.putQueryParameter("TemplateCode", aliyunSMSConfig.getTemplateCode01());
 
-        // 这里的code就是后台自动生成的code
-        String code = UUIDUtils.vCode();
         Map<String, Object> params = Maps.newHashMap();
         params.put("code", code);
         // 短信验证码存入redis,存入缓存保存5分钟
-        String key = "lhb:gdms:aliyun:sms:code:" + phone;
         logger.debug("存入缓存保存5分钟, code = " + code);
         redisUtils.set(key, code, 60 * 5);
+
         // 放入参数，转化为json字符串
         request.putQueryParameter("TemplateParam", JSON.toJSONString(params));
 

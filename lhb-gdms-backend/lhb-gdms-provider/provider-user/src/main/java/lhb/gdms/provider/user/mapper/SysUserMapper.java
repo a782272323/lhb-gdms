@@ -62,4 +62,11 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
      * @return
      */
     Integer updateUserSysIcon(@Param("entity") SysUserEntity entity);
+
+    /**
+     * 根据id查询单个列表信息
+     * @param sysUserId
+     * @return
+     */
+    SysUserEntity getListById(@Param("sysUserId") Long sysUserId);
 }

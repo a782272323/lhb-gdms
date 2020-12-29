@@ -19,6 +19,12 @@ public class AliyunSmsFeignFallback implements AliyunSmsFeign {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
+    public BaseResult sendRegisteredCode(String phone) throws Exception {
+        logger.debug("阿里云短信服务,feign远程调用失败");
+        return BaseResult.error(HttpConstant.SYSTEM_BUSY_MESSAGE);
+    }
+
+    @Override
     public BaseResult checkCode(String phone) throws Exception {
         logger.debug("阿里云短信服务,feign远程调用失败");
         return BaseResult.error(HttpConstant.SYSTEM_BUSY_MESSAGE);

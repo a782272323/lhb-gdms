@@ -15,7 +15,7 @@ public class RegularExpressionUtil {
      * 正则表达式：验证用户名
      */
     public static final String REGEX_USERNAME = "^[a-zA-Z]\\w{5,20}$";
-    public static final String REGEX_USERNAME_ERROR = "用户名格式错误!";
+    public static final String REGEX_USERNAME_ERROR = "用户名格式错误!请输入中英混合用户名";
     public static final String REGEX_USERNAME_NULL = "用户名不能为空!";
     /**
      * 正则表达式：验证密码

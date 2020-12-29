@@ -20,10 +20,6 @@ public class SysCollectionEntity extends BaseDateEntity {
      */
     private String sysCollectionName;
     /**
-     * 文章表id
-     */
-    private Long articleId;
-    /**
      * 用户id
      */
     private Long sysUserId;
@@ -33,7 +29,6 @@ public class SysCollectionEntity extends BaseDateEntity {
         return "SysCollectionEntity{" +
                 "sysCollectionId=" + sysCollectionId +
                 ", sysCollectionName='" + sysCollectionName + '\'' +
-                ", articleId=" + articleId +
                 ", sysUserId=" + sysUserId +
                 '}';
     }
@@ -52,14 +47,6 @@ public class SysCollectionEntity extends BaseDateEntity {
 
     public void setSysCollectionName(String sysCollectionName) {
         this.sysCollectionName = sysCollectionName;
-    }
-
-    public Long getArticleId() {
-        return articleId;
-    }
-
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
     }
 
     public Long getSysUserId() {

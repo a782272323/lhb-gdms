@@ -40,6 +40,25 @@ public class AliyunSmsController {
     private String templateCode01;
 
     /**
+     * 阿里云发送注册验证码短信
+     * @param phone
+     * @return
+     * @throws Exception
+     */
+    @PrintlnLog(description = "阿里云发送注册验证码短信-controller")
+    @PostMapping("/web/cloud/aliyun/registered/sms/code")
+    public BaseResult sendRegisteredCode(@RequestParam("phone") String phone) throws Exception{
+        // 校验手机号
+        if (StringUtils.isBlank(phone)) {
+            return BaseResult.error(RegularExpressionUtil.REGEX_MOBILE_NULL);
+        }
+        if (!RegularExpressionUtil.isMobile(phone)) {
+            return BaseResult.error(RegularExpressionUtil.REGEX_MOBILE_ERROR);
+        }
+        return aliyunSmsService.sendRegisteredCodeSms(phone);
+    }
+
+    /**
      * 阿里云发送验证码短信
      * @param phone
      * @return
@@ -48,11 +67,6 @@ public class AliyunSmsController {
     @PrintlnLog(description = "阿里云发送验证码短信-controller")
     @PostMapping("/web/cloud/aliyun/sms/checkCode")
     public BaseResult checkCode(@RequestParam("phone") String phone) throws Exception{
-        String code = UUIDUtils.vCode();
-        Map<String,Object> map = Maps.newHashMap();
-        map.put("code", code);
-        logger.debug("templateCode01 = " + templateCode01.toString() + ",code = " + code);
-
         // 校验手机号
         if (StringUtils.isBlank(phone)) {
             return BaseResult.error(RegularExpressionUtil.REGEX_MOBILE_NULL);
@@ -79,4 +93,5 @@ public class AliyunSmsController {
         }
         return BaseResult.error(HttpConstant.INVALID_CODE_MESSAGE);
     }
+
 }

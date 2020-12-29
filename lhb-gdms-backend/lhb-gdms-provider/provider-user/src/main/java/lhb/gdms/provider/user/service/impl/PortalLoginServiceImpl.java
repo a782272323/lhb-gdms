@@ -100,7 +100,7 @@ public class PortalLoginServiceImpl implements PortalLoginService {
 
         // 添加角色邮箱手机绑定关系表
         SysUserPhoneEmailEntity sysUserPhoneEmailEntity = new SysUserPhoneEmailEntity();
-        sysUserPhoneEmailEntity.setIsPhone(0);
+        sysUserPhoneEmailEntity.setIsPhone(1);
         sysUserPhoneEmailEntity.setIsEmail(0);
         sysUserPhoneEmailEntity.setSysUserId(sysUserEntity.getSysUserId());
         sysUserMapper.insertSysUserPhoneEmail(sysUserPhoneEmailEntity);
@@ -173,7 +173,7 @@ public class PortalLoginServiceImpl implements PortalLoginService {
                         return BaseResult.ok().put(HttpConstant.OK, HttpConstant.LOGIN_OK_MESSAGE, ResponseConstant.DATA, loginToken(access_token_phone, resultPhone));
                     }
                 }
-                return BaseResult.error(HttpConstant.INVALID_CODE_MESSAGE);
+                return BaseResult.error(HttpConstant.ERROR_CODE_MESSAGE);
 
             // 邮箱登录
             case 3:
@@ -201,7 +201,7 @@ public class PortalLoginServiceImpl implements PortalLoginService {
                         return BaseResult.ok().put(HttpConstant.OK, HttpConstant.LOGIN_OK_MESSAGE, ResponseConstant.DATA, loginToken(access_token_email, resultEmail));
                     }
                 }
-                return BaseResult.error(HttpConstant.INVALID_CODE_MESSAGE);
+                return BaseResult.error(HttpConstant.ERROR_CODE_MESSAGE);
             default:
                 return BaseResult.error(HttpConstant.ERROR_MESSAGE);
         }

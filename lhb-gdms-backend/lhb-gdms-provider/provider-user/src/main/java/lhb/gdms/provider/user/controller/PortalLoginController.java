@@ -6,8 +6,10 @@ import lhb.gdms.commons.constant.ResponseConstant;
 import lhb.gdms.commons.domain.entity.SysUserEntity;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.commons.utils.MapperUtils;
+import lhb.gdms.commons.utils.RedisUtils;
 import lhb.gdms.commons.utils.RegularExpressionUtil;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
+import lhb.gdms.configuration.utils.SecurityOauth2Utils;
 import lhb.gdms.provider.user.domain.vo.LoginInfoVO;
 import lhb.gdms.provider.user.domain.vo.LoginPortalParamVO;
 import lhb.gdms.provider.user.domain.vo.RegisteredParamsVO;
@@ -53,6 +55,12 @@ public class PortalLoginController {
     @Autowired
     private RedisTokenStore tokenStore;
 
+    @Autowired
+    private SecurityOauth2Utils securityOauth2Utils;
+
+    @Autowired
+    private RedisUtils redisUtils;
+
     /**
      * 门户网站用户登录
      * @param loginPortalParamVO
@@ -80,6 +88,8 @@ public class PortalLoginController {
                     return BaseResult.error(RegularExpressionUtil.REGEX_MOBILE_ERROR);
                 } else if (StringUtils.isBlank(loginPortalParamVO.getPhoneCode())) {
                     return BaseResult.error(HttpConstant.CODE_NULL_MESSAGE);
+                } else if (sysUserMapper.checkSysUserPhone(loginPortalParamVO.getPhone(), "+86") == null) {
+                    return BaseResult.error("该手机号并未注册，不能用于登录系统!");
                 }
                 break;
             // 邮箱登录
@@ -90,6 +100,8 @@ public class PortalLoginController {
                     return BaseResult.error(RegularExpressionUtil.REGEX_EMAIL_ERROR);
                 } else if (StringUtils.isBlank(loginPortalParamVO.getEmailCode())) {
                     return BaseResult.error(HttpConstant.CODE_NULL_MESSAGE);
+                } else if (sysUserMapper.checkSysUserEmail(loginPortalParamVO.getEmail()) == null) {
+                    return BaseResult.error("该邮箱并未注册，不能用于登录系统!");
                 }
                 break;
             default: break;
@@ -106,14 +118,15 @@ public class PortalLoginController {
     @PrintlnLog(description = "获取用户信息，用于登录成功后跳转首页--controller")
     @GetMapping("/user/info/portal")
     public BaseResult portalInfo(Authentication authentication) throws Exception{
-//        SysUserEntity sysUserEntity = new SysUserEntity();
-//        sysUserEntity.setSysUserUsername(authentication.getName());
-//        SysUserEntity entity = sysUserService.selectOneByKeyWord(sysUserEntity);
+        Long sysUserId = securityOauth2Utils.getUserId(authentication);
+        logger.debug("用户id = " + sysUserId);
+        SysUserEntity sysUserEntity = new SysUserEntity();
+        sysUserEntity.setSysUserId(sysUserId);
+        SysUserEntity entity = sysUserMapper.getListById(sysUserId);
 
-        SysUserEntity entity = MapperUtils.json2pojo(authentication.getName(), SysUserEntity.class);
         logger.debug(entity.toString());
         LoginInfoVO loginInfoVO = new LoginInfoVO();
-        loginInfoVO.setName(authentication.getName());
+        loginInfoVO.setName(entity.getSysUserUsername());
         loginInfoVO.setAvatar(entity.getSysUserIcon());
         loginInfoVO.setRoles("Average User");
         return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, loginInfoVO);
@@ -142,8 +155,9 @@ public class PortalLoginController {
      * @return
      */
     @PrintlnLog(description = "门户网站用户注册详情-controller")
-    @PostMapping("/user/registered/portal")
-    public BaseResult portalRegistered(@RequestBody RegisteredParamsVO registeredParamsVO) {
+    @PostMapping("/user/registered/portal/{code}")
+    public BaseResult portalRegistered(@PathVariable("code") String code,
+                                       @RequestBody RegisteredParamsVO registeredParamsVO) {
         SysUserEntity sysUserEntity = new SysUserEntity();
         sysUserEntity.setSysUserUsername(registeredParamsVO.getUsername());
         // 密码加密
@@ -176,14 +190,6 @@ public class PortalLoginController {
         if (!RegularExpressionUtil.isMobile(sysUserEntity.getSysUserPhone())) {
             return BaseResult.error(RegularExpressionUtil.REGEX_MOBILE_ERROR);
         }
-        // 邮箱不能为空
-        if (StringUtils.isBlank(sysUserEntity.getSysUserEmail())) {
-            return BaseResult.error(RegularExpressionUtil.REGEX_EMAIL_NULL);
-        }
-        // 邮箱格式错误
-        if (!RegularExpressionUtil.isEmail(sysUserEntity.getSysUserEmail())) {
-            return BaseResult.error(RegularExpressionUtil.REGEX_EMAIL_ERROR);
-        }
         // 重复性校验
         if (sysUserMapper.checkSysUserPhone(sysUserEntity.getSysUserPhone(), sysUserEntity.getSysUserAreaCode()) != null) {
             return BaseResult.error("该手机号码(" + sysUserEntity.getSysUserPhone() + ")已经被注册!");
@@ -191,9 +197,22 @@ public class PortalLoginController {
         if (sysUserMapper.checkSysUsername(sysUserEntity.getSysUserUsername()) != null) {
             return BaseResult.error("用户名(" + sysUserEntity.getSysUserUsername() + ")已经存在!");
         }
-        if (sysUserMapper.checkSysUserEmail(sysUserEntity.getSysUserEmail()) != null) {
-            return BaseResult.error("该邮箱(" + sysUserEntity.getSysUserEmail() + ")已被注册!");
+        // 校验手机验证码
+        String key = "lhb:gdms:aliyun:registered:sms:code:" + registeredParamsVO.getPhone();
+        String checkCode = (String) redisUtils.getValueByKey(key);
+        if (code.length() != 6) {
+            return BaseResult.error("请输入6位纯数字验证码");
         }
+        if (StringUtils.isBlank(checkCode)) {
+            return BaseResult.error(HttpConstant.INVALID_CODE_MESSAGE);
+        }
+        if (code.trim().equals(checkCode.trim()) == false) {
+            return BaseResult.error(HttpConstant.ERROR_CODE_MESSAGE);
+        } else {
+            redisUtils.deleteCache(key);
+        }
+
+
         return portalLoginService.portalRegistered(sysUserEntity);
     }
 

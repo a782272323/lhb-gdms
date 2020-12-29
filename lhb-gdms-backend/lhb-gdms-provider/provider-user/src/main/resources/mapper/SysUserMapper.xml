@@ -85,7 +85,7 @@
             (
              #{entity.sysUserNickname},
              #{entity.sysUserPhone},
-             #{entity.sysUserEmail},
+             null,
              #{entity.sysUserAreaCode},
              #{entity.sysUserSex},
              #{entity.sysUserStatus},
@@ -198,4 +198,9 @@
         </if>
         WHERE sys_user_id = #{entity.sysUserId}
     </update>
+
+    <!-- 根据id查询单个列表信息 -->
+    <select id="getListById" resultMap="sysUserMap1">
+        SELECT DISTINCT * FROM sys_user WHERE sys_user_id = #{sysUserId}
+    </select>
 </mapper>
