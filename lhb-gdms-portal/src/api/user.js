@@ -33,6 +33,15 @@ export function getPhoneCode(phone) {
   })
 }
 
+// 获取阿里云注册短信验证码
+export function getRegisteredPhoneCode(phone) {
+ return request({
+   url: '/provider-cloud/web/cloud/aliyun/registered/sms/code',
+   method: 'post',
+   params: { phone: phone }
+ })
+}
+
 // 获取qq邮箱验证码
 export function getEmailCode(to) {
   return request({
@@ -43,9 +52,9 @@ export function getEmailCode(to) {
 }
 
 // 用户注册
-export function registered(data) {
+export function registered(code, data) {
   return request({
-    url: '/provider-user/user/registered/portal',
+    url: '/provider-user/user/registered/portal/' + code,
     method: 'post',
     data
   })

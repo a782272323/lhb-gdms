@@ -118,7 +118,7 @@
                   <el-input
                     ref="phoneCode"
                     v-model="loginFormParams.phoneCode"
-                    placeholder="输入手机验证码"
+                    placeholder="输入验证码"
                     name="phoneCode"
                     type="text"
                     tabindex="2"
@@ -164,7 +164,7 @@
                 <el-input
                   ref="phoneCode"
                   v-model="loginFormParams.emailCode"
-                  placeholder="输入邮箱验证码"
+                  placeholder="输入验证码"
                   name="phoneCode"
                   type="text"
                   tabindex="2"
@@ -234,7 +234,7 @@
         // 登录提交表单参数
         loginFormParams: {
           loginType: '',
-          username: 'lhb',
+          username: 'lhb123',
           password: '123456',
           phone: '',
           phoneCode: '',
@@ -436,9 +436,10 @@
               localStorage.setItem('loginEmailEndTime', JSON.stringify(endEmailMessageRes))
               this.emailCodeCountDown(endEmailMessageRes)
             } else {
-              this.$message.error(result.message)
               this.emailCodeLoading = false
+              this.$message.error(result.message)
             }
+            this.emailCodeLoading = false
           })
         }
       },
@@ -449,10 +450,9 @@
           this.phoneCountDown--
           if (this.phoneCountDown >= 1) {
             this.codePhoneMsg = '(' + this.phoneCountDown + ')秒后重试'
-            console.log('倒计时 = ' + this.codePhoneMsg)
           }
           if (this.phoneCountDown < 1) {
-            this.codePhoneMsg = '收到验证码'
+            this.codePhoneMsg = '获取验证码'
             this.phoneCountDown = 60
             localStorage.removeItem('loginPhoneEndTime')
             clearTimeout(timer)

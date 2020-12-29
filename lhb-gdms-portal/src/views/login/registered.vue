@@ -26,18 +26,35 @@
             >
             <!-- 用户输入框 -->
             <el-form-item prop="username">
-              <el-input
-                ref="username"
-                name="username"
-                :key="passwordType"
-                placeholder="请输入用户名"
-                v-model="registeredFormParams.username"
-                type="text"
-                tabindex="1"
-                autocomplete="on"
-                clearable
-                >
-              </el-input>
+              <el-row :gutter="24">
+                <el-col :span="21">
+                  <el-input
+                    ref="username"
+                    name="username"
+                    :key="passwordType"
+                    placeholder="请输入用户名"
+                    v-model="registeredFormParams.username"
+                    type="text"
+                    tabindex="1"
+                    autocomplete="on"
+                    clearable
+                  >
+                  </el-input>
+                </el-col>
+                <el-col :span="2">
+                  <el-tooltip
+                    effect="light"
+                    placement="top-end"
+                    >
+                    <svg-icon icon-class="xiaowenhao00-#ffffff">
+                    </svg-icon>
+                    <div slot="content">
+                      用户名确定后不可修改,<br/>
+                      请勿随意填写!
+                    </div>
+                  </el-tooltip>
+                </el-col>
+              </el-row>
             </el-form-item>
             <!-- 密码输入框 -->
             <el-form-item prop="password" style="margin-top: 40px">
@@ -84,18 +101,24 @@
                 >
               </el-input>
             </el-form-item>
-            <!-- 邮箱输入框 -->
-            <el-form-item prop="email" style="margin-top: 40px">
-              <el-input
-                ref="email"
-                v-model="registeredFormParams.email"
-                placeholder="请输入邮箱"
-                name="email"
-                tabindex="5"
-                autocomplete="on"
-                clearable
-              >
-              </el-input>
+            <!-- 手机验证码输入框 -->
+            <el-form-item prop="phoneCode" style="margin-top: 40px;">
+              <div style="float: left">
+                <el-input
+                  ref="phoneCode"
+                  v-model="registeredFormParams.phoneCode"
+                  placeholder="输入验证码"
+                  name="phoneCode"
+                  type="text"
+                  tabindex="5"
+                  style="width: 130px"
+                  clearable
+                  >
+                </el-input>
+                <el-button :loading="phoneCodeLoading" style="margin-left: 25px;width: 140px;" type="success" plain @click="getRegisteredCode">
+                  {{ codePhoneMsg }}
+                </el-button>
+              </div>
             </el-form-item>
             <!-- 拼图验证码 -->
             <Vcode :show="codeShow" @success="codeSuccess" :imgs="[Img2, Img1]"></Vcode>
@@ -117,7 +140,7 @@
   import Vcode from 'vue-puzzle-vcode'
   import Img1 from '../../../src/img/bg01.jpg'
   import Img2 from '../../../src/img/bg05.jpg'
-  import { registered } from '../../api/user'
+  import { registered, getRegisteredPhoneCode } from '@/api/user'
 
   export default {
     name: 'Registered',
@@ -129,8 +152,12 @@
           password: '',
           passwordAgain: '',
           phone: '',
-          email: ''
+          phoneCode: ''
         },
+        // 倒计时初始秒数
+        phoneCountDown: 60,
+        phoneCodeLoading: false,
+        codePhoneMsg: '获取验证码',
         passwordType: 'password',
         passwordTypeAgain: 'password',
         loading: false,
@@ -159,6 +186,11 @@
       }
     },
     created() {
+      // 进入页面时获取之前是否有手机验证码倒计时
+      const phoneEndTime = localStorage.getItem('phoneEndTime')
+      if (phoneEndTime) {
+        this.phoneCodeCountDown(phoneEndTime)
+      }
     },
     methods: {
       // 跳转到登录
@@ -189,6 +221,40 @@
           this.$refs.passwordAgain.focus()
         })
       },
+      // 手机验证码倒计时60秒，网页刷新后仍然存在
+      phoneCodeCountDown(endPhoneMessageRes) {
+        this.phoneCountDown = Math.ceil((endPhoneMessageRes - (new Date()).getTime()) / 1000)
+        const timer = setTimeout(() => {
+          this.phoneCountDown--
+          if (this.phoneCountDown >= 1) {
+            this.codePhoneMsg = '(' + this.phoneCountDown + ')秒后重试'
+          }
+          if (this.phoneCountDown < 1) {
+            this.codePhoneMsg = '获取验证码'
+            this.phoneCountDown = 60
+            localStorage.removeItem('phoneEndTime')
+            clearTimeout(timer)
+          } else {
+            this.phoneCodeCountDown(endPhoneMessageRes)
+          }
+        }, 1000)
+      },
+      // 获取注册手机验证码
+      getRegisteredCode() {
+        this.phoneCodeLoading = true
+        getRegisteredPhoneCode(this.registeredFormParams.phone).then(res => {
+          if (res.code === 200) {
+            this.$message.success(res.message)
+            this.phoneCodeLoading = false
+            const endPhoneMessageRes = (new Date()).getTime() + 60000
+            localStorage.setItem('phoneEndTime', JSON.stringify(endPhoneMessageRes))
+            this.phoneCodeCountDown(endPhoneMessageRes)
+          } else {
+            this.$message.success(res.message)
+            this.phoneCodeLoading = false
+          }
+        })
+      },
       // 注册按钮
       handleRegistered() {
         this.$refs.registeredFormParams.validate((valid) => {
@@ -211,7 +277,7 @@
         this.codeShow = false
         this.loading = true
         console.log(JSON.stringify(this.registeredFormParams))
-        registered(this.registeredFormParams).then(res => {
+        registered(this.registeredFormParams.phoneCode, this.registeredFormParams).then(res => {
           if (res.code === 200) {
             this.loading = false
             this.$message.success('注册成功！请登录系统')
@@ -297,6 +363,7 @@
         margin-left: 30px;
         margin-top: 70px;
         width: 300px;
+        max-width: 350px;
         background-color: transparent;;
       }
 
