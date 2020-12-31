@@ -10,4 +10,11 @@ import lhb.gdms.commons.domain.entity.SysArticleEntity;
  * @time 13:19
  */
 public interface SysArticleService extends BaseService<SysArticleEntity> {
+
+    /**
+     * 新增
+     * @param entity
+     * @return 返回主键id
+     */
+    public Long insertData(SysArticleEntity entity);
 }

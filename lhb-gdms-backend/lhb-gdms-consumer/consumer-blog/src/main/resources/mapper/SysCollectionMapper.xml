@@ -8,6 +8,18 @@
         <result column="created" property="created" />
         <result column="updated" property="updated" />
     </resultMap>
+    <!-- 收藏集数据二次查询 -->
+    <resultMap id="sysCollectionMap2" type="java.util.HashMap">
+        <id column="sys_collection_id" property="sysCollectionId" />
+        <result column="sys_collection_name" property="sysCollectionName" />
+        <result column="sys_user_id" property="sysUserId" />
+        <result column="created" property="created" />
+        <result column="updated" property="updated" />
+        <collection property="articles" column="sys_collection_id"
+            ofType="java.util.HashMap" select="selectCollectionArticleCount">
+            <result column="article_count" property="articleCount" />
+        </collection>
+    </resultMap>
 
     <!-- 添加 -->
     <insert id="insert">
@@ -51,9 +63,30 @@
     </update>
 
     <!-- 查询列表全部信息 -->
-    <select id="getCollectionLists" resultMap="sysCollectionMap1">
+    <select id="getCollectionLists" resultMap="sysCollectionMap2">
         SELECT * FROM sys_collection
         WHERE sys_user_id = #{sysUserId}
+        ORDER BY created DESC
     </select>
+    <!-- 二次查询每条收藏集里面收藏的文章数量 -->
+    <select id="selectCollectionArticleCount" resultMap="sysCollectionMap2">
+        SELECT COUNT(*) AS articleCount
+        FROM sys_article_collection
+        WHERE sys_collection_id = #{sysCollectionId}
+    </select>
+
+    <!-- 根据id查看单条收藏集列表 -->
+    <select id="getCollectionListById" resultMap="sysCollectionMap1">
+        SELECT * FROM sys_collection
+        WHERE sys_collection_id = #{sysCollectionId}
+        AND sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 删除 -->
+    <delete id="deleteOneByKeyWord">
+        DELETE FROM sys_collection
+        WHERE sys_collection_id = #{entity.sysCollectionId}
+        AND sys_user_id = #{entity.sysUserId}
+    </delete>
 
 </mapper>

@@ -14,5 +14,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SysUserMapper extends BaseMapper<SysUserEntity> {
 
-
+    /**
+     * 根据id查询用户昵称
+     * @param sysUserId
+     * @return
+     */
+    String findNicknameById(@Param("sysUserId") Long sysUserId);
 }

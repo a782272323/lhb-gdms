@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lhb.gdms.consumer.blog.mapper.SysArticleCollectionMapper">
+    <resultMap id="map1" type="lhb.gdms.commons.domain.entity.SysArticleCollectionEntity">
+        <id column="sys_article_collection_id" property="sysArticleCollectionId" />
+        <result column="sys_collection_id" property="sysCollectionId" />
+        <result column="article_id" property="articleId" />
+    </resultMap>
+
+    <!-- 根据id获取全部列表信息 -->
+    <select id="getListsById" resultType="java.util.HashMap">
+        SELECT sys_article_collection_id AS sysArticleCollectionId,
+               article_id AS articleId
+        FROM sys_article_collection
+        WHERE sys_collection_id = #{sysCollectionId}
+    </select>
+
+    <!-- 删除 -->
+    <delete id="deleteOne">
+        DELETE FROM sys_article_collection
+        WHERE article_id = #{articleId}
+        AND sys_collection_id = #{sysCollectionId}
+    </delete>
+</mapper>

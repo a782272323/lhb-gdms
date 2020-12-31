@@ -205,10 +205,11 @@ public class WriteArticleAndDraftController {
         sysArticleEntity.setLabelId(labelId);
         sysArticleEntity.setCreated(new Date());
         sysArticleEntity.setUpdated(new Date());
-        if (sysArticleService.insert(sysArticleEntity) < 0) {
+        Long articleId = sysArticleService.insertData(sysArticleEntity);
+        if (articleId == null) {
             return BaseResult.error(HttpConstant.ERROR_MESSAGE);
         }
-        return BaseResult.ok("发布成功");
+        return BaseResult.ok().put(HttpConstant.OK, "发布成功", "articleId", articleId);
     }
 
     /**

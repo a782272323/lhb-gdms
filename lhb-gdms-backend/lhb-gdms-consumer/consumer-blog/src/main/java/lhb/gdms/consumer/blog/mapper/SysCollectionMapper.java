@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description  
@@ -44,11 +45,11 @@ public interface SysCollectionMapper extends BaseMapper<SysCollectionEntity> {
     List<SysCollectionEntity> getCollectionLists(@Param("sysUserId") Long sysUserId);
 
     /**
-     * 根据id查询收藏集合下收藏的文章数量
-     * @param sysCollectionId
+     * 根据id查看单条收藏集列表
      * @param sysUserId
+     * @param sysCollectionId
      * @return
      */
-    Integer getCollectionArticleCount(@Param("sysCollectionId") Long sysCollectionId,
-                               @Param("sysUserId") Long sysUserId);
+    List<Map<String, Object>> getCollectionListById(@Param("sysUserId") Long sysUserId,
+                                                    @Param("sysCollectionId") Long sysCollectionId);
 }

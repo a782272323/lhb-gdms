@@ -16,7 +16,7 @@
     </resultMap>
 
     <!-- 添加 -->
-    <insert id="insert">
+    <insert id="insertData" useGeneratedKeys="true" keyColumn="article_id" keyProperty="articleId">
         INSERT INTO sys_article
             (
              article_title,
@@ -43,4 +43,30 @@
              #{entity.updated}
             )
     </insert>
+
+    <!-- 根据id查看单个文章详情 -->
+    <select id="getArticleListById" resultMap="sysArticleMap1">
+        SELECT * FROM sys_article
+        WHERE article_id = #{articleId}
+    </select>
+
+    <!-- 查询文章相关详情用于收藏集模块 -->
+    <select id="getArticlesDetailsToCollection" resultType="java.util.HashMap">
+        SELECT
+            article_id AS articleId,
+            article_title AS articleTitle,
+            article_content AS articleContent,
+            article_type AS articleType,
+            article_browse_sum AS articleBrowseSum,
+            article_img_url AS articleImgUrl,
+            article_img_key AS articleImgKey,
+            sys_user_id AS sysUserId,
+            a.label_id AS labelId,
+            b.label_name AS labelName,
+            a.created AS created,
+            a.updated AS updated
+        FROM sys_article AS a, sys_label AS b
+        WHERE a.label_id = b.label_id
+        AND article_id = #{articleId}
+    </select>
 </mapper>

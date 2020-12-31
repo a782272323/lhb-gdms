@@ -30,4 +30,6 @@ public interface SysCollectionService extends BaseService<SysCollectionEntity> {
      * @return
      */
     public boolean checkNameByIdToInsert(Long sysUserId, String sysCollectionName);
+
+
 }

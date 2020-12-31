@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lhb.gdms.consumer.blog.mapper.SysArticlePraiseMapper">
+    <resultMap id="map1" type="lhb.gdms.commons.domain.entity.SysArticlePraiseEntity">
+        <id column="sys_article_praise_id" property="sysArticlePraiseId" />
+        <result column="article_id" property="articleId" />
+        <result column="sys_user_id" property="sysUserId" />
+        <result column="sys_article_praise_status" property="sysArticlePraiseStatus" />
+        <result column="created" property="created" />
+        <result column="updated" property="updated" />
+    </resultMap>
+
+    <!-- 查询文章点赞总数 -->
+    <select id="getArticlePraiseCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM sys_article_praise
+        WHERE article_id = #{articleId}
+        AND sys_article_praise_status = 1
+    </select>
+
+    <!-- 根据文章id和用户id查询是否存在数据 -->
+    <select id="findInfoById" resultMap="map1">
+        SELECT * FROM sys_article_praise
+        WHERE article_id = #{articleId}
+        AND sys_user_id = #{sysUserId}
+    </select>
+</mapper>
