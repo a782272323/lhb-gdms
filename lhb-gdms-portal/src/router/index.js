@@ -144,6 +144,14 @@ export const constantRoutes = [
         name: 'Collection',
         hidden: true,
         meta: { title: '收藏集', noCache: true }
+      },
+      // 收藏集详情页面
+      {
+        path: '/collectionDetails',
+        component: () => import('@/views/profile/collectionDetails'),
+        name: 'CollectionDetails',
+        hidden: true,
+        meta: { title: '收藏集详情', noCache: true }
       }
     ]
   },
@@ -175,6 +183,12 @@ export const constantRoutes = [
         name: 'ArticleFaBu',
         hidden: true,
         meta: { title: '发布成功', noCache: true }
+      },
+      {
+        path: '/articleDetails',
+        component: () => import('@/views/article/articleDetails'),
+        hidden: true,
+        name: 'ArticleDetails'
       }
     ]
   },

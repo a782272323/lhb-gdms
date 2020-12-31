@@ -35,7 +35,7 @@
         </div>
         <div class="switch-input">
           <el-input
-            placeholder="探索Bin博客"
+            placeholder="探索Bin博客(文章/标签/用户)"
             clearable
             >
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -107,7 +107,7 @@ import { mapGetters } from 'vuex'
 // eslint-disable-next-line no-unused-vars
 import { getToken } from '@/utils/auth' // get token from cookie
 // import '@/src/icons/my/Blog2.svg'
-import { getUserDetails } from '../../api/system'
+import { getUserDetails } from '@/api/system'
 
 export default {
   computed: {
@@ -147,7 +147,6 @@ export default {
     isLogin() {
       const hashToken = getToken()
       if (hashToken) {
-        console.log('已经登录')
         this.login = true
       } else {
         console.log('未登录')

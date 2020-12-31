@@ -192,7 +192,7 @@
     <div v-if="this.compilerType === 'Markdown'" align="center">
       <div class="compiler-Markdown">
         <MarkdownEditor ref="markdownEditor" v-model="articleParams.content" :language="language" align="left"/>
-        <el-button style="margin-top: 10px" type="success" round @click="getHtml">预览文章</el-button>
+<!--        <el-button style="margin-top: 10px" type="success" round @click="getHtml">预览文章</el-button>-->
       </div>
     </div>
     <!-- 预览markdown编译器文章 -->
@@ -511,9 +511,15 @@
               console.log('删除草稿箱')
               deleteDraft(this.$route.params.sysDraftId)
             }
+            this.articleParams.id = res.articleId
             this.isLeaf = true
             this.$message.success(res.message)
-            this.$router.push({ path: '/articleFaBu' })
+            // this.$router.push({ path: '/articleFaBu' })
+            const routeUrl = this.$router.resolve({
+              name: 'ArticleFaBu',
+              query: { articleId: this.articleParams.id }
+            })
+            window.open(routeUrl.href, '_blank')
           } else {
             this.$message.error(res.message)
           }

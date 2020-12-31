@@ -25,3 +25,19 @@ export function getCollectionLists() {
     method: 'get'
   })
 }
+
+// 删除收藏集
+export function deleteOne(sysCollectionId) {
+  return request({
+    url: '/consumer-blog/blog/collection/' + sysCollectionId,
+    method: 'delete'
+  })
+}
+
+// 查询收藏集下文章详情
+export function getCollectionListById(sysCollectionId) {
+  return request({
+    url: '/consumer-blog/blog/collection/list/' + sysCollectionId,
+    method: 'get'
+  })
+}

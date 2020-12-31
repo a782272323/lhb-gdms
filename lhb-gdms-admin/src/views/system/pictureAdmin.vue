@@ -18,7 +18,7 @@
         <div>
           <el-table
             v-loading="loading"
-            element-loading-text="拼命加载中......"
+            element-loading-texwt="拼命加载中......"
             :data="getList"
             style="margin-top: 20px;width: 100%;border: 1px solid #409EFF;"
             border

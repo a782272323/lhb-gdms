@@ -5,7 +5,7 @@
         <h1>草稿箱({{ this.draftCount }})</h1>
       </el-link>
       <!-- 草稿箱盒子区域 -->
-      <div v-for="item in draftList" class="caoGao-box">
+      <div v-for="item in draftList" :key="item.sysDraftId" class="caoGao-box">
         <el-divider></el-divider>
         <el-row :gutter="20">
           <el-col :span="20">
@@ -143,3 +143,4 @@
 
   }
 </style>
+

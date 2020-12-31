@@ -4,7 +4,16 @@
 
 <script>
     export default {
-      name: 'ArticleFaBu'
+      name: 'ArticleFaBu',
+      data() {
+        return {
+        }
+      },
+      created() {
+        console.log('文章id = ' + this.$route.query.articleId)
+      },
+      methods: {
+      }
     }
 </script>
 
