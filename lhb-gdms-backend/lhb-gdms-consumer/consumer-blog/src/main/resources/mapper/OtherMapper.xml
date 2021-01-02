@@ -44,4 +44,41 @@
         WHERE label_name LIKE CONCAT(concat('%', #{keyWord}), '%')
     </select>
 
+    <!-- 查询该标签下有多少人关注 -->
+    <select id="getLabelFocusCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM sys_label_focus
+        WHERE label_id = #{labelId}
+    </select>
+
+    <!-- 判断当前登录用户是否关注了该标签 -->
+    <select id="findLabelFocusInfoById" resultType="lhb.gdms.commons.domain.entity.SysLabelFocusEntity">
+        SELECT * FROM sys_label_focus
+        WHERE sys_user_id = #{sysUserId}
+        AND label_id = #{labelId}
+    </select>
+
+    <!-- 取消标签关注 -->
+    <delete id="deleteLabelFocusOne">
+        DELETE FROM sys_label_focus
+        WHERE label_id = #{labelId}
+        AND sys_user_id = #{sysUserId}
+    </delete>
+
+    <!-- 添加标签关注 -->
+    <insert id="insertLabelFocus">
+        INSERT INTO sys_label_focus
+            (
+             label_id,
+             sys_user_id,
+             created,
+             upadted
+            ) VALUES
+            (
+             #{entity.labelId},
+             #{entity.sysUserId},
+             #{entity.created},
+             #{entity.updated}
+            )
+    </insert>
 </mapper>

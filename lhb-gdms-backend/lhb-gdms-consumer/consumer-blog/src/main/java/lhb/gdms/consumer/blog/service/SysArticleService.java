@@ -17,4 +17,11 @@ public interface SysArticleService extends BaseService<SysArticleEntity> {
      * @return 返回主键id
      */
     public Long insertData(SysArticleEntity entity);
+
+    /**
+     * 查询该标签下有多少文章
+     * @param labelId
+     * @return
+     */
+    public Integer getLabelArticleCount(Long labelId);
 }

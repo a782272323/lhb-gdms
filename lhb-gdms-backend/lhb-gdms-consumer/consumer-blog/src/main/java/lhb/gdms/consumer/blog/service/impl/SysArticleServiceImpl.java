@@ -31,10 +31,19 @@ public class SysArticleServiceImpl extends BaseServiceImpl<SysArticleEntity, Sys
      */
     @Override
     public Long insertData(SysArticleEntity entity) {
-        if (sysArticleMapper.insertData(entity) > 0) {
-            logger.debug("新增成功，文章id = " + entity.getArticleId());
-            return entity.getArticleId();
-        }
-        return null;
+        return sysArticleMapper.insertData(entity) > 0
+                ? entity.getArticleId()
+                : null;
+    }
+
+    /**
+     * 查询该标签下有多少文章
+     * @param labelId
+     * @return
+     */
+    @Override
+    public Integer getLabelArticleCount(Long labelId) {
+        Integer count = sysArticleMapper.getLabelArticleCount(labelId);
+        return count == null ? 0 : count;
     }
 }

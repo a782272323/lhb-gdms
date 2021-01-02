@@ -7,7 +7,7 @@ import lhb.gdms.commons.domain.entity.SysLabelEntity;
  * @Description  
  * @author Herbie Leung(梁鸿斌)
  * @date 2020/12/31 
- * @time 18:39
+ * @time 18:57
  */
 public interface SysLabelService extends BaseService<SysLabelEntity> {
 }

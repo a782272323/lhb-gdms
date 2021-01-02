@@ -10,4 +10,44 @@
         <result column="updated" property="updated"/>
     </resultMap>
 
+    <!-- 查询所有标签 -->
+    <select id="selectAllLabelLists" resultType="java.util.HashMap">
+        SELECT label_id AS labelId,
+               label_name AS labelName,
+               label_icon_url AS labelIconUrl,
+               label_icon_key AS labelIconKey,
+               created AS created,
+               updated AS updated
+        FROM sys_label
+        WHERE 1=1
+        <if test="keyWord != null and keyWord != ''">
+            AND label_name LIKE CONCAT(CONCAT('%', #{keyWord}), '%')
+        </if>
+    </select>
+
+    <select id="select" resultMap="map1">
+        SELECT * FROM sys_label
+    </select>
+
+    <!-- 查询当前登录用户关注的标签 -->
+    <select id="getLabelFocusLists" resultType="java.util.HashMap">
+        SELECT
+            sys_label_focus_id AS sysLabelFocusId,
+            a.label_id AS labelId,
+            label_name AS labelName,
+            label_icon_url AS labelIconUrl,
+            label_icon_key AS labelIconKey,
+            a.created AS created,
+            a.updated AS updated
+        FROM sys_label AS a,sys_label_focus AS b
+        WHERE a.label_id = b.label_id
+        AND sys_user_id = #{sysUserId}
+        ORDER BY sys_label_focus_id DESC
+    </select>
+
+    <!-- 根据id查看标签详情 -->
+    <select id="getLabelInfoById" resultMap="map1">
+        SELECT * FROM sys_label
+        WHERE label_id = #{labelId}
+    </select>
 </mapper>

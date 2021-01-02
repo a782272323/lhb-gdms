@@ -194,9 +194,12 @@ public class CollectionController {
         list.stream().forEach(item -> {
             Long articleId =Long.parseLong(item.get("articleId").toString());
             item.put("articleDetails", sysArticleMapper.getArticlesDetailsToCollection(articleId).get(0));
+            // 获取文章点赞数量
             item.put("articlePraiseCount", sysArticlePraiseService.getArticlePraiseCount(articleId));
+            // 获取文章评论数量
             item.put("articleCommentsCount", sysArticleCommentsMapper.getArticleCommentsCount(articleId));
             item.put("userNickName", sysUserMapper.findNicknameById(sysUserId));
+            // 判断是否当前用户点赞
             item.put("isPraise", sysArticlePraiseService.findInfoById(articleId, sysUserId));
         });
         Map<String, Object> map = Maps.newHashMap();

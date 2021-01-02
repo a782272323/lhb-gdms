@@ -23,12 +23,6 @@ public class SysLabelFocusEntity extends BaseDateEntity {
      * 用户id，执行此关注的用户id
      */
     private Long sysUserId;
-    /**
-     * 关注状态
-     * 0-取消关注
-     * 1-已关注
-     */
-    private Integer focusStatus;
 
     @Override
     public String toString() {
@@ -36,7 +30,6 @@ public class SysLabelFocusEntity extends BaseDateEntity {
                 "sysLabelFocusId=" + sysLabelFocusId +
                 ", labelId=" + labelId +
                 ", sysUserId=" + sysUserId +
-                ", focusStatus=" + focusStatus +
                 '}';
     }
 
@@ -62,13 +55,5 @@ public class SysLabelFocusEntity extends BaseDateEntity {
 
     public void setSysUserId(Long sysUserId) {
         this.sysUserId = sysUserId;
-    }
-
-    public Integer getFocusStatus() {
-        return focusStatus;
-    }
-
-    public void setFocusStatus(Integer focusStatus) {
-        this.focusStatus = focusStatus;
     }
 }

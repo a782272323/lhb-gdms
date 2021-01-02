@@ -5,7 +5,6 @@
         <id column="sys_article_praise_id" property="sysArticlePraiseId" />
         <result column="article_id" property="articleId" />
         <result column="sys_user_id" property="sysUserId" />
-        <result column="sys_article_praise_status" property="sysArticlePraiseStatus" />
         <result column="created" property="created" />
         <result column="updated" property="updated" />
     </resultMap>
@@ -15,7 +14,6 @@
         SELECT COUNT(*)
         FROM sys_article_praise
         WHERE article_id = #{articleId}
-        AND sys_article_praise_status = 1
     </select>
 
     <!-- 根据文章id和用户id查询是否存在数据 -->
@@ -24,4 +22,5 @@
         WHERE article_id = #{articleId}
         AND sys_user_id = #{sysUserId}
     </select>
+
 </mapper>

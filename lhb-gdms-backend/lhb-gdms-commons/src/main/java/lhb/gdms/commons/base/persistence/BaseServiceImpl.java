@@ -40,7 +40,7 @@ public class BaseServiceImpl<T extends BaseDateEntity, M extends BaseMapper<T>> 
      */
     @Override
     public List<T> selectPageHelper(@Param("queryVO") QueryVO queryVO) {
-        PageHelper.startPage(queryVO.getLimit(), queryVO.getOffSet());
+        PageHelper.startPage(queryVO.getOffSet(), queryVO.getLimit());
         return mapper.selectPageHelper(queryVO);
     }
 

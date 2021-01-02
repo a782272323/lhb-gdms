@@ -69,4 +69,28 @@
         WHERE a.label_id = b.label_id
         AND article_id = #{articleId}
     </select>
+
+    <!-- 查询该标签下有多少文章 -->
+    <select id="getLabelArticleCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM sys_article
+        WHERE label_id = #{labelId}
+    </select>
+
+    <!-- 根据标签id查看文章详情 -->
+    <select id="getArticleDetailsByLabelId" resultType="java.util.HashMap">
+        SELECT article_id AS articleId,
+               article_title AS articleTitle,
+               article_content AS articleContent,
+               article_type AS articleType,
+               article_browse_sum AS articleBrowseSum,
+               article_img_url AS articleImgUrl,
+               article_img_key AS articleImgKey,
+               sys_user_id AS sysUserId,
+               label_id AS labelId,
+               created,
+               updated
+        FROM sys_article
+        WHERE label_id = #{labelId}
+    </select>
 </mapper>

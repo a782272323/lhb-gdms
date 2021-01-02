@@ -24,10 +24,6 @@ public class SysArticlePraiseEntity extends BaseDateEntity {
      * 点赞的用户id
      */
     private Long sysUserId;
-    /**
-     * 点赞状态
-     */
-    private Integer sysArticlePraiseStatus;
 
     @Override
     public String toString() {
@@ -35,7 +31,6 @@ public class SysArticlePraiseEntity extends BaseDateEntity {
                 "sysArticlePraiseId=" + sysArticlePraiseId +
                 ", articleId=" + articleId +
                 ", sysUserId=" + sysUserId +
-                ", sysArticlePraiseIdStatus=" + sysArticlePraiseStatus +
                 '}';
     }
 
@@ -63,11 +58,4 @@ public class SysArticlePraiseEntity extends BaseDateEntity {
         this.sysUserId = sysUserId;
     }
 
-    public Integer getSysArticlePraiseStatus() {
-        return sysArticlePraiseStatus;
-    }
-
-    public void setSysArticlePraiseStatus(Integer sysArticlePraiseStatus) {
-        this.sysArticlePraiseStatus = sysArticlePraiseStatus;
-    }
 }

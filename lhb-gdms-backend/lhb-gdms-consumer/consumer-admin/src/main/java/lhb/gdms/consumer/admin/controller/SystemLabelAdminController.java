@@ -243,8 +243,8 @@ public class SystemLabelAdminController {
             queryVO.setOrderBy("ASC");
         }
         Map<String, Object> map = Maps.newHashMap();
-        map.put("getLists", sysLabelMapper.selectPageHelper(queryVO));
-        map.put("count", sysLabelMapper.selectPageHelperCount());
+        map.put("getLists", sysLabelService.selectPageHelper(queryVO));
+        map.put("count", sysLabelService.selectPageHelperCount());
         return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, map);
     }
 
