@@ -616,4 +616,9 @@
     /*height: 480px;*/
     margin-top: 20px;
   }
+
+  .el-dropdown-menu__item:not(.is-disabled):hover {
+    background-color: #E3F9ED !important;
+    color: #333333 !important;
+  }
 </style>

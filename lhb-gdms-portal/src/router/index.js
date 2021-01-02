@@ -207,6 +207,7 @@ export const constantRoutes = [
       }
     ]
   },
+  // 标签管理
   {
     path: '/',
     component: Layout,
@@ -227,6 +228,14 @@ export const constantRoutes = [
         name: 'LabelAll',
         hidden: true,
         meta: { title: '标签管理', noCache: true }
+      },
+      // 标签详情
+      {
+        path: '/labelDetails',
+        component: () => import('@/views/label/labelDetails'),
+        name: 'LabelDetails',
+        hidden: true,
+        meta: { title: '标签详情', noCache: true }
       }
     ]
   },

@@ -54,7 +54,7 @@
                     <!-- 浏览数量 -->
                     <el-badge style="float: left;margin-right: 5px;margin-top: -10px;">
                       <el-button type="info" size="mini" plain @click="linkToArticleDetails(item)">
-                        <svg-icon icon-class="liulang00"></svg-icon>
+                        <svg-icon icon-class="liulang00"></svg-icon><
                         {{ item.articleDetails.articleBrowseSum }}
                       </el-button>
                     </el-badge>

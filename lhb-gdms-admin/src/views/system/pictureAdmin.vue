@@ -67,7 +67,7 @@
           <el-dialog
             :visible.sync="dialogAdd"
             title="添加头像"
-            width="30%"
+            width="40%"
             center>
             <div align="center">
               <el-upload

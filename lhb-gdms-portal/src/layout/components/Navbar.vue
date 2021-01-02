@@ -294,4 +294,18 @@ export default {
       }
     }
   }
+
+  /*修改下拉框*/
+  .el-dropdown-menu__item:not(.is-disabled):hover {
+    background-color: #E3F9ED !important;
+    color: #333333 !important;
+  }
+
+  /*修改输入框*/
+  /deep/.el-input__inner {
+    background-color: transparent !important;
+    background-image: none;
+    border: 1px solid #2ECC71;
+  }
+
 </style>

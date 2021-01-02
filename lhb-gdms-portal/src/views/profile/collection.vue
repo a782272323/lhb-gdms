@@ -45,7 +45,7 @@
               label-width="120px"
               >
               <el-form-item style="margin-top: 20px" label="收藏集名称" prop="sysCollectionName">
-                <el-input v-model.trim="collectionParams.sysCollectionName"></el-input>
+                <el-input v-model.trim="collectionParams.sysCollectionName" clearable></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button style="margin-left: -50px" @click="removeAdd" type="success" plain>取 消</el-button>
@@ -71,7 +71,7 @@
               label-width="120px"
               >
               <el-form-item style="margin-top: 20px;" label="收藏集名称" prop="sysCollectionName">
-                <el-input v-model.trim="collectionParams.sysCollectionName"></el-input>
+                <el-input v-model.trim="collectionParams.sysCollectionName" clearable></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="success" plain @click="removeDialogEdit">取 消</el-button>
@@ -244,5 +244,12 @@
       float: left;
       margin-top: -10px;
     }
+  }
+
+  /*修改输入框*/
+  /deep/.el-input__inner {
+    background-color: transparent !important;
+    background-image: none;
+    border: 1px solid #2ECC71;
   }
 </style>

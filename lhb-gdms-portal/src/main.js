@@ -4,6 +4,7 @@ import Cookies from 'js-cookie'
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
+// 引入自定义主题
 import Element from 'element-ui'
 import './styles/element-variables.scss'
 

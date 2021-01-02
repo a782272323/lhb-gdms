@@ -76,9 +76,9 @@
             </el-table-column>
             <el-table-column fixed label="操作" align="center">
               <template slot-scope="scope">
-                <el-button type="primary" plain @click="labelIconEdit(scope.row)">编辑标签图标</el-button>
-                <el-button type="primary" plain @click="labelNameEdit(scope.row)">编辑标签名称</el-button>
-                <el-button type="danger" plain @click="deleteOne(scope.row)">删除</el-button>
+                <el-button type="primary" plain @click="labelIconEdit(scope.row)" size="small">编辑标签图标</el-button>
+                <el-button type="primary" plain @click="labelNameEdit(scope.row)" size="small">编辑标签名称</el-button>
+                <el-button type="danger" plain @click="deleteOne(scope.row)" size="small">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -109,7 +109,7 @@
         <el-dialog
           :visible.sync="dialogAdd"
           title="添加标签"
-          width="30%"
+          width="40%"
           center
           >
           <div align="center">
@@ -444,6 +444,7 @@
                 this.dialogLabelNameEdit = false
                 this.$message.success(res.message)
                 this.sysLabelFormParams.labelName = ''
+                this.refreshPage()
               } else {
                 this.dialogLabelNameEdit = false
                 this.$message.error(res.message)
