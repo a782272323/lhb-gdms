@@ -15,8 +15,10 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="8">
-            <span style="float: left;margin-left: 22px">{{ item.updated }}</span>
+          <el-col :span="12">
+            <span style="float: left;margin-left: 22px">
+              {{ item.updated | parseTime('{y}') }}年{{ item.updated | parseTime('{m}') }}月{{ item.updated | parseTime('{d}') }}日 {{ item.created | parseTime('{h}:{m}:{s}')}}
+            </span>
           </el-col>
           <el-col :span="4">
             <el-dropdown trigger="click">

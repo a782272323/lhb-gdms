@@ -129,7 +129,7 @@ export default {
   created() {
     this.isLogin()
     // 如果已经登录系统则使用刷新详情的数据
-    if (this.login) {
+    if (this.login === true) {
       this.refreshPage()
     }
   },
@@ -138,6 +138,7 @@ export default {
       getUserDetails().then(res => {
         this.userList = res.data.getList
         this.imageUrl = res.data.getList.sysUserIcon
+        localStorage.setItem('sysUserId', res.data.getList.sysUserId)
       })
     },
     async logout() {

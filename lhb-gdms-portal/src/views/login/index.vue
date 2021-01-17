@@ -328,10 +328,11 @@
         this.loading = true
         this.loginFormParams.loginType = this.loginType
         this.$store.dispatch('user/login', this.loginFormParams).then(() => {
-          console.log('账密登录成功!开始跳转首页')
+          console.log('账密登录成功!')
           this.loading = false
           this.$message.success('登录成功!')
-          this.$router.push({ path: '/home' })
+          this.checkLinkToWhere()
+          // this.$router.push({ path: '/home' })
         }).catch(() => {
           this.loading = false
         })
@@ -349,6 +350,15 @@
         this.$nextTick(() => {
           this.$refs.password.focus()
         })
+      },
+      // 判断是否需要返回原页面还是直接跳转首页
+      checkLinkToWhere() {
+        if (this.$route.query.redirect === 'yes') {
+          console.log('登录成功，返回旧页面')
+          this.$router.go(-1)
+        } else {
+          this.$router.push({ path: '/home' })
+        }
       },
       // 登录按钮提交
       handleLogin() {
@@ -368,10 +378,11 @@
           this.loading = true
           this.loginFormParams.loginType = this.loginType
           this.$store.dispatch('user/login', this.loginFormParams).then(() => {
-            console.log('手机登录成功!开始跳转首页')
+            console.log('手机登录成功!')
             this.loading = false
             this.$message.success('登录成功!')
-            this.$router.push({ path: '/home' })
+            this.checkLinkToWhere()
+            // this.$router.push({ path: '/home' })
           }).catch(() => {
             this.loading = false
           })
@@ -382,10 +393,11 @@
           this.loading = true
           this.loginFormParams.loginType = this.loginType
           this.$store.dispatch('user/login', this.loginFormParams).then(() => {
-            console.log('邮箱登录成功!开始跳转首页')
+            console.log('邮箱登录成功!')
             this.loading = false
             this.$message.success('登录成功!')
-            this.$router.push({ path: '/home' })
+            this.checkLinkToWhere()
+            // this.$router.push({ path: '/home' })
           }).catch(() => {
             this.loading = false
           })

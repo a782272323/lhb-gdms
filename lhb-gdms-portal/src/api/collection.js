@@ -41,3 +41,27 @@ export function getCollectionListById(sysCollectionId) {
     method: 'get'
   })
 }
+
+// 查询当前用户的收藏集并且用于文章详情判断当前文章是否被收藏
+export function getCollectionsToArticle(articleId) {
+  return request({
+    url: '/consumer-blog/blog/collection/lists/' + articleId,
+    method: 'get'
+  })
+}
+
+// 添加文章到收藏集
+export function insertArticleToCollection(articleId, sysCollectionId) {
+  return request({
+    url: '/consumer-blog/blog/collection/article/' + articleId + '/' + sysCollectionId,
+    method: 'post'
+  })
+}
+
+// 取消文章的收藏
+export function deleteArticleToCollection(articleId, sysCollectionId) {
+  return request({
+    url: '/consumer-blog/blog/collection/article/' + articleId + '/' + sysCollectionId,
+    method: 'delete'
+  })
+}

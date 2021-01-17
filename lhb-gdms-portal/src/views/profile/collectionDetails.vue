@@ -32,7 +32,9 @@
                     <h5>{{ item.userNickName }} · </h5>
                   </el-link>
                   <el-link style="float: left"  type="info" :underline="false" @click="linkToArticleDetails(item)">
-                    <h5>{{ item.articleDetails.created }} · </h5>
+                    <h5>
+                      {{ item.articleDetails.created | parseTime('{y}') }}年{{ item.articleDetails.created | parseTime('{m}') }}月{{ item.articleDetails.created | parseTime('{d}') }}日 ·
+                    </h5>
                   </el-link>
                   <el-link style="float: left"  type="info" :underline="false">
                     <h5>{{ item.articleDetails.labelName }}</h5>
@@ -54,7 +56,7 @@
                     <!-- 浏览数量 -->
                     <el-badge style="float: left;margin-right: 5px;margin-top: -10px;">
                       <el-button type="info" size="mini" plain @click="linkToArticleDetails(item)">
-                        <svg-icon icon-class="liulang00"></svg-icon><
+                        <svg-icon icon-class="liulang00"></svg-icon>
                         {{ item.articleDetails.articleBrowseSum }}
                       </el-button>
                     </el-badge>
@@ -104,7 +106,7 @@
 <script>
   import { getUserDetails } from '@/api/system'
   import { getCollectionListById } from '@/api/collection'
-
+  import { insertArticleBrowse } from '@/api/homePageArticle'
   export default {
     name: 'CollectionDetails',
     data() {
@@ -204,11 +206,21 @@
       },
       // 跳转文章详情页面
       linkToArticleDetails(item) {
-        const routeUrl = this.$router.resolve({
-          name: 'ArticleDetails',
-          query: { articleId: item.articleDetails.articleId }
+        this.addArticleBrowse(item)
+      },
+      // 查看文章详情时，使文章被阅读数加一
+      addArticleBrowse(item) {
+        insertArticleBrowse(item.articleDetails.articleId).then(res => {
+          if (res.code === 200) {
+            const routeUrl = this.$router.resolve({
+              name: 'ArticleDetails',
+              query: { articleId: item.articleDetails.articleId }
+            })
+            window.open(routeUrl.href, '_blank')
+          } else {
+            this.$message.error(res.message)
+          }
         })
-        window.open(routeUrl.href, '_blank')
       }
     }
   }

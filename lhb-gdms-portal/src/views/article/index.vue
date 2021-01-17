@@ -151,6 +151,7 @@
         </div>
       </el-dialog>
     </div>
+    <hr style="margin-top: 0px;margin-bottom: 0px;border: 1px solid #ECF0F1;">
     <!-- 标题输入框 -->
     <div align="center">
       <div style="margin-top: 30px;width: 960px;">

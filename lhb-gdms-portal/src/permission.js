@@ -12,7 +12,8 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login',
   '/auth-redirect', '/', '/home', '/home/index',
   '/registered', '/registered/index',
-  '/forgetPassword', '/password/forgetPassword', '/resetPassword', '/password/resetPassword'] // no redirect whitelist
+  '/forgetPassword', '/password/forgetPassword', '/resetPassword', '/password/resetPassword',
+  '/articleDetails'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar 开始进度条

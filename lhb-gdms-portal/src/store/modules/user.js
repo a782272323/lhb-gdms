@@ -41,7 +41,7 @@ const actions = {
         phone: phone.trim(),
         phoneCode: phoneCode,
         email: email.trim(),
-        emailCode: emailCode
+        emailCode: emailCode.trim()
       }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
@@ -55,8 +55,15 @@ const actions = {
         if (loginType === 2) {
           console.log('邮箱登录')
         }
-        // 跳转首页
-        // this.$router.push({ path: '/home' })
+
+        // if (this.$route.query.redirect === 'yes') {
+        //   console.log('登录成功，跳转到内部页面, ')
+        //   this.$router.go(-1)
+        // } else {
+        //   console.log('登录成功，跳转首页')
+        //   // 跳转首页
+        //   this.$router.push({ path: '/home' })
+        // }
         resolve()
       }).catch(error => {
         reject(error)

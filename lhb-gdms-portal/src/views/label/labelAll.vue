@@ -231,13 +231,21 @@
         },
         // 取消关注
         removeFocus(item) {
-          deleteLabelFocusOne(item.labelId).then(res => {
-            if (res.code === 200) {
-              this.$message.success(res.message)
-              this.chooseSortType()
-            } else {
-              this.$message.error(res.message)
-            }
+          this.$confirm('此操作将取消关注,是否继续', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteLabelFocusOne(item.labelId).then(res => {
+              if (res.code === 200) {
+                this.$message.success(res.message)
+                this.chooseSortType()
+              } else {
+                this.$message.error(res.message)
+              }
+            })
+          }).catch(() => {
+            this.$message.info('已取消该操作')
           })
         },
         // 添加关注

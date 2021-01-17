@@ -80,18 +80,22 @@
                   <el-link style="float: left" type="info" :underline="false">
                     <h5>{{ item.userNickName }} · </h5>
                   </el-link>
-                  <el-link style="float: left" type="info" :underline="false">
-                    <h5>{{ item.articleDetails.created }} · </h5>
+                  <el-link style="float: left" type="info" :underline="false" @click="linkToArticleDetails(item)">
+                    <h5>
+                      {{ item.articleDetails.created | parseTime('{y}') }}年{{ item.articleDetails.created | parseTime('{m}') }}月{{ item.articleDetails.created | parseTime('{d}') }}日 ·
+                    </h5>
                   </el-link>
                   <el-link style="float: left" type="info" :underline="false">
-                    <h5>{{ item.articleDetails.labelName }}</h5>
+                    <h5>
+                      {{ item.articleDetails.labelName }}
+                    </h5>
                   </el-link>
                 </el-col>
               </el-row>
               <!-- 文章标题 -->
               <el-row :gutter="24">
-                <el-col :span="10">
-                  <el-link style="float: left;" :underline="false">
+                <el-col :span="20">
+                  <el-link style="float: left;" :underline="false" @click="linkToArticleDetails(item)">
                     <h2 style="margin-top: -10px;color: black">{{ item.articleDetails.articleTitle }}</h2>
                   </el-link>
                 </el-col>
@@ -102,7 +106,7 @@
                   <el-col :span="14">
                     <!-- 浏览数量 -->
                     <el-badge style="float: left;margin-right: 5px;margin-top: -10px;">
-                      <el-button type="info" size="mini" plain>
+                      <el-button type="info" size="mini" plain @click="linkToArticleDetails(item)">
                         <svg-icon icon-class="liulang00"></svg-icon>
                         {{ item.articleDetails.articleBrowseSum }}
                       </el-button>
@@ -146,6 +150,7 @@
 
 <script>
   import { getLabelDetails, deleteLabelFocusOne, getLabelList, insertLabelFocus } from '@/api/label'
+  import { insertArticleBrowse } from '@/api/homePageArticle'
   export default {
     name: 'LabelDetails',
     data() {
@@ -277,13 +282,22 @@
       },
       // 取消关注
       removeFocus() {
-        deleteLabelFocusOne(this.labelId).then(res => {
-          if (res.code === 200) {
-            this.$message.success(res.message)
-            this.refreshPage()
-          } else {
-            this.$message.error(res.message)
-          }
+        this.$confirm('此操作将取消关注,是否继续', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteLabelFocusOne(this.labelId).then(res => {
+            if (res.code === 200) {
+              this.$message.success(res.message)
+              this.refreshPage()
+              this.chooseSortType()
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        }).catch(() => {
+          this.$message.info('已取该操作')
         })
       },
       // 添加关注
@@ -292,6 +306,24 @@
           if (res.code === 200) {
             this.$message.success(res.message)
             this.refreshPage()
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      },
+      // 跳转文章详情页面
+      linkToArticleDetails(item) {
+        this.addArticleBrowse(item)
+      },
+      // 查看文章详情时，使文章被阅读数加一
+      addArticleBrowse(item) {
+        insertArticleBrowse(item.articleDetails.articleId).then(res => {
+          if (res.code === 200) {
+            const routeUrl = this.$router.resolve({
+              name: 'ArticleDetails',
+              query: { articleId: item.articleDetails.articleId }
+            })
+            window.open(routeUrl.href, '_blank')
           } else {
             this.$message.error(res.message)
           }
