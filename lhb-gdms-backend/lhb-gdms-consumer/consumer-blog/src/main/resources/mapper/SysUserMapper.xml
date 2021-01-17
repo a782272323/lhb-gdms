@@ -59,10 +59,16 @@
         WHERE sys_user_id = #{entity.sysUserId}
     </update>
 
-    <!--  -->
+    <!-- 根据id查询用户昵称 -->
     <select id="findNicknameById" resultType="java.lang.String">
         SELECT sys_user_nickname
         FROM sys_user
+        WHERE sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 根据用户id查询用户详情 -->
+    <select id="getUserInfoByUserId" resultMap="sysUserMap1">
+        SELECT * FROM sys_user
         WHERE sys_user_id = #{sysUserId}
     </select>
 </mapper>

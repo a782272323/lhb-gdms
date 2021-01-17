@@ -212,7 +212,7 @@ public class LabelController {
             // 获取文章点赞数量
             item.put("articlePraiseCount", sysArticlePraiseService.getArticlePraiseCount(articleId));
             // 获取文章评论数量
-            item.put("articleCommentsCount", sysArticleCommentsMapper.getArticleCommentsCount(articleId));
+            item.put("articleCommentsCount", otherService.getArticleCommentsCountAll(articleId));
             item.put("userNickName", sysUserMapper.findNicknameById(sysUserId));
             // 判断是否当前用户点赞
             item.put("isPraise", sysArticlePraiseService.findInfoById(articleId, sysUserId));

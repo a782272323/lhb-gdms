@@ -16,6 +16,14 @@
         WHERE article_id = #{articleId}
     </select>
 
+    <!-- 根据用户id和文章id查询点赞总数 -->
+    <select id="getArticlePraiseCountBySysUserId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM sys_article_praise
+        WHERE article_id = #{articleId}
+        AND sys_user_id = #{sysUserId}
+    </select>
+
     <!-- 根据文章id和用户id查询是否存在数据 -->
     <select id="findInfoById" resultMap="map1">
         SELECT * FROM sys_article_praise
@@ -23,4 +31,27 @@
         AND sys_user_id = #{sysUserId}
     </select>
 
+    <!-- 点赞文章 -->
+    <insert id="insert">
+        INSERT INTO sys_article_praise
+            (
+             article_id,
+             sys_user_id,
+             created,
+             updated
+            ) VALUES
+            (
+             #{entity.articleId},
+             #{entity.sysUserId},
+             #{entity.created},
+             #{entity.updated}
+            )
+    </insert>
+
+    <!-- 取消点赞 -->
+    <delete id="deleteOneByKeyWord">
+        DELETE FROM sys_article_praise
+        WHERE article_id = #{entity.articleId}
+        AND sys_user_id = #{entity.sysUserId}
+    </delete>
 </mapper>

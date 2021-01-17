@@ -93,4 +93,39 @@
         FROM sys_article
         WHERE label_id = #{labelId}
     </select>
+
+    <!-- 文章被点击查看时被阅读数加 -->
+    <update id="insertArticleBrowse">
+        UPDATE sys_article
+        SET article_browse_sum = article_browse_sum + 1
+        WHERE article_id = #{articleId}
+    </update>
+
+    <!-- 根据文章id查询文章详情 -->
+    <select id="getArticleDetailsByArticleId" resultMap="sysArticleMap1">
+        SELECT * FROM sys_article WHERE article_id = #{articleId}
+    </select>
+
+    <!-- 根据文章id获取文章详情信息 -->
+    <select id="getArticleInfoByArticleId" resultMap="sysArticleMap1">
+        SELECT * FROM sys_article WHERE article_id = #{articleId}
+    </select>
+
+    <!-- 根据用户id查询所发表的文章 -->
+    <select id="getArticleBySysUserId" resultType="java.util.HashMap">
+        SELECT article_id AS articleId,
+               article_title AS articleTitle,
+               article_content AS articleContent,
+               article_type AS articleType,
+               article_browse_sum AS articleBrowseSum,
+               article_img_url AS articleImgUrl,
+               article_img_key AS articleImgKey,
+               sys_user_id AS sysUserId,
+               label_id AS labelId,
+               created,
+               updated
+        FROM sys_article
+        WHERE sys_user_id = #{sysUserId}
+        ORDER BY created DESC
+    </select>
 </mapper>

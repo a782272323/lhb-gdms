@@ -22,6 +22,15 @@ public interface SysArticlePraiseMapper extends BaseMapper<SysArticlePraiseEntit
     Integer getArticlePraiseCount(@Param("articleId") Long articleId);
 
     /**
+     * 根据用户id和文章id查询点赞总数
+     * @param articleId
+     * @param sysUserId
+     * @return
+     */
+    Integer getArticlePraiseCountBySysUserId(@Param("articleId") Long articleId,
+                                             @Param("sysUserId") Long sysUserId);
+
+    /**
      * 根据文章id和用户id查询是否存在数据
      * @param articleId
      * @param sysUserId
@@ -29,4 +38,5 @@ public interface SysArticlePraiseMapper extends BaseMapper<SysArticlePraiseEntit
      */
     SysArticlePraiseEntity findInfoById(@Param("articleId") Long articleId,
                                         @Param("sysUserId") Long sysUserId);
+
 }

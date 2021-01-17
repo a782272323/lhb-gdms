@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lhb.gdms.consumer.blog.mapper.SysCommentsReplyMapper">
+    <resultMap id="map1" type="lhb.gdms.commons.domain.entity.SysCommentsReplyEntity">
+        <id column="sys_comments_reply_id" property="sysCommentsReplyId"/>
+        <result column="sys_article_comments_id" property="sysArticleCommentsId"/>
+        <result column="comments_reply_type" property="commentsReplyType"/>
+        <result column="comments_reply_content" property="commentsReplyContent"/>
+        <result column="from_sys_user_id" property="fromSysUserId"/>
+        <result column="to_sys_user_id" property="toSysUserId"/>
+        <result column="created" property="created"/>
+        <result column="updated" property="updated"/>
+    </resultMap>
+
+    <!-- 根据评论id获取所有评论回复的列表信息 -->
+    <select id="getCommentsReplyLists" resultType="java.util.HashMap">
+        SELECT sys_comments_reply_id AS sysCommentsReplyId,
+               sys_article_comments_id AS sysArticleCommentsId,
+               comments_reply_type AS commentsReplyType,
+               comments_reply_content AS commentsReplyContent,
+               from_sys_user_id AS fromSysUserId,
+               to_sys_user_id AS toSysUserId,
+               created,
+               updated
+        FROM sys_comments_reply
+        WHERE sys_article_comments_id = #{sysArticleCommentsId}
+        ORDER By created ASC
+    </select>
+
+    <!-- 根据评论id统计回复数量 -->
+    <select id="getCommentsReplyCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_comments_reply
+        WHERE sys_article_comments_id = #{sysArticleCommentsId}
+    </select>
+
+    <!-- 添加回复 -->
+    <insert id="insert">
+        INSERT INTO sys_comments_reply
+            (
+             sys_article_comments_id,
+             comments_reply_type,
+             comments_reply_content,
+             from_sys_user_id,
+             to_sys_user_id,
+             created,
+             updated
+            ) VALUES
+            (
+             #{entity.sysArticleCommentsId},
+             #{entity.commentsReplyType},
+             #{entity.commentsReplyContent},
+             #{entity.fromSysUserId},
+             #{entity.toSysUserId},
+             #{entity.created},
+             #{entity.updated}
+            )
+    </insert>
+</mapper>

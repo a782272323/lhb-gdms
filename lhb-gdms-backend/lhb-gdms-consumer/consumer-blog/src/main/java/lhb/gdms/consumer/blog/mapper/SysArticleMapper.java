@@ -51,4 +51,33 @@ public interface SysArticleMapper extends BaseMapper<SysArticleEntity> {
      * @return
      */
     List<Map<String, Object>> getArticleDetailsByLabelId(@Param("labelId") Long labelId);
+
+    /**
+     * 文章被点击查看时被阅读数加
+     * @param articleId
+     * @return
+     */
+    Integer insertArticleBrowse(@Param("articleId") Long articleId);
+
+    /**
+     * 根据文章id查询文章详情
+     * @param articleId
+     * @return
+     */
+    List<SysArticleEntity> getArticleDetailsByArticleId(@Param("articleId") Long articleId);
+
+    /**
+     * 根据文章id获取文章详情信息
+     * @param articleId
+     * @return
+     */
+    SysArticleEntity getArticleInfoByArticleId(@Param("articleId") Long articleId);
+
+    /**
+     * 根据用户id查询所发表的文章
+     * @param sysUserId
+     * @return
+     */
+    List<Map<String, Object>> getArticleBySysUserId(@Param("sysUserId") Long sysUserId);
+
 }

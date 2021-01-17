@@ -31,5 +31,11 @@ public interface SysCollectionService extends BaseService<SysCollectionEntity> {
      */
     public boolean checkNameByIdToInsert(Long sysUserId, String sysCollectionName);
 
-
+    /**
+     * 判断当前文章是否存在于当前收藏集
+     * @param sysCollectionId
+     * @param articleId
+     * @return
+     */
+    public Boolean checkArticleCollection(Long sysCollectionId, Long articleId);
 }

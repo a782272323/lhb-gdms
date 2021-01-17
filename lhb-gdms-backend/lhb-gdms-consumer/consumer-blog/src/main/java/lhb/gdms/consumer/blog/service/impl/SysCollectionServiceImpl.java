@@ -2,6 +2,7 @@ package lhb.gdms.consumer.blog.service.impl;
 
 import lhb.gdms.commons.base.persistence.BaseServiceImpl;
 import lhb.gdms.commons.domain.entity.SysCollectionEntity;
+import lhb.gdms.consumer.blog.mapper.OtherMapper;
 import lhb.gdms.consumer.blog.mapper.SysCollectionMapper;
 import lhb.gdms.consumer.blog.service.SysCollectionService;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description
@@ -22,6 +26,9 @@ public class SysCollectionServiceImpl extends BaseServiceImpl<SysCollectionEntit
 
     @Autowired
     private SysCollectionMapper sysCollectionMapper;
+
+    @Autowired
+    private OtherMapper otherMapper;
 
 
     /**
@@ -47,5 +54,17 @@ public class SysCollectionServiceImpl extends BaseServiceImpl<SysCollectionEntit
     public boolean checkNameByIdToInsert(Long sysUserId, String sysCollectionName) {
         String isNull = sysCollectionMapper.checkNameByIdToInsert(sysUserId, sysCollectionName);
         return StringUtils.isNotBlank(isNull) ? true : false;
+    }
+
+    /**
+     * 判断当前文章是否存在于当前收藏集
+     * @param sysCollectionId
+     * @param articleId
+     * @return
+     */
+    @Override
+    public Boolean checkArticleCollection(Long sysCollectionId, Long articleId) {
+        List<Map<String, Object>> list = otherMapper.getArticleCollectionInfoByTwoId(articleId, sysCollectionId);
+        return list != null && list.size() > 0 ? true : false;
     }
 }

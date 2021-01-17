@@ -24,4 +24,18 @@ public interface SysArticleService extends BaseService<SysArticleEntity> {
      * @return
      */
     public Integer getLabelArticleCount(Long labelId);
+
+    /**
+     * 查询用户所有点赞总数
+     * @param sysUserId
+     * @return
+     */
+    public Integer getArticlePriseAll(Long sysUserId);
+
+    /**
+     * 查询用户所有被阅读数
+     * @param sysUserId
+     * @return
+     */
+    public Integer getArticleBrowseAll(Long sysUserId);
 }

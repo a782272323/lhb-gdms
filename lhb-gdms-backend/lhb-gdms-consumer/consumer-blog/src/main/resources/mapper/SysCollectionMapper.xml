@@ -89,4 +89,23 @@
         AND sys_user_id = #{entity.sysUserId}
     </delete>
 
+    <!-- 查询当前用户的收藏集并且用于文章详情判断当前文章是否被收藏 -->
+    <select id="getCollectionListsBySysUserId" resultType="java.util.HashMap">
+        SELECT sys_collection_id AS sysCollectionId,
+               sys_collection_name AS sysCollectionName,
+               sys_user_id AS sysUserId,
+               created,
+               updated
+        FROM sys_collection
+        WHERE sys_user_id = #{sysUserId}
+        ORDER BY updated DESC
+    </select>
+
+    <!-- 获取收藏集下的文章数量 -->
+    <select id="getCollectionArticleCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) AS articleCount
+        FROM sys_article_collection
+        WHERE sys_collection_id = #{sysCollectionId}
+    </select>
+
 </mapper>

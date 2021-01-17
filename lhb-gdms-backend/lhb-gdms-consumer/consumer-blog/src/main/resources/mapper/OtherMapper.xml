@@ -81,4 +81,110 @@
              #{entity.updated}
             )
     </insert>
+
+    <!-- 根据文章和收藏集id查询 sys_article_collection 数据 -->
+    <select id="getArticleCollectionInfoByTwoId" resultType="java.util.HashMap">
+        SELECT sys_article_collection_id AS sysArticleCollectionId,
+               article_id AS articleId,
+               sys_collection_id AS sysCollectionId
+        FROM sys_article_collection
+        WHERE sys_collection_id = #{sysCollectionId}
+        AND article_id = #{articleId}
+    </select>
+
+    <!-- 添加文章到收藏集 -->
+    <insert id="insertArticleToCollection">
+        INSERT INTO sys_article_collection
+            (
+             article_id,
+             sys_collection_id
+            )
+            VALUES
+            (
+             #{articleId},
+             #{sysCollectionId}
+            )
+    </insert>
+
+    <!-- 取消文章的收藏 -->
+    <delete id="deleteArticleToCollection">
+        DELETE FROM sys_article_collection
+        WHERE sys_collection_id = #{sysCollectionId}
+        AND article_id = #{articleId}
+    </delete>
+
+    <!-- 获取评论点赞数量 -->
+    <select id="getCommentsPraiseCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_comments_praise
+        WHERE sys_article_comments_id = #{sysArticleCommentsId}
+    </select>
+
+    <!-- 根据评论表id和用户id查询数据 -->
+    <select id="getCommentsPraiseByTwoId" resultType="java.util.HashMap">
+        SELECT * FROM sys_comments_praise
+        WHERE sys_article_comments_id = #{sysArticleCommentsId}
+        AND sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 点赞评论 -->
+    <insert id="insertCommentsPraise">
+        INSERT INTO sys_comments_praise
+            (
+             sys_article_comments_id,
+             sys_user_id,
+             created,
+             updated
+            )
+            VALUES
+            (
+             #{entity.sysArticleCommentsId},
+             #{entity.sysUserId},
+             #{entity.created},
+             #{entity.updated}
+            )
+    </insert>
+
+    <!-- 取消评论点赞 -->
+    <delete id="deleteCommentsPraise">
+        DELETE FROM sys_comments_praise
+        WHERE sys_article_comments_id = #{sysArticleCommentsId}
+        AND sys_user_id = #{sysUserId}
+    </delete>
+
+    <!-- 获取回复点赞数量 -->
+    <select id="getReplyPraiseCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_reply_praise
+        WHERE sys_comments_reply_id = #{sysCommentsReplyId}
+    </select>
+
+    <!-- 根据回复id和用户id查询回复点赞表数据 -->
+    <select id="getReplyPraiseInfoByTwoId" resultType="java.util.HashMap">
+        SELECT * FROM sys_reply_praise
+        WHERE sys_comments_reply_id = #{sysCommentsReplyId}
+        AND sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 回复点赞 -->
+    <insert id="insertReplyPraise">
+        INSERT INTO sys_reply_praise
+            (
+             sys_comments_reply_id,
+             sys_user_id,
+             created,
+             updated
+            ) VALUES
+            (
+             #{entity.sysCommentsReplyId},
+             #{entity.sysUserId},
+             #{entity.created},
+             #{entity.updated}
+            )
+    </insert>
+
+    <!-- 取消回复的点赞 -->
+    <delete id="deleteReplyPraise">
+        DELETE FROM sys_reply_praise
+        WHERE sys_comments_reply_id = #{sysCommentsReplyId}
+        AND sys_user_id = #{sysUserId}
+    </delete>
 </mapper>

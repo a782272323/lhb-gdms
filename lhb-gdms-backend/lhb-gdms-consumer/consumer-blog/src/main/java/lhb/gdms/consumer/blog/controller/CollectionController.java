@@ -4,13 +4,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lhb.gdms.commons.constant.HttpConstant;
 import lhb.gdms.commons.constant.ResponseConstant;
-import lhb.gdms.commons.domain.entity.SysArticleCollectionEntity;
-import lhb.gdms.commons.domain.entity.SysArticleEntity;
 import lhb.gdms.commons.domain.entity.SysCollectionEntity;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
 import lhb.gdms.configuration.utils.SecurityOauth2Utils;
 import lhb.gdms.consumer.blog.mapper.*;
+import lhb.gdms.consumer.blog.service.OtherService;
 import lhb.gdms.consumer.blog.service.SysArticleCommentsService;
 import lhb.gdms.consumer.blog.service.SysArticlePraiseService;
 import lhb.gdms.consumer.blog.service.SysCollectionService;
@@ -21,9 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Description  收藏集 controller
@@ -65,6 +66,12 @@ public class CollectionController {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private OtherMapper otherMapper;
+
+    @Autowired
+    private OtherService otherService;
 
     /**
      * 新建收藏集
@@ -197,7 +204,7 @@ public class CollectionController {
             // 获取文章点赞数量
             item.put("articlePraiseCount", sysArticlePraiseService.getArticlePraiseCount(articleId));
             // 获取文章评论数量
-            item.put("articleCommentsCount", sysArticleCommentsMapper.getArticleCommentsCount(articleId));
+            item.put("articleCommentsCount", otherService.getArticleCommentsCountAll(articleId));
             item.put("userNickName", sysUserMapper.findNicknameById(sysUserId));
             // 判断是否当前用户点赞
             item.put("isPraise", sysArticlePraiseService.findInfoById(articleId, sysUserId));
@@ -208,5 +215,64 @@ public class CollectionController {
         return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, map);
     }
 
+    /**
+     * 查询当前用户的收藏集并且用于文章详情判断当前文章是否被收藏
+     * @param articleId
+     * @param authentication
+     * @return
+     * @throws Exception
+     */
+    @PrintlnLog(description = "查询当前用户的收藏集并且用于文章详情判断当前文章是否被收藏-controller")
+    @GetMapping("/blog/collection/lists/{articleId}")
+    public BaseResult getCollectionsToArticle(@PathVariable("articleId") Long articleId,
+                                              Authentication authentication) throws Exception {
+        Long sysUserId = securityOauth2Utils.getUserId(authentication);
+        List<Map<String, Object>> list = sysCollectionMapper.getCollectionListsBySysUserId(sysUserId);
+        AtomicBoolean isCollection = new AtomicBoolean(false);
+        list.stream().forEach(item -> {
+            Long sysCollectionId = Long.parseLong(item.get("sysCollectionId").toString());
+            boolean flag = sysCollectionService.checkArticleCollection(sysCollectionId, articleId);
+            item.put("isArticleCollection", flag);
+            item.put("collectionArticleCount", sysCollectionMapper.getCollectionArticleCount(sysCollectionId));
+            if (flag == true) {
+                isCollection.set(true);
+            }
+        });
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("collectionLists", list);
+        map.put("isCollection", isCollection);
+        return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, map);
+    }
 
+    /**
+     * 添加文章到收藏集
+     * @param articleId
+     * @param sysCollectionId
+     * @param authentication
+     * @return
+     * @throws Exception
+     */
+    @PrintlnLog(description = "添加文章到收藏集-controller")
+    @PostMapping("/blog/collection/article/{articleId}/{sysCollectionId}")
+    public BaseResult insertArticleToCollection(@PathVariable("articleId") Long articleId,
+                                                @PathVariable("sysCollectionId") Long sysCollectionId,
+                                                Authentication authentication) throws Exception {
+        return otherMapper.insertArticleToCollection(articleId, sysCollectionId) <= 0
+                ? BaseResult.error(HttpConstant.ERROR_MESSAGE)
+                : BaseResult.ok("收藏成功!");
+    }
+
+    /**
+     * 取消文章的收藏
+     * @param sysCollectionId
+     * @return
+     */
+    @PrintlnLog(description = "取消文章的收藏-controller")
+    @DeleteMapping("/blog/collection/article/{articleId}/{sysCollectionId}")
+    public BaseResult deleteArticleToCollection(@PathVariable("articleId") Long articleId,
+                                                @PathVariable("sysCollectionId") Long sysCollectionId) {
+        return otherMapper.deleteArticleToCollection(articleId, sysCollectionId) <= 0
+                ? BaseResult.error(HttpConstant.ERROR_MESSAGE)
+                : BaseResult.ok("取消成功!");
+    }
 }

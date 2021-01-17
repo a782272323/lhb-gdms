@@ -20,4 +20,11 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
      * @return
      */
     String findNicknameById(@Param("sysUserId") Long sysUserId);
+
+    /**
+     * 根据用户id查询用户详情
+     * @param sysUserId
+     * @return
+     */
+    SysUserEntity getUserInfoByUserId(@Param("sysUserId") Long sysUserId);
 }

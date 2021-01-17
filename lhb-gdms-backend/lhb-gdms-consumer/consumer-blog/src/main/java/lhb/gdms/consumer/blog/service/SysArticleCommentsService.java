@@ -10,4 +10,12 @@ import lhb.gdms.commons.domain.entity.SysArticleCommentsEntity;
  * @time 02:59
  */
 public interface SysArticleCommentsService extends BaseService<SysArticleCommentsEntity> {
+
+    /**
+     * 判断是否是文章作者发表的评论
+     * @param articleId
+     * @param sysUserId
+     * @return
+     */
+    Boolean getCommentsListsBySysUserIdAndArticleId(Long articleId, Long sysUserId);
 }

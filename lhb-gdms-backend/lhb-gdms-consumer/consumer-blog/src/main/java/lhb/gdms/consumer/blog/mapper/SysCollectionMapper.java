@@ -52,4 +52,18 @@ public interface SysCollectionMapper extends BaseMapper<SysCollectionEntity> {
      */
     List<Map<String, Object>> getCollectionListById(@Param("sysUserId") Long sysUserId,
                                                     @Param("sysCollectionId") Long sysCollectionId);
+
+    /**
+     * 查询当前用户的收藏集并且用于文章详情判断当前文章是否被收藏
+     * @param sysUserId
+     * @return
+     */
+    List<Map<String, Object>> getCollectionListsBySysUserId(@Param("sysUserId") Long sysUserId);
+
+    /**
+     * 获取收藏集下的文章数量
+     * @param sysCollectionId
+     * @return
+     */
+    Integer getCollectionArticleCount(@Param("sysCollectionId") Long sysCollectionId);
 }
