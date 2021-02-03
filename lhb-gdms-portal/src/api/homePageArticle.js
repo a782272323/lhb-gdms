@@ -105,3 +105,20 @@ export function insertCommentsOrReply(data) {
     data
   })
 }
+
+// 删除单个文章
+export function deleteArticle(articleId) {
+  return request({
+    url: '/consumer-blog/blog/home-page-article/article/' + articleId,
+    method: 'delete'
+  })
+}
+
+// 编辑文章
+export function editArticle(articleId, data) {
+  return request({
+    url: '/consumer-blog/blog/home-page-article/article/' + articleId,
+    method: 'put',
+    data
+  })
+}

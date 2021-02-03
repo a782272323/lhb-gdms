@@ -16,6 +16,7 @@ export function getInfo(token) {
   })
 }
 
+// 注销
 export function logout(token) {
   return request({
     url: '/provider-user/user/logout/portal',

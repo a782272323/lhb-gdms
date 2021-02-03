@@ -36,13 +36,27 @@
         </el-row>
       </div>
     </div>
+    <!-- 回到顶部 -->
+    <el-tooltip content="返回顶部" placement="top">
+      <vue-to-top
+        type="12"
+        right="100"
+        bottom="50"
+        size="60"
+        color="#67C23A"
+        duration="300"
+      >
+      </vue-to-top>
+    </el-tooltip>
   </div>
 </template>
 
 <script>
   import { getDraftLists, deleteDraft } from '@/api/writeArticle'
+  import vueToTop from 'vue-totop'
     export default {
       name: 'CaoGao',
+      components: { vueToTop },
       data() {
           return {
             loading: false,
@@ -102,15 +116,22 @@
         },
         // 编辑草稿箱
         editOne(item) {
+          // 清除缓存
+          localStorage.removeItem('draftTitle')
+          localStorage.removeItem('draftContent')
+          localStorage.removeItem('draftType')
+          localStorage.removeItem('draftImgUrl')
+          localStorage.removeItem('draftImgKey')
+          // 设置缓存
+          localStorage.setItem('draftTitle', item.draftTitle)
+          localStorage.setItem('draftContent', item.draftContent)
+          localStorage.setItem('draftType', item.draftType)
+          localStorage.setItem('draftImgUrl', item.draftImgUrl)
+          localStorage.setItem('draftImgKey', item.draftImgKey)
           this.$router.push({
             name: 'Article',
-            params: {
-              sysDraftId: item.sysDraftId,
-              draftTitle: item.draftTitle,
-              draftContent: item.draftContent,
-              draftType: item.draftType,
-              draftImgUrl: item.draftImgUrl,
-              draftImgKey: item.draftImgKey
+            query: {
+              sysDraftId: item.sysDraftId
             }
           })
         }

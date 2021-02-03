@@ -71,6 +71,7 @@
     "vue-puzzle-vcode": "^1.1.4",
     "vue-router": "3.0.2",
     "vue-splitpane": "1.0.4",
+    "vue-totop": "^1.0.3",
     "vuedraggable": "2.20.0",
     "vuex": "3.1.0",
     "xlsx": "0.14.1"

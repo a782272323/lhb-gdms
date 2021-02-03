@@ -82,11 +82,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/home',
     children: [
+      // 首页
       {
         path: 'home',
         component: () => import('@/views/home/index'),
         name: 'Home',
         meta: { title: '首页', icon: 'dashboard', affix: true }
+      },
+      // 搜索页面
+      {
+        path: 'homeSearch',
+        component: () => import('@/views/home/homeSearch'),
+        name: 'HomeSearch',
+        meta: { title: '搜索', affix: true }
       }
     ]
   },

@@ -184,13 +184,16 @@
         </div>
         <!-- 其他事项选择 -->
         <div class="login-form-button">
-          <p style="float: left;margin-top: -20px; color: #fff">
+          <p style="float: left;margin-top: -20px; color: #fff;">
             还没有账号？
-            <el-link @click="linkToRegistered" type="success">立即注册</el-link>
+            <el-link @click="linkToRegistered" type="success" :underline="false">立即注册</el-link>
           </p>
           <p style="float: right;margin-top: -20px">
-            <el-link @click="linkToForgetPassword" type="success">忘记密码?</el-link>
+            <el-link @click="linkToForgetPassword" type="success" :underline="false">忘记密码?</el-link>
           </p>
+          <div align="center">
+            <el-link type="success" :underline="false" @click="linkToHome">暂不登录,进入博客平台</el-link>
+          </div>
         </div>
       </div>
     </div>
@@ -201,7 +204,7 @@
   import Vcode from 'vue-puzzle-vcode'
   import Img1 from '../../../src/img/bg01.jpg'
   import Img2 from '../../../src/img/bg05.jpg'
-  import { getPhoneCode, getEmailCode } from '../../api/user'
+  import { getPhoneCode, getEmailCode } from '@/api/user'
 
   export default {
     name: 'Login',
@@ -490,6 +493,9 @@
             this.emailCodeCountDown(endEmailMessageRes)
           }
         }, 1000)
+      },
+      linkToHome() {
+        this.$router.push({ name: 'Home' })
       }
     }
   }
@@ -564,13 +570,13 @@
         /*background-color: #34495E;*/
 
         .login-form-menu {
-          margin-left: 30px;
+          margin-left: 45px;
           margin-top: 80px;
           width: 300px;
         }
 
         .login-form-login {
-          margin-left: 30px;
+          margin-left: 40px;
           margin-top: 40px;
           width: 300px;
           /*background-color: #623615;*/
@@ -578,7 +584,7 @@
         }
 
         .login-form-button {
-          margin-left: 35px;
+          margin-left: 45px;
           margin-top: 50px;
           width: 300px;
         }

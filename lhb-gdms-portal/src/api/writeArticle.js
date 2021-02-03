@@ -89,3 +89,19 @@ export function updateDraft(sysDraftId, data) {
     data
   })
 }
+
+// 根据文章id获取文章详情
+export function getArticleList(articleId) {
+  return request({
+    url: '/consumer-blog/blog/write/article/list/' + articleId,
+    method: 'get'
+  })
+}
+
+// 根据标签id获取标签信息
+export function getLabelDetails(labelId) {
+  return request({
+    url: '/consumer-blog/blog/write/article/label/' + labelId,
+    method: 'get'
+  })
+}

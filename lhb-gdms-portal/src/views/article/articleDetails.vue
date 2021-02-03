@@ -124,13 +124,15 @@
                 <el-col :span="2">
                   <el-image
                     class="articleDetails-box-author-title-img"
-                    :src="userImgUrl"></el-image>
+                    :src="userImgUrl"
+                    @click="linkToBlog(userDetails.sysUserId)"
+                    ></el-image>
                 </el-col>
-                <el-col style="margin-top: -5px;"  :span="14">
+                <el-col :span="14">
                   <el-row :gutter="24">
                     <el-col :span="14">
-                      <el-link style="float: left;" :underline="false" type="info">
-                        <h5 style="color: black;">{{ userDetails.sysUserNickname }}</h5>
+                      <el-link style="float: left;" :underline="false" type="info" @click="linkToBlog(userDetails.sysUserId)">
+                        <h4 style="color: black;">{{ userDetails.sysUserNickname }}</h4>
                       </el-link>
                     </el-col>
                   </el-row>
@@ -229,12 +231,12 @@
               <el-divider></el-divider>
               <el-row :gutter="24">
                 <el-col :span="2" :offset="2">
-                  <el-image class="articleDetails-pinglun-content-img" :src="commentsLists[0].sysUserIcon"></el-image>
+                  <el-image class="articleDetails-pinglun-content-img" :src="item.sysUserIcon" @click="linkToBlog(item.sysUserId)"></el-image>
                 </el-col>
                 <el-col :span="20">
                   <el-row :gutter="24">
                     <el-col :span="20">
-                      <el-link style="float: left;margin-left: 5px;" :underline="false" type="info">
+                      <el-link style="float: left;margin-left: 5px;" :underline="false" type="info" @click="linkToBlog(item.sysUserId)">
                         <h4 v-if="item.isArticleAuthor === false" style="color: black;">{{ item.sysUserNickname }}</h4>
                         <h4 v-if="item.isArticleAuthor === true" style="color: black;">{{ item.sysUserNickname }} (作者) </h4>
                       </el-link>
@@ -330,13 +332,13 @@
                   >
                     <el-row :gutter="24">
                       <el-col :span="2">
-                        <el-image class="articleDetails-reply-content-img" :src="row.fromSysUserIcon"></el-image>
+                        <el-image class="articleDetails-reply-content-img" :src="row.fromSysUserIcon" @click="linkToBlog(row.fromSysUserId)"></el-image>
                       </el-col>
                       <el-col :span="20">
                         <!-- 该回复发表人 -->
                         <el-row :gutter="24">
                           <el-col :span="20">
-                            <el-link type="info" :underline="false" style="float: left;margin-left: 5px;margin-top: -10px;">
+                            <el-link type="info" :underline="false" style="float: left;margin-left: 5px;margin-top: -10px;" @click="linkToBlog(row.fromSysUserId)">
                               <h4 v-if="row.fromSysUserId !== articleDetails[0].sysUserId" style="color: black;">{{ row.fromSysUserNickname }}</h4>
                               <h4 v-if="row.fromSysUserId === articleDetails[0].sysUserId" style="color: black;">{{ row.fromSysUserNickname }} (作者) </h4>
                             </el-link>
@@ -358,7 +360,7 @@
                                   <h5 style="float: left;margin-left: 5px;color: black;margin-top: -10px;"> 回复 </h5>
                                 </el-col>
                                 <el-col :span="16">
-                                  <el-link style="float: left;margin-top: -28px;margin-left: -15px;" :underline="false" type="success">
+                                  <el-link style="float: left;margin-top: -28px;margin-left: -15px;" :underline="false" type="success" @click="linkToBlog(row.toSysUserId)">
                                     <h5 v-if="row.toSysUserId !== articleDetails[0].sysUserId"> {{ row.toSysUserNickname }} : </h5>
                                     <h5 v-if="row.toSysUserId === articleDetails[0].sysUserId"> {{ row.toSysUserNickname }} (作者) : </h5>
                                   </el-link>
@@ -385,7 +387,7 @@
                               style="float: right;margin-top: -7px;margin-left: 10px;"
                               :underline="false"
                               type="info"
-                              @click="openCommentsReply2(row, i)"
+                              @click="openCommentsReply2(row, i, index)"
                             >
                               <svg-icon icon-class="pinglun00-#909399"></svg-icon> 回复
                             </el-link>
@@ -412,7 +414,7 @@
                         </el-row>
                         <!-- 回复评论的回复输入框区域 -->
                         <div
-                          v-if="isCommentsReplyButton2 === true && isCommentsReply2 === i"
+                          v-if="isCommentsReplyButton2 === true && isCommentsReply2 === i && isCommentsReplyIndex2 === index"
                           style="background-color: #fff;width: 100%;height: 115px;padding: 10px;margin-top: -10px;"
                           >
                           <el-input
@@ -421,7 +423,7 @@
                             maxlength="200"
                             show-word-limit
                             clearable
-                            @blur="closeCommentsReply2(row, i)"
+                            @blur="closeCommentsReply2(row, i, index)"
                             >
                           </el-input>
                           <div>
@@ -474,10 +476,12 @@
             <div>
               <el-row :gutter="24">
                 <el-col :span="6">
-                  <el-image class="articleDetails-right-img" :src="userImgUrl"></el-image>
+                  <el-image class="articleDetails-right-img" :src="userImgUrl" @click="linkToBlog(userDetails.sysUserId)"></el-image>
                 </el-col>
                 <el-col :span="14">
-                  <h6>{{ userDetails.sysUserNickname }}</h6>
+                  <el-link :underline="false" type="info" @click="linkToBlog(userDetails.sysUserId)">
+                    <h6 style="color: black;">{{ userDetails.sysUserNickname }}</h6>
+                  </el-link>
                 </el-col>
               </el-row>
               <el-row :gutter="24">
@@ -560,6 +564,18 @@
           </div>
         </div>
       </div>
+      <!-- 回到顶部 -->
+      <el-tooltip content="返回顶部" placement="top">
+        <vue-to-top
+          type="12"
+          right="100"
+          bottom="50"
+          size="60"
+          color="#67C23A"
+          duration="300"
+        >
+        </vue-to-top>
+      </el-tooltip>
     </div>
 </template>
 
@@ -570,9 +586,10 @@
     insertCommentsOrReply } from '@/api/homePageArticle'
   import { getCollectionsToArticle, insertArticleToCollection, deleteArticleToCollection, insertCollection } from '@/api/collection'
   import marked from 'marked'
+  import vueToTop from 'vue-totop'
   export default {
     name: 'ArticleDetails',
-    components: {},
+    components: { vueToTop },
     data() {
       return {
         loading: false,
@@ -700,6 +717,7 @@
         // 是否显示评论回复的评论
         isCommentsReplyButton2: false,
         isCommentsReply2: -1,
+        isCommentsReplyIndex2: -1,
         commentsReplyContent2: '',
         // 是否显示回复详情
         isShowCommentReplyList: false,
@@ -726,6 +744,12 @@
     },
     created() {
       this.checkLogin()
+      // 判断是否跳转评论
+      if (this.$route.query.jump === 'comment') {
+        setTimeout(() => {
+          this.jumpToPingLun()
+        }, 1000)
+      }
     },
     methods: {
       // 判断是否登录
@@ -851,9 +875,11 @@
         // console.log(pingLunDiv.offsetTop)
         // 使用平滑属性，滑动到上方获取的距离
         // widow 根据浏览器滚动条，如果要在某个盒子里面产生滑动，记得修改
-        window.scrollTo({
-          'top': pingLunDiv.offsetTop,
-          'behavior': 'smooth'
+        this.$nextTick(() => {
+          window.scrollTo({
+            'top': pingLunDiv.offsetTop,
+            'behavior': 'smooth'
+          })
         })
       },
       // 没有登录系统先跳转登录,然后再返回该页面
@@ -878,7 +904,7 @@
           addArticlePraise(this.$route.query.articleId).then(res => {
             if (res.code === 200) {
               this.checkLogin()
-              this.$message.success(res.message);
+              this.$message.success(res.message)
             } else {
               this.$message.error(res.message)
             }
@@ -993,8 +1019,9 @@
         insertArticlesComments(this.$route.query.articleId, this.articleCommentsContent).then(res => {
           if (res.code === 200) {
             this.checkLogin()
-            this.$message.success(res.message)
             this.isCommentsButton = false
+            this.articleCommentsContent = ''
+            this.$message.success(res.message)
           } else {
             this.$message.error(res.message)
           }
@@ -1035,37 +1062,43 @@
         insertCommentsOrReply(this.commentsReplyParams).then(res => {
           if (res.code === 200) {
             this.checkLogin()
-            this.$message.success(res.message)
             this.isCommentsReplyButton1 = false
             this.isCommentsReply1 = -1
+            this.commentsReplyContent1 = ''
+            this.$message.success(res.message)
           } else {
             this.$message.error(res.message)
           }
         })
       },
       // 评论回复的评论聚焦时
-      openCommentsReply2(row, i) {
+      openCommentsReply2(row, i, index) {
         if (this.isLogin === false) {
           this.linkToLogin()
         } else {
           this.isCommentsReplyButton2 = true
           this.isCommentsReply2 = i
+          this.isCommentsReplyIndex2 = index
+          console.log(this.isCommentsReply2 + '/' + index)
         }
       },
       // 评论回复的评论失焦时
-      closeCommentsReply2(row, i) {
+      closeCommentsReply2(row, i, index) {
         if (this.commentsReplyContent2 !== '') {
           this.isCommentsReplyButton2 = true
           this.isCommentsReply2 = i
+          this.isCommentsReplyIndex2 = index
         } else {
           this.isCommentsReplyButton2 = false
           this.isCommentsReply2 = -1
+          this.isCommentsReplyIndex2 = -1
         }
       },
       // 取消评论回复的评论按钮
       removeCommentsReply2(row, i) {
         this.isCommentsReplyButton2 = false
         this.isCommentsReply2 = -1
+        this.isCommentsReplyIndex2 = -1
         this.commentsReplyContent2 = ''
       },
       // 评论回复的评论的评论按钮
@@ -1080,6 +1113,7 @@
             this.checkLogin()
             this.isCommentsReplyButton2 = false
             this.isCommentsReply2 = -1
+            this.commentsReplyContent2 = ''
             this.$message.success(res.message)
           } else {
             this.$message.error(res.message)
@@ -1152,6 +1186,15 @@
           })
         }).catch(() => {
           this.$message.info('已取消该操作')
+        })
+      },
+      // 跳转用户主页
+      linkToBlog(id) {
+        this.$router.push({
+          name: 'Blog',
+          query: {
+            sysUserId: id
+          }
         })
       }
     }

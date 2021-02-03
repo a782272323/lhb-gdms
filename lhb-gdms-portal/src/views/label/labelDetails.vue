@@ -77,7 +77,7 @@
             <el-col style="margin-left: 20px;margin-top: -20px" :span="14">
               <el-row :gutter="24">
                 <el-col :span="20">
-                  <el-link style="float: left" type="info" :underline="false">
+                  <el-link style="float: left" type="info" :underline="false" @click="linkToBlog(item)">
                     <h5>{{ item.userNickName }} · </h5>
                   </el-link>
                   <el-link style="float: left" type="info" :underline="false" @click="linkToArticleDetails(item)">
@@ -113,18 +113,18 @@
                     </el-badge>
                     <!-- 点赞数量 -->
                     <el-badge style="float: left;margin-right: 5px;margin-top: -10px;">
-                      <el-button v-if="item.isPraise === false" type="info" size="mini" plain>
+                      <el-button v-if="item.isPraise === false" type="info" size="mini" plain @click="submitArticlePraise(item)">
                         <svg-icon icon-class="praise00"></svg-icon>
                         {{ item.articlePraiseCount }}
                       </el-button>
-                      <el-button v-if="item.isPraise === true" type="success" size="mini">
+                      <el-button v-if="item.isPraise === true" type="success" size="mini" @click="removeArticlePraise(item)">
                         <svg-icon icon-class="praise00"></svg-icon>
                         {{ item.articlePraiseCount }}
                       </el-button>
                     </el-badge>
                     <!-- 评论数量 -->
                     <el-badge style="float: left;margin-right: 5px;margin-top: -10px;">
-                      <el-button type="info" size="mini" plain>
+                      <el-button type="info" size="mini" plain @click="linkToArticleCommentsDetails(item)">
                         <svg-icon icon-class="pinglun00"></svg-icon>
                         {{ item.articleCommentsCount }}
                       </el-button>
@@ -139,20 +139,35 @@
                 v-if="item.articleDetails.articleImgUrl"
                 style="height: 80px;width: 80px"
                 :src="item.articleDetails.articleImgUrl"
+                @click="linkToArticleDetails(item)"
                 >
               </el-image>
             </el-col>
           </el-row>
         </div>
       </div>
+      <!-- 回到顶部 -->
+      <el-tooltip content="返回顶部" placement="top">
+        <vue-to-top
+          type="12"
+          right="100"
+          bottom="50"
+          size="60"
+          color="#67C23A"
+          duration="300"
+        >
+        </vue-to-top>
+      </el-tooltip>
     </div>
 </template>
 
 <script>
   import { getLabelDetails, deleteLabelFocusOne, getLabelList, insertLabelFocus } from '@/api/label'
-  import { insertArticleBrowse } from '@/api/homePageArticle'
+  import { insertArticleBrowse, addArticlePraise, deleteArticlePraise } from '@/api/homePageArticle'
+  import vueToTop from 'vue-totop'
   export default {
     name: 'LabelDetails',
+    components: { vueToTop },
     data() {
       return {
         loading: false,
@@ -313,7 +328,23 @@
       },
       // 跳转文章详情页面
       linkToArticleDetails(item) {
+        // 反正el-image导致页面卡死
+        document.body.style = null
         this.addArticleBrowse(item)
+      },
+      // 跳转文章评论详情页面
+      linkToArticleCommentsDetails(item) {
+        insertArticleBrowse(item.articleId).then(res => {
+          if (res.code === 200) {
+            const routeUrl = this.$router.resolve({
+              name: 'ArticleDetails',
+              query: { articleId: item.articleId, jump: 'comment' }
+            })
+            window.open(routeUrl.href, '_blank')
+          } else {
+            this.$message.error(res.message)
+          }
+        })
       },
       // 查看文章详情时，使文章被阅读数加一
       addArticleBrowse(item) {
@@ -326,6 +357,51 @@
             window.open(routeUrl.href, '_blank')
           } else {
             this.$message.error(res.message)
+          }
+        })
+      },
+      // 点赞文章
+      submitArticlePraise(item) {
+        if (this.isLogin === false) {
+          this.linkToLogin()
+        } else {
+          addArticlePraise(item.articleId).then(res => {
+            if (res.code === 200) {
+              this.refreshPage()
+              this.chooseSortType()
+              this.$message.success(res.message)
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        }
+      },
+      // 取消文章的点赞
+      removeArticlePraise(item) {
+        this.$confirm('此操作将取消点赞,是否继续', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          console.log(item.articleId)
+          deleteArticlePraise(item.articleId).then(res => {
+            if (res.code === 200) {
+              this.refreshPage()
+              this.chooseSortType()
+              this.$message.success(res.message)
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        }).catch(() => {
+          this.$message.info('已取消该操作')
+        })
+      },
+      linkToBlog(item) {
+        this.$router.push({
+          name: 'Blog',
+          query: {
+            sysUserId: item.sysUserId
           }
         })
       }

@@ -42,3 +42,57 @@ export function getIconLists() {
     method: 'get'
   })
 }
+
+// 发送短信验证码
+export function sendPhoneCode(phone) {
+  return request({
+    url: '/consumer-blog/blog/person/center/system/send/phone-code',
+    method: 'post',
+    params: { phone: phone }
+  })
+}
+
+// 校验手机验证码
+export function checkPhoneCode(phone, code) {
+  return request({
+    url: '/consumer-blog/blog/person/center/system/check/phone-code',
+    method: 'get',
+    params: { phone: phone, code: code }
+  })
+}
+
+// 发送邮箱验证码
+export function sendEmailCode(to) {
+  return request({
+    url: '/consumer-blog/blog/person/center/system/send/email-code',
+    method: 'post',
+    params: { to: to }
+  })
+}
+
+// 校验邮箱验证码
+export function checkEmailCode(to, code) {
+  return request({
+    url: '/consumer-blog/blog/person/center/system/check/email-code',
+    method: 'get',
+    params: { to: to, code: code }
+  })
+}
+
+// 重置密码
+export function resetPassword(password) {
+  return request({
+    url: '/consumer-blog/blog/person/center/system/reset/password',
+    method: 'post',
+    params: { password: password }
+  })
+}
+
+// 忘记密码-重置密码
+export function resetPasswordWithoutLogin(keyword, password, code, type) {
+  return request({
+    url: '/consumer-blog/web/blog/person/center/system/reset/password',
+    method: 'post',
+    params: { keyword: keyword, password: password, code: code, type: type }
+  })
+}

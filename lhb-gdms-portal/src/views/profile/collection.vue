@@ -9,6 +9,15 @@
         </div>
 
         <!-- 收藏集盒子区域 -->
+        <div v-if="collectionList.length === 0">
+          <div>
+            <svg-icon style="height: 100px;width: 100px;" icon-class="emptyPage00"></svg-icon>
+          </div>
+          <br>
+          <div>
+            <h4>您的收藏集空空如也!</h4>
+          </div>
+        </div>
         <div v-for="(item, index) in collectionList" :key="item.sysCollectionId" class="collection-box">
           <el-divider></el-divider>
           <el-row :gutter="20" v-for="i in item.articles" :key="index">
@@ -147,7 +156,7 @@
         localStorage.setItem('sysCollectionId', item.sysCollectionId)
         localStorage.setItem('sysCollectionName', item.sysCollectionName)
         localStorage.setItem('articleCount', i.articleCount)
-        this.$router.push({ path: '/collectionDetails' })
+        this.$router.push({ path: '/collectionDetails', query: { sysCollectionId: item.sysCollectionId }})
       },
       // 打开新建收藏集弹窗
       openDialogAdd() {
@@ -200,7 +209,7 @@
       },
       // 删除收藏集
       deleteOneByOd(item) {
-        this.$confirm('此操作将删除该收藏集且移除对于的收藏文章不可恢复，是否继续', '提示', {
+        this.$confirm('此操作将删除该收藏集且移除对应的收藏文章不可恢复，是否继续', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

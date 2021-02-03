@@ -131,6 +131,9 @@
         <div align="center">
           <p style="color: #fff;margin-top: 20px">已有账号?  <el-link @click="linkToLogin" type="success"> 立即登录</el-link> </p>
         </div>
+        <div align="center">
+          <el-link type="success" :underline="false" @click="linkToHome">暂不登录,进入博客平台</el-link>
+        </div>
       </div>
     </div>
   </div>
@@ -241,19 +244,27 @@
       },
       // 获取注册手机验证码
       getRegisteredCode() {
-        this.phoneCodeLoading = true
-        getRegisteredPhoneCode(this.registeredFormParams.phone).then(res => {
-          if (res.code === 200) {
-            this.$message.success(res.message)
+        if (this.registeredFormParams.phone === '') {
+          this.$message.error('手机号不能为空')
+        } else if (this.registeredFormParams.phone.length !== 11) {
+          this.$message.error('请输入11位数的手机号')
+        } else {
+          this.phoneCodeLoading = true
+          getRegisteredPhoneCode(this.registeredFormParams.phone).then(res => {
+            if (res.code === 200) {
+              this.$message.success(res.message)
+              this.phoneCodeLoading = false
+              const endPhoneMessageRes = (new Date()).getTime() + 60000
+              localStorage.setItem('phoneEndTime', JSON.stringify(endPhoneMessageRes))
+              this.phoneCodeCountDown(endPhoneMessageRes)
+            } else {
+              this.$message.success(res.message)
+              this.phoneCodeLoading = false
+            }
+          }).catch(() => {
             this.phoneCodeLoading = false
-            const endPhoneMessageRes = (new Date()).getTime() + 60000
-            localStorage.setItem('phoneEndTime', JSON.stringify(endPhoneMessageRes))
-            this.phoneCodeCountDown(endPhoneMessageRes)
-          } else {
-            this.$message.success(res.message)
-            this.phoneCodeLoading = false
-          }
-        })
+          })
+        }
       },
       // 注册按钮
       handleRegistered() {
@@ -290,6 +301,9 @@
           this.loading = false
           this.$message.error('网络异常，请稍后重试!')
         })
+      },
+      linkToHome() {
+        this.$router.push({ name: 'Home' })
       }
     }
   }
@@ -360,7 +374,7 @@
       }
 
       .registered-form {
-        margin-left: 30px;
+        margin-left: 50px;
         margin-top: 70px;
         width: 300px;
         max-width: 350px;

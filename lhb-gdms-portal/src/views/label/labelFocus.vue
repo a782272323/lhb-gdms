@@ -67,13 +67,27 @@
           </el-col>
         </el-row>
       </div>
+      <!-- 回到顶部 -->
+      <el-tooltip content="返回顶部" placement="top">
+        <vue-to-top
+          type="12"
+          right="100"
+          bottom="50"
+          size="60"
+          color="#67C23A"
+          duration="300"
+        >
+        </vue-to-top>
+      </el-tooltip>
     </div>
 </template>
 
 <script>
   import { getLabelFocusLists, deleteLabelFocusOne, insertLabelFocus } from '@/api/label'
+  import vueToTop from 'vue-totop'
   export default {
     name: 'LabelFocus',
+    components: { vueToTop },
     data() {
       return {
         loading: false,
@@ -194,6 +208,7 @@
    width: 980px;
    min-height: 750px;
    background-color: #fff;
+   margin-bottom: 20px;
 
    .labelFocus-box-col {
      float: left;

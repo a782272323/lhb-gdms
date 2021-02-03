@@ -8,10 +8,9 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-// todo 我的主页 和 消息暂时进入白名单后续再移除
 const whiteList = ['/login',
-  '/auth-redirect', '/', '/home', '/home/index',
-  '/registered', '/registered/index',
+  '/auth-redirect', '/', '/home', '/home/index', '/blog', '/blog/index',
+  '/registered', '/registered/index', '/homeSearch',
   '/forgetPassword', '/password/forgetPassword', '/resetPassword', '/password/resetPassword',
   '/articleDetails'] // no redirect whitelist
 
@@ -28,7 +27,7 @@ router.beforeEach(async(to, from, next) => {
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page 如果已登录，则重定向到主页
-      next({ path: '/' })
+      next({ path: '/home' })
       NProgress.done()
     } else {
       // determine whether the user has obtained his permission roles through getInfo
@@ -60,7 +59,8 @@ router.beforeEach(async(to, from, next) => {
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
 
-          next(`/login?redirect=${to.path}`)
+          // next(`/login?redirect=${to.path}`)
+          next(`/login?redirect=yes`)
           // next(`/`)
           NProgress.done()
         }
@@ -75,7 +75,8 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // other pages that do not have permission to access are redirected to the login page.
       // 其他没有访问权限的页面被重定向到登录页面。
-      next(`/login?redirect=${to.path}`)
+      // next(`/login?redirect=${to.path}`)
+      next(`/login?redirect=yes`)
       // next(`/`)
       NProgress.done()
     }

@@ -20,26 +20,92 @@
             <el-menu-item index="/home" @click="linkToHome">
               <i class="el-icon-s-home"></i> 首页
             </el-menu-item>
-            <el-menu-item index="/blog" @click="linkToBlog">
-              <div v-if="this.$route.path === '/blog' ">
-                <svg-icon icon-class="Blog03-#2ECC71"></svg-icon> 我的主页
-              </div>
-              <div v-if="this.$route.path != '/blog' ">
-                <svg-icon icon-class="Blog03"></svg-icon> 我的主页
-              </div>
-            </el-menu-item>
-            <el-menu-item index="/message" @click="linkToMessage">
+<!--            <el-menu-item v-if="login === true" index="/blog" @click="linkToBlog">-->
+<!--              <div v-if="this.$route.path === '/blog'">-->
+<!--                <svg-icon icon-class="Blog03-#2ECC71"></svg-icon> 我的主页-->
+<!--              </div>-->
+<!--              <div v-if="this.$route.path !== '/blog' ">-->
+<!--                <svg-icon icon-class="Blog03"></svg-icon> 我的主页-->
+<!--              </div>-->
+<!--            </el-menu-item>-->
+            <el-menu-item v-if="login === true" index="/message" @click="linkToMessage">
               <i class="el-icon-bell"></i> 消息
             </el-menu-item>
           </el-menu>
         </div>
         <div class="switch-input">
-          <el-input
-            placeholder="探索Bin博客(文章/标签/用户)"
-            clearable
+          <el-popover
+            width="300"
+            v-if="isInputHistory === true"
+            placement="bottom"
+            trigger="click"
             >
+            <div
+              v-for="(item, index) in inputHistoryLists"
+              :key="index"
+              >
+              <el-card style="width: 270px;height: 50px; float: left;margin-bottom: 10px;" shadow="hover">
+                <el-row :gutter="24">
+                  <el-col :span="2">
+                    <svg-icon
+                      style="float: left;height: 30px;width: 30px;margin-top: -10px;margin-left: -15px;"
+                      icon-class="history00">
+                    </svg-icon>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-link
+                      style="float: left;margin-top: -25px;margin-left: 10px;color: black;"
+                      type="info"
+                      :underline="false"
+                      @click="linkToHomeSearch(item)"
+                      >
+                      <h2>{{ item.sysInputHistoryContent }}</h2>
+                    </el-link>
+                  </el-col>
+                  <el-col :span="2" :offset="1">
+                    <el-button
+                      style="float: left;margin-top: -10px;margin-bottom: 20px;"
+                      size="mini"
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                      plain
+                      @click="removeInputHistory(item)">
+                    </el-button>
+                  </el-col>
+                </el-row>
+              </el-card>
+            </div>
+            <el-input
+              slot="reference"
+              style="width: 250px;"
+              placeholder="探索Bin博客(文章/标签/用户)"
+              v-model.trim="searchContent"
+              @keyup.enter.native="linkToHomeSort"
+              clearable
+            >
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+          </el-popover>
+          <el-input
+            slot="reference"
+            v-if="isInputHistory === false"
+            style="width: 250px;"
+            placeholder="探索Bin博客(文章/标签/用户)"
+            v-model.trim="searchContent"
+            @keyup.enter.native="linkToHomeSort"
+            clearable
+          >
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
+          <el-button
+            type="success"
+            icon="el-icon-search"
+            plain
+            circle
+            @click="linkToHomeSort"
+            :disabled="searchContent === ''"
+            ></el-button>
         </div>
         <!-- 个人中心区域 -->
         <!--    <div class="person-center" >-->
@@ -64,14 +130,17 @@
               <router-link to="/">
                 <el-dropdown-item><i class="el-icon-s-home"></i>首页</el-dropdown-item>
               </router-link>
-              <router-link to="/blog">
-                <el-dropdown-item><svg-icon icon-class="Blog03"></svg-icon> 我的主页</el-dropdown-item>
-              </router-link>
               <router-link to="/message">
                 <el-dropdown-item><i class="el-icon-bell"></i>消息</el-dropdown-item>
               </router-link>
+<!--              <div @click="linkToBlog">-->
+<!--                <el-dropdown-item divided><svg-icon icon-class="Blog03"></svg-icon> 我的主页</el-dropdown-item>-->
+<!--              </div>-->
+              <router-link to="/blog">
+                <el-dropdown-item divided><svg-icon icon-class="Blog03"></svg-icon> 我的主页</el-dropdown-item>
+              </router-link>
               <router-link to="/article">
-                <el-dropdown-item divided><i class="el-icon-edit"></i>写文章</el-dropdown-item>
+                <el-dropdown-item><i class="el-icon-edit"></i>写文章</el-dropdown-item>
               </router-link>
               <router-link to="/caoGao">
                 <el-dropdown-item><svg-icon icon-class="caoGao01"></svg-icon> 草稿箱</el-dropdown-item>
@@ -107,8 +176,8 @@ import { mapGetters } from 'vuex'
 // eslint-disable-next-line no-unused-vars
 import { getToken } from '@/utils/auth' // get token from cookie
 // import '@/src/icons/my/Blog2.svg'
-import { getUserDetails } from '@/api/system'
-
+import { getUserDetails, sendPhoneCode, checkPhoneCode } from '@/api/system'
+import { insertInputHistory, getInputHistory, updateInputHistory, deleteInputHistory } from '@/api/homeSearch'
 export default {
   computed: {
     ...mapGetters([
@@ -123,7 +192,21 @@ export default {
       // 当前激活菜单
       activeIndex: '1',
       imageUrl: '',
-      userList: []
+      userList: [],
+      searchContent: '',
+      isInputHistory: false,
+      // 当前登录用户id
+      userId: '',
+      // 输入框历史记录
+      inputHistoryLists: [
+        {
+          created: '',
+          updated: '',
+          sysInputHistoryId: '',
+          sysInputHistoryContent: '',
+          sysUserId: ''
+        }
+      ]
     }
   },
   created() {
@@ -132,17 +215,34 @@ export default {
     if (this.login === true) {
       this.refreshPage()
     }
+    if (this.$route.query.search !== undefined) {
+      this.searchContent = this.$route.query.search
+    }
   },
   methods: {
     refreshPage() {
+      // 获取用户数据详情
       getUserDetails().then(res => {
         this.userList = res.data.getList
         this.imageUrl = res.data.getList.sysUserIcon
-        localStorage.setItem('sysUserId', res.data.getList.sysUserId)
+        this.userId = res.data.getList.sysUserId
+        localStorage.setItem('sysUserId', this.userId)
+      })
+      // 获取输入框历史记录
+      getInputHistory().then(res => {
+        if (res.code === 200) {
+          this.inputHistoryLists = res.data.inputHistoryLists
+          if (this.inputHistoryLists.length > 0) {
+            this.isInputHistory = true
+          }
+        } else {
+          this.$message.error(res.message)
+        }
       })
     },
     async logout() {
       await this.$store.dispatch('user/logout')
+      localStorage.removeItem('sysUserId')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     isLogin() {
@@ -150,25 +250,28 @@ export default {
       if (hashToken) {
         this.login = true
       } else {
-        console.log('未登录')
         this.login = false
       }
     },
     // 跳转到我的主页
     linkToBlog() {
-      console.log('我的主页 activeIndex = ' + this.activeIndex)
       this.activeIndex = '2'
-      this.$router.push({ path: '/blog' })
+      this.$router.push({
+        path: '/blog',
+        query: {
+          sysUserId: this.userId,
+          blogType: 'article'
+        }
+      })
+      window.location.reload()
     },
     // 跳转到首页
     linkToHome() {
-      console.log('首页 activeIndex = ' + this.activeIndex)
       this.activeIndex = '1'
       this.$router.push({ path: '/home' })
     },
     // 跳转到消息
     linkToMessage() {
-      console.log('消息 activeIndex = ' + this.$route.path)
       this.activeIndex = '3'
       this.$router.push({ path: '/message' })
     },
@@ -183,6 +286,67 @@ export default {
     // 跳转到写文章页面
     linkToArticle() {
       this.$router.push({ path: '/article' })
+    },
+    // 搜索按钮跳转搜索页面
+    linkToHomeSort() {
+      if (this.login === true) {
+        insertInputHistory(this.searchContent).then(res => {
+          if (res.code === 200) {
+            this.refreshPage()
+            const routeUrl = this.$router.resolve({
+              name: 'HomeSearch',
+              query: {
+                search: this.searchContent
+              }
+            })
+            window.open(routeUrl.href, '_blank')
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      } else {
+        const routeUrl = this.$router.resolve({
+          name: 'HomeSearch',
+          query: {
+            search: this.searchContent
+          }
+        })
+        window.open(routeUrl.href, '_blank')
+      }
+    },
+    // 历史记录内容点击跳转搜索页面
+    linkToHomeSearch(item) {
+      updateInputHistory(item.sysInputHistoryContent).then(res => {
+        if (res.code === 200) {
+          const routeUrl = this.$router.resolve({
+            name: 'HomeSearch',
+            query: {
+              search: item.sysInputHistoryContent
+            }
+          })
+          window.open(routeUrl.href, '_blank')
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    // 删除搜索框历史记录
+    removeInputHistory(item) {
+      deleteInputHistory(item.sysInputHistoryId).then(res => {
+        if (res.code === 200) {
+          this.refreshPage()
+          this.$message.success(res.message)
+          getInputHistory().then(res => {
+            if (res.data.inputHistoryLists.length <= 0) {
+              setTimeout(() => {
+                window.location.reload()
+              }, 1000)
+            }
+          })
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     }
   }
 }
@@ -228,7 +392,7 @@ export default {
       .switch-input {
         float: left;
         margin-top: 13px;
-        width: 250px;
+        width: 300px;
       }
 
     }

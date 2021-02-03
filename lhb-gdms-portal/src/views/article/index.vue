@@ -33,38 +33,64 @@
             <el-button style="margin-top: 17px" type="success" plain round slot="reference" @click="clickFaBu">
               发布
             </el-button>
-            <el-input
-              v-model="labelKeyWord"
-              ref="keyWord"
-              placeholder="搜索标签......"
-              type="text"
-              clearable
-              style="width: 120px;margin-right: 10px"
-            />
-            <el-button type="success" @click="queryLabel">搜索</el-button>
-            <el-table
-              :data="labelList"
-              style="margin-top: 10px"
-              max-height="250px"
-              fit
-              border
-              stripe
-              highlight-current-row
-              @current-change="clickCurrentChange"
+            <!-- 使用当前标签 -->
+            <div v-if="this.isLabel === true">
+              <el-row :gutter="24">
+                <el-col :span="6">
+                  <h4 style="color: black;">
+                    当前标签 :
+                  </h4>
+                </el-col>
+                <el-col :span="2">
+                  <el-image style="margin-top: 10px;width: 40px;height: 40px;border-radius: 10px" :src="EditLabelIconUrl"></el-image>
+                </el-col>
+                <el-col :span="10">
+                  <h4 style="color: black;">{{ EditLabelName }}</h4>
+                </el-col>
+                <el-col :span="4">
+                  <el-button style="margin-top: 20px;" type="success" size="mini" plain round @click="chooseNewLabel">
+                    重新选择
+                  </el-button>
+                </el-col>
+              </el-row>
+              <el-divider></el-divider>
+            </div>
+            <!-- 搜索标签 -->
+            <div v-if="this.isLabel === false">
+              <el-input
+                v-model="labelKeyWord"
+                ref="keyWord"
+                placeholder="搜索标签......"
+                type="text"
+                clearable
+                style="width: 120px;margin-right: 10px"
+              />
+              <el-button type="success" @click="queryLabel">搜索</el-button>
+              <el-button type="success" @click="chooseOldLabel">查看原本标签</el-button>
+              <el-table
+                :data="labelList"
+                style="margin-top: 10px"
+                max-height="250px"
+                fit
+                border
+                stripe
+                highlight-current-row
+                @current-change="clickCurrentChange"
               >
-              <el-table-column fixed label="标签图标" prop="labelIconUrl" align="center" width="120">
-                <template slot-scope="scope">
-                  <div class="block">
-                    <el-image style="width: 30px;height: 30px;border-radius: 10px" :src="scope.row.labelIconUrl"></el-image>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column fixed label="标签名称" prop="labelName" align="center">
-                <template slot-scope="scope">
-                  <span> {{ scope.row.labelName }}</span>
-                </template>
-              </el-table-column>
-            </el-table>
+                <el-table-column fixed label="标签图标" prop="labelIconUrl" align="center" width="120">
+                  <template slot-scope="scope">
+                    <div class="block">
+                      <el-image style="width: 30px;height: 30px;border-radius: 10px" :src="scope.row.labelIconUrl"></el-image>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="标签名称" prop="labelName" align="center">
+                  <template slot-scope="scope">
+                    <span> {{ scope.row.labelName }}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
             <div style="margin-top: 10px" align="center">
               <el-button type="success" @click="submitFaBu">确定并发布</el-button>
             </div>
@@ -118,7 +144,11 @@
     </div>
 <!--    <el-divider style="margin-top: -10px"></el-divider>-->
     <!-- 上传图片弹窗 -->
-    <div style="" align="center">
+    <div
+      v-loading="coverLoading"
+      element-loading-text="拼命加载中......"
+      elment-loading-spinner="el-icon-loading"
+      align="center">
       <el-dialog
         :visible.sync="dialogCoverImg"
         title="上传文章封面图片"
@@ -197,7 +227,8 @@
       </div>
     </div>
     <!-- 预览markdown编译器文章 -->
-    <div align="center">
+    <div
+      align="center">
       <el-dialog
         :visible.sync="dialogMarkdown"
         width="650px"
@@ -213,18 +244,32 @@
         <div v-html="html" />
       </el-dialog>
     </div>
+    <!-- 回到顶部 -->
+    <el-tooltip content="返回顶部" placement="top">
+      <vue-to-top
+        type="12"
+        right="100"
+        bottom="50"
+        size="60"
+        color="#67C23A"
+        duration="300"
+      >
+      </vue-to-top>
+    </el-tooltip>
   </div>
 </template>
 
 <script>
   import Tinymce from '@/components/Tinymce'
   import { articleCoverImg, deleteArticleCoverImg, addDraft, getLabelInfo, queryLabelInfo, faBuArticle,
-    updateDraft, deleteDraft } from '@/api/writeArticle'
+    updateDraft, deleteDraft, getLabelDetails } from '@/api/writeArticle'
   import MarkdownEditor from '@/components/MarkdownEditor'
   import { getUserDetails } from '@/api/system'
+  import { editArticle } from '@/api/homePageArticle'
+  import vueToTop from 'vue-totop'
   export default {
     name: 'Article',
-    components: { Tinymce, MarkdownEditor },
+    components: { Tinymce, MarkdownEditor, vueToTop },
     data() {
       return {
         imageUrl: '',
@@ -267,10 +312,26 @@
           labelIconUrl: '',
           labelIconKey: ''
         },
+        // 标签列表
         labelList: [],
         labelKeyWord: '',
         labelId: '',
-        loading: false
+        loading: false,
+        coverLoading: false,
+        // 判断是否存在标签(文章编辑)
+        isLabel: false,
+        EditLabelId: '',
+        EditLabelName: '',
+        EditLabelIconUrl: '',
+        // 编辑文章参数
+        editArticleParams: {
+          articleTitle: '',
+          articleContent: '',
+          articleType: '',
+          articleImgUrl: '',
+          articleImgKey: '',
+          labelId: ''
+        }
       }
     },
     // 离开页面时提示
@@ -282,8 +343,10 @@
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            this.removeCache()
             next()
           }).catch(() => {
+            this.removeCache()
             window.history.go(1)
           })
         } else {
@@ -292,8 +355,10 @@
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            this.removeCache()
             next()
           }).catch(() => {
+            this.removeCache()
             window.history.go(1)
           })
         }
@@ -304,13 +369,35 @@
     created() {
       this.refreshPage()
       // 判断是否从草稿箱的编辑项跳转过来
-      if (this.$route.params.sysDraftId !== undefined) {
+      if (this.$route.query.sysDraftId !== undefined) {
         console.log('从草稿箱过来编辑文章的')
-        this.compilerType = this.$route.params.draftType
-        this.uploadImgParams.url = this.$route.params.draftImgUrl
-        this.uploadImgParams.key = this.$route.params.draftImgKey
-        this.articleParams.title = this.$route.params.draftTitle
-        this.articleParams.content = this.$route.params.draftContent
+        // 读取缓存
+        this.compilerType = localStorage.getItem('draftType')
+        this.uploadImgParams.url = localStorage.getItem('draftImgUrl')
+        this.uploadImgParams.key = localStorage.getItem('draftImgKey')
+        this.articleParams.title = localStorage.getItem('draftTitle')
+        this.articleParams.content = localStorage.getItem('draftContent')
+      }
+      // 判断是否从我的主页跳转过来编辑文章的
+      if (this.$route.query.articleId !== undefined) {
+        console.log('从我的主页过来编辑文章的')
+        // 读取缓存
+        this.compilerType = localStorage.getItem('articleType')
+        this.uploadImgParams.url = localStorage.getItem('articleImgUrl')
+        this.uploadImgParams.key = localStorage.getItem('articleImgKey')
+        this.articleParams.title = localStorage.getItem('articleTitle')
+        this.articleParams.content = localStorage.getItem('articleContent')
+        this.EditLabelId = localStorage.getItem('labelId')
+        // 获取标签信息
+        getLabelDetails(this.EditLabelId).then(res => {
+          if (res.code === 200) {
+            this.isLabel = true
+            this.EditLabelIconUrl = res.data.labelDetails[0].labelIconUrl
+            this.EditLabelName = res.data.labelDetails[0].labelName
+          } else {
+            this.$message.error(res.message)
+          }
+        })
       }
     },
     computed: {
@@ -348,7 +435,6 @@
       // 预览tinymce富文本编译器弹窗
       openTinymceDialog() {
         this.dialogTinymce = true
-        console.log('富文本内容 = ' + this.articleParams.content)
       },
       // 文章封面图片上传取消按钮
       removeCoverImg() {
@@ -400,22 +486,19 @@
       },
       // 文章封面图片上传确认按钮
       submitCoverImg() {
+        this.coverLoading = true
         var formData = new FormData()
         formData.append('file', this.uploadImgParams.img)
         articleCoverImg(formData).then(res => {
-          if (res.code === 200) {
-            this.dialogCoverImg = false
-            this.uploadImgParams.url = res.data.url
-            this.uploadImgParams.key = res.data.key
-            this.$message.success(res.message)
-          } else {
-            this.$message.error(res.message)
-          }
+          this.dialogCoverImg = false
+          this.uploadImgParams.url = res.data.url
+          this.uploadImgParams.key = res.data.key
+          this.coverLoading = false
+          this.$message.success('上传成功!')
         })
       },
       // 删除文章封面图片按钮
       deleteCoverImg() {
-        console.log('七牛云key = ' + this.uploadImgParams.key)
         this.$confirm('此操作将删除该封面图片且不可恢复，是否继续', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -441,8 +524,8 @@
         this.articleParams.coverImgUrl = this.uploadImgParams.url
         this.articleParams.key = this.uploadImgParams.key
         this.articleParams.type = this.compilerType
-        if (this.$route.params.sysDraftId !== undefined) {
-          updateDraft(this.$route.params.sysDraftId, this.articleParams).then(res => {
+        if (this.$route.query.sysDraftId !== undefined) {
+          updateDraft(this.$route.query.sysDraftId, this.articleParams).then(res => {
             if (res.code === 200) {
               this.isLeaf = true
               this.$message.success(res.message)
@@ -467,7 +550,6 @@
       getHtml() {
         this.dialogTinymce = true
         this.html = this.$refs.markdownEditor.getHtml()
-        console.log('markdown编译器内容 = ' + this.html)
       },
       // 获取标签信息
       clickFaBu() {
@@ -498,6 +580,7 @@
           }
         })
       },
+      // 选择表格的标签
       clickCurrentChange(val) {
         this.labelId = val.labelId
       },
@@ -506,25 +589,85 @@
         this.articleParams.coverImgUrl = this.uploadImgParams.url
         this.articleParams.key = this.uploadImgParams.key
         this.articleParams.type = this.compilerType
-        faBuArticle(this.articleParams, this.labelId).then(res => {
-          if (res.code === 200) {
-            if (this.$route.params.sysDraftId !== undefined) {
-              console.log('删除草稿箱')
-              deleteDraft(this.$route.params.sysDraftId)
+        if (this.$route.query.articleId === undefined) {
+          // 发布文章
+          faBuArticle(this.articleParams, this.labelId).then(res => {
+            if (res.code === 200) {
+              if (this.$route.query.sysDraftId !== undefined) {
+                deleteDraft(this.$route.query.sysDraftId)
+              }
+              this.articleParams.id = res.articleId
+              this.isLeaf = true
+              this.$message.success(res.message)
+              this.$router.push({ path: '/articleFaBu', query: { articleId: this.articleParams.id }})
+            } else {
+              this.$message.error(res.message)
             }
-            this.articleParams.id = res.articleId
+          })
+        }
+        // 编辑文章重新发布
+        if (this.$route.query.articleId !== undefined) {
+          this.editArticleParams.articleContent = this.articleParams.content
+          this.editArticleParams.articleImgKey = this.articleParams.key
+          this.editArticleParams.articleImgUrl = this.articleParams.coverImgUrl
+          this.editArticleParams.articleTitle = this.articleParams.title
+          this.editArticleParams.articleType = this.articleParams.type
+          // 重新选择标签发布
+          if (this.isLabel === false) {
+            if (this.labelId === '') {
+              this.$message.error('请选择标签')
+            }
+            this.editArticleParams.labelId = this.labelId
+            console.log('重新选择标签发布 ' + JSON.stringify(this.editArticleParams))
+            this.submitArticle(this.$route.query.articleId, this.editArticleParams)
+          }
+          // 使用原本标签发布
+          if (this.isLabel === true) {
+            this.editArticleParams.labelId = this.EditLabelId
+            console.log('使用原本标签发布 ' + JSON.stringify(this.editArticleParams))
+            this.submitArticle(this.$route.query.articleId, this.editArticleParams)
+          }
+        }
+      },
+      // 编辑文章
+      submitArticle(articleId, data) {
+        editArticle(articleId, data).then(res => {
+          if (res.code === 200) {
             this.isLeaf = true
             this.$message.success(res.message)
-            // this.$router.push({ path: '/articleFaBu' })
-            const routeUrl = this.$router.resolve({
-              name: 'ArticleFaBu',
-              query: { articleId: this.articleParams.id }
-            })
-            window.open(routeUrl.href, '_blank')
+            this.$router.push({ path: '/articleFaBu', query: { articleId: articleId }})
           } else {
             this.$message.error(res.message)
           }
         })
+      },
+      // 清除缓存
+      removeCache() {
+        if (this.$route.query.sysDraftId !== undefined) {
+          console.log('清除草稿箱缓存')
+          localStorage.removeItem('draftTitle')
+          localStorage.removeItem('draftContent')
+          localStorage.removeItem('draftType')
+          localStorage.removeItem('draftImgUrl')
+          localStorage.removeItem('draftImgKey')
+        }
+        if (this.$route.query.articleId !== undefined) {
+          console.log('清除主页缓存')
+          localStorage.removeItem('articleTitle')
+          localStorage.removeItem('articleContent')
+          localStorage.removeItem('articleType')
+          localStorage.removeItem('articleImgUrl')
+          localStorage.removeItem('articleImgKey')
+          localStorage.removeItem('labelId')
+        }
+      },
+      // 重新选择标签
+      chooseNewLabel() {
+        this.isLabel = false
+      },
+      // 查看旧标签
+      chooseOldLabel() {
+        this.isLabel = true
       }
     }
   }
