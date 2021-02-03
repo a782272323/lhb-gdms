@@ -39,4 +39,10 @@ public interface SysArticlePraiseMapper extends BaseMapper<SysArticlePraiseEntit
     SysArticlePraiseEntity findInfoById(@Param("articleId") Long articleId,
                                         @Param("sysUserId") Long sysUserId);
 
+    /**
+     * 根据用户id查询用户点赞总数
+     * @param sysUserId
+     * @return
+     */
+    Integer getUserArticlePraise(@Param("sysUserId") Long sysUserId);
 }

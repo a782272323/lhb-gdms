@@ -1,5 +1,8 @@
 package lhb.gdms.consumer.blog.service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Description
  * @author Herbie Leung(梁鸿斌)
@@ -69,4 +72,25 @@ public interface OtherService {
      * @return
      */
     Integer deleteReplyPraise(Long sysCommentsReplyId, Long sysUserId);
+
+    /**
+     * 用户主页点赞列表
+     * @param userId
+     * @return
+     */
+    List<Map<String, Object>> getHomePraiseLists(Long userId);
+
+    /**
+     * 消息模块评论相关列表详情
+     * @param sysUserId
+     * @return
+     */
+    public List<Map<String, Object>> getMessageCommentsLists(Long sysUserId);
+
+    /**
+     * 消息模块点赞相关列表详情
+     * @param sysUserId
+     * @return
+     */
+    public List<Map<String, Object>> getMessagePraiseLists(Long sysUserId);
 }

@@ -36,4 +36,25 @@ public interface SysLabelMapper extends BaseMapper<SysLabelEntity> {
      * @return
      */
     List<SysLabelEntity> getLabelInfoById(@Param("labelId") Long labelId);
+
+    /**
+     * 当前登录用户关注的标签数据列表
+     * @param sysUserId
+     * @return
+     */
+    List<Map<String, Object>> getFocusLabelLists(@Param("sysUserId") Long sysUserId);
+
+    /**
+     * 根据用户id查询用户关注的标签数
+     * @param sysUserId
+     * @return
+     */
+    Integer getHomeUserFocusLabelCountAll(@Param("sysUserId") Long sysUserId);
+
+    /**
+     * 搜索标签
+     * @param labelName
+     * @return
+     */
+    List<Map<String, Object>> searchLabelLists(@Param("labelName") String labelName);
 }

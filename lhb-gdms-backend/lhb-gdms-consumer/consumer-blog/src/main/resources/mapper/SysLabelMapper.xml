@@ -50,4 +50,42 @@
         SELECT * FROM sys_label
         WHERE label_id = #{labelId}
     </select>
+
+    <!-- 根据标签名称查询标签信息 -->
+    <select id="selectOneByKeyWord" resultMap="map1">
+        SELECT * FROM sys_label
+        WHERE label_name = #{entity.labelName}
+    </select>
+
+    <!-- 当前登录用户关注的标签数据列表 -->
+    <select id="getFocusLabelLists" resultType="java.util.HashMap">
+        SELECT sys_label_focus_id AS sysLabelFocusId,
+               a.label_id AS labelId,
+               label_name AS labelName,
+               sys_user_id AS sysUserId,
+               a.created,
+               b.updated
+        FROM sys_label_focus AS a, sys_label AS b
+        WHERE a.label_id = b.label_id
+        AND sys_user_id = #{sysUserId}
+        ORDER BY a.created DESC
+    </select>
+
+    <!-- 根据用户id查询用户关注的标签数 -->
+    <select id="getHomeUserFocusLabelCountAll" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_label_focus
+        WHERE sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 搜索标签 -->
+    <select id="searchLabelLists" resultType="java.util.HashMap">
+        SELECT label_id AS labelId,
+               label_name AS labelName,
+               label_icon_url AS labelIconUrl,
+               label_icon_key AS labelIconKey,
+               created AS created,
+               updated AS updated
+        FROM sys_label
+        WHERE label_name LIKE CONCAT(CONCAT('%', #{labelName}), '%')
+    </select>
 </mapper>

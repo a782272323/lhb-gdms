@@ -44,7 +44,7 @@
             )
     </insert>
 
-    <!-- 根据id查看单个文章详情 -->
+    <!-- 根据文章id查看单个文章详情 -->
     <select id="getArticleListById" resultMap="sysArticleMap1">
         SELECT * FROM sys_article
         WHERE article_id = #{articleId}
@@ -121,11 +121,166 @@
                article_img_url AS articleImgUrl,
                article_img_key AS articleImgKey,
                sys_user_id AS sysUserId,
-               label_id AS labelId,
-               created,
-               updated
-        FROM sys_article
+               a.label_id AS labelId,
+               label_name AS labelName,
+               a.created,
+               a.updated
+        FROM sys_article AS a, sys_label AS b
         WHERE sys_user_id = #{sysUserId}
+        AND a.label_id = b.label_id
+        ORDER BY a.updated DESC, a.created DESC
+    </select>
+
+    <!-- 按照文章发布时间降序排序 -->
+    <select id="getHomeArticleLists" resultType="java.util.HashMap">
+        SELECT article_id AS articleId,
+               article_title AS articleTitle,
+               article_content AS articleContent,
+               article_type AS articleType,
+               article_browse_sum AS articleBrowseSum,
+               article_img_url AS articleImgUrl,
+               article_img_key AS articleImgKey,
+               a.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               a.label_id AS labelId,
+               label_name AS labelName,
+               a.created,
+               a.updated
+        FROM sys_article AS a, sys_label AS b, sys_user AS c
+        WHERE a.label_id = b.label_id
+        AND a.sys_user_id = c.sys_user_id
+        ORDER BY a.created DESC
+    </select>
+
+    <!-- 根据标签id查看首页文章详情，按照时间降序排序 -->
+    <select id="getHomeArticleListsByLabelId" resultType="java.util.HashMap">
+        SELECT article_id AS articleId,
+               article_title AS articleTitle,
+               article_content AS articleContent,
+               article_type AS articleType,
+               article_browse_sum AS articleBrowseSum,
+               article_img_url AS articleImgUrl,
+               article_img_key AS articleImgKey,
+               a.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               a.label_id AS labelId,
+               label_name AS labelName,
+               a.created,
+               a.updated
+        FROM sys_article AS a, sys_label AS b, sys_user AS c
+        WHERE a.label_id = b.label_id
+        AND a.sys_user_id = c.sys_user_id
+        AND a.label_id = #{labelId}
+        ORDER BY a.created DESC
+    </select>
+
+    <!-- 根据用户id查询文章总数 -->
+    <select id="getHomeUserArticleCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_article
+        WHERE sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 用户主页评论列表 -->
+    <select id="getHomeCommentsLists" resultType="java.util.HashMap">
+        (
+            SELECT A.article_id AS id,
+                   A.sys_user_id AS sysUserId,
+                   article_comments_content AS commentsContent,
+                   A.created AS created,
+                   B.article_title AS title,
+                   'comment' AS type
+            FROM sys_article_comments A
+            LEFT JOIN sys_article B
+            ON A.article_id = B.article_id
+            WHERE A.sys_user_id = #{userId}
+        ) UNION ALL
+        (
+            SELECT C.article_id AS id,
+                   from_sys_user_id AS sysUserId,
+                   comments_reply_content AS commentContent,
+                   B.created AS created,
+                   C.article_title AS title,
+                   'reply' AS type
+            FROM sys_article_comments A
+            LEFT JOIN sys_comments_reply B
+            ON A.sys_article_comments_id = B.sys_article_comments_id
+            LEFT JOIN sys_article C
+            ON C.article_id = A.article_id
+            WHERE from_sys_user_id = #{userId}
+        )
         ORDER BY created DESC
+    </select>
+
+    <!-- 删除单个文章 -->
+    <delete id="deleteOneById">
+        DELETE FROM sys_article
+        WHERE article_id = #{id}
+    </delete>
+
+    <!-- 编辑文章 -->
+    <update id="update">
+        UPDATE sys_article
+        SET updated = #{entity.updated},
+            sys_user_id = #{entity.sysUserId}
+        <if test="entity.articleTitle != null and entity.articleTitle != ''">
+            ,article_title = #{entity.articleTitle}
+        </if>
+        <if test="entity.articleContent != null and entity.articleContent != ''">
+            ,article_content = #{entity.articleContent}
+        </if>
+        <if test="entity.articleType != null and entity.articleType != ''">
+            ,article_type = #{entity.articleType}
+        </if>
+        <if test="entity.articleImgUrl != null and entity.articleImgUrl != ''">
+            ,article_img_url = #{entity.articleImgUrl}
+        </if>
+        <if test="entity.articleImgKey != null and entity.articleImgKey != ''">
+            ,article_img_key = #{entity.articleImgKey}
+        </if>
+        <if test="entity.labelId != null and entity.labelId != ''">
+            ,label_id = #{entity.labelId}
+        </if>
+        WHERE article_id = #{entity.articleId}
+    </update>
+
+    <!-- 搜索文章 -->
+    <select id="searchArticleLists" resultType="java.util.HashMap">
+        SELECT article_id AS articleId,
+               article_title AS articleTitle,
+               article_type AS articleType,
+               article_browse_sum AS articleBrowseSum,
+               article_img_key AS articleImgKey,
+               article_img_url AS articleImgUrl,
+               A.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               A.label_id AS labelId,
+               label_name AS labelName,
+               A.created AS created,
+               A.updated AS updated
+        FROM sys_article A
+        LEFT JOIN sys_label B
+        ON A.label_id = B.label_id
+        LEFT JOIN sys_user C
+        ON A.sys_user_id = C.sys_user_id
+        WHERE article_title LIKE BINARY CONCAT(CONCAT('%', #{search}), '%')
+        OR article_content LIKE BINARY CONCAT(CONCAT('%', #{search}), '%')
+        OR sys_user_nickname LIKE BINARY CONCAT(CONCAT('%', #{search}), '%')
+        OR label_name LIKE BINARY CONCAT(CONCAT('%', #{search}), '%')
+        <if test="articleType == 'days'">
+            AND A.created > DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        </if>
+        <if test="articleType == 'weeks'">
+            AND A.created > DATE_SUB(CURDATE(), INTERVAL 1 WEEK)
+        </if>
+        <if test="articleType == 'months'">
+            AND A.created > DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+        </if>
+        ORDER BY A.created DESC
+    </select>
+
+    <!-- 搜索文章内容根据文章id -->
+    <select id="searchArticleContent" resultType="java.lang.String">
+        SELECT article_content AS articleContent FROM sys_article
+        WHERE article_id = #{articleId}
     </select>
 </mapper>

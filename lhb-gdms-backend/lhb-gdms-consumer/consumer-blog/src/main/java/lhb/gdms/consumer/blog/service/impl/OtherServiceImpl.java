@@ -139,4 +139,34 @@ public class OtherServiceImpl implements OtherService {
     public Integer deleteReplyPraise(Long sysCommentsReplyId, Long sysUserId) {
         return otherMapper.deleteReplyPraise(sysCommentsReplyId, sysUserId) > 0 ? 1 : 0;
     }
+
+    /**
+     * 用户主页点赞列表
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> getHomePraiseLists(Long userId) {
+        return otherMapper.getHomePraiseLists(userId);
+    }
+
+    /**
+     * 消息模块评论相关列表详情
+     * @param sysUserId
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> getMessageCommentsLists(Long sysUserId) {
+        return otherMapper.getMessageCommentsLists(sysUserId);
+    }
+
+    /**
+     * 消息模块点赞相关列表详情
+     * @param sysUserId
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> getMessagePraiseLists(Long sysUserId) {
+        return otherMapper.getMessagePraiseLists(sysUserId);
+    }
 }

@@ -38,4 +38,11 @@ public interface SysCollectionService extends BaseService<SysCollectionEntity> {
      * @return
      */
     public Boolean checkArticleCollection(Long sysCollectionId, Long articleId);
+
+    /**
+     * 根据用户id查询用户创建的收藏集总数
+     * @param sysUserId
+     * @return
+     */
+    public Integer getHomeUserCollectionCountAll(Long sysUserId);
 }

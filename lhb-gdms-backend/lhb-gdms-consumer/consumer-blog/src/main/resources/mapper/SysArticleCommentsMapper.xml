@@ -63,4 +63,10 @@
         SELECT * FROM sys_article_comments
         WHERE article_id = #{articleId}
     </select>
+
+    <!-- 根据用户id获取用户发表的评论总数 -->
+    <select id="getHomeUserCommentsCountAll" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_article_comments
+        WHERE sys_user_id = #{sysUserId}
+    </select>
 </mapper>

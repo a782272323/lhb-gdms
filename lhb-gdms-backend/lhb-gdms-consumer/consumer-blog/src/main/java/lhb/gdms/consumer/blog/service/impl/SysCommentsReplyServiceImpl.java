@@ -21,4 +21,14 @@ public class SysCommentsReplyServiceImpl extends BaseServiceImpl<SysCommentsRepl
 
     @Autowired
     private SysCommentsReplyMapper sysCommentsReplyMapper;
+
+    /**
+     * 根据用户id查询用户发表的回复总数
+     * @param sysUserId
+     * @return
+     */
+    @Override
+    public Integer getHomeUserReplyCountAll(Long sysUserId) {
+        return sysCommentsReplyMapper.getHomeUserReplyCountAll(sysUserId);
+    }
 }

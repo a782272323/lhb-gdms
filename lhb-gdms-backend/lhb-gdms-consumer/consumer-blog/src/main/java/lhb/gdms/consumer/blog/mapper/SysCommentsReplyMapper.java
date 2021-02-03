@@ -30,4 +30,11 @@ public interface SysCommentsReplyMapper extends BaseMapper<SysCommentsReplyEntit
      * @return
      */
     Integer getCommentsReplyCount(@Param("sysArticleCommentsId") Long sysArticleCommentsId);
+
+    /**
+     * 根据用户id查询用户发表的回复总数
+     * @param sysUserId
+     * @return
+     */
+    Integer getHomeUserReplyCountAll(@Param("sysUserId") Long sysUserId);
 }

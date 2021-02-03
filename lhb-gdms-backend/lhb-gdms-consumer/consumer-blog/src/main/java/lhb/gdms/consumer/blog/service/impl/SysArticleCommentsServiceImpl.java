@@ -37,4 +37,14 @@ public class SysArticleCommentsServiceImpl extends BaseServiceImpl<SysArticleCom
         List<SysArticleCommentsEntity> list = sysArticleCommentsMapper.getCommentsListsBySysUserIdAndArticleId(articleId, sysUserId);
         return list.size() > 0 && list != null ? true : false;
     }
+
+    /**
+     * 根据用户id查询用户发表的评论总数
+     * @param sysUserId
+     * @return
+     */
+    @Override
+    public Integer getHomeUserCommentsCountAll(Long sysUserId) {
+        return sysArticleCommentsMapper.getHomeUserCommentsCountAll(sysUserId);
+    }
 }

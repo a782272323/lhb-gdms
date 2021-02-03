@@ -52,6 +52,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 // 仅门户网站能访问的
                 // 收藏集模块
                 .antMatchers("/blog/collection/**").hasAnyAuthority("Average User")
+                // 关注模块
+                .antMatchers("/blog/focus/**").hasAnyAuthority("Average User")
                 // 写文章模块
                 .antMatchers("/blog/write/article/**").hasAnyAuthority("Average User")
                 // 草稿箱模块
@@ -62,6 +64,14 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/blog/label/**").hasAnyAuthority("Average User")
                 // 我的主页-文章详情相关模块
                 .antMatchers("/blog/home-page-article/**").hasAnyAuthority("Average User")
+                // 我的主页-用户主页相关模块
+                .antMatchers("/blog/home-page-user/**").hasAnyAuthority("Average User")
+                // 首页模块
+                .antMatchers("/blog/home/**").hasAnyAuthority("Average User")
+                // 首页搜索模块
+                .antMatchers("/blog/home-search/**").hasAnyAuthority("Average User")
+                // 消息模块
+                .antMatchers("/blog/message/**").hasAnyAuthority("Average User")
                 // 获取用户信息
                 .antMatchers("/user/info/portal").hasAnyAuthority("Average User")
                 // 仅后台管理网站能访问的

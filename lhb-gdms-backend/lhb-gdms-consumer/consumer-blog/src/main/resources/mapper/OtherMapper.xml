@@ -187,4 +187,179 @@
         WHERE sys_comments_reply_id = #{sysCommentsReplyId}
         AND sys_user_id = #{sysUserId}
     </delete>
+
+    <!-- 用户主页点赞列表 -->
+    <select id="getHomePraiseLists" resultType="java.util.HashMap">
+        (
+            SELECT B.article_id AS articleId,
+                   B.sys_user_id AS sysUserId,
+                   B.sys_article_praise_id AS praiseId,
+                   article_title AS title,
+                   B.created AS created,
+                   'article' AS type
+            FROM sys_article A
+            LEFT JOIN sys_article_praise B
+            ON A.article_id = B.article_id
+            WHERE B.sys_user_id = #{userId}
+        ) UNION ALL
+        (
+            SELECT B.article_id AS articleId,
+                   C.sys_user_id AS sysUserId,
+                   C.sys_comments_praise_id AS praiseId,
+                   article_title AS title,
+                   C.created AS created,
+                   'comment' AS type
+            FROM sys_article_comments A
+            LEFT JOIN sys_article B
+            ON A.article_id = B.article_id
+            LEFT JOIN sys_comments_praise C
+            ON C.sys_article_comments_id = A.sys_article_comments_id
+            WHERE C.sys_user_id = #{userId}
+        ) UNION ALL
+        (
+            SELECT C.article_id AS articleId,
+                   D.sys_user_id AS sysUserId,
+                   D.sys_reply_praise_id AS praiseId,
+                   article_title AS content,
+                   D.created AS created,
+                   'reply' AS type
+            FROM sys_comments_reply A
+            LEFT JOIN sys_article_comments B
+            ON A.sys_article_comments_id = B.sys_article_comments_id
+            LEFT JOIN sys_article C
+            ON C.article_id = B.article_id
+            LEFT JOIN sys_reply_praise D
+            ON D.sys_comments_reply_id = A.sys_comments_reply_id
+            WHERE D.sys_user_id = #{userId}
+        )
+        ORDER BY created DESC
+    </select>
+
+    <!-- 消息模块评论相关列表详情 -->
+    <select id="getMessageCommentsLists" resultType="java.util.HashMap">
+        (
+            SELECT A.article_id AS articleId,
+                   article_title AS articleTitle,
+                   article_comments_content AS content,
+                   A.sys_user_id AS sysUserId,
+                   sys_user_nickname AS sysUserNickname,
+                   sys_user_icon AS sysUserIcon,
+                   A.created AS created,
+                   'comment' AS type
+            FROM sys_article_comments A
+            LEFT JOIN sys_article B
+            ON A.article_id = B.article_id
+            LEFT JOIN sys_user C
+            ON A.sys_user_id = C.sys_user_id
+            WHERE A.sys_user_id &lt;&gt; ${sysUserId}
+            AND B.article_id IN
+            (
+                SELECT article_id FROM sys_article
+                WHERE sys_user_id = #{sysUserId}
+            )
+            AND C.sys_user_type = 1
+            AND C.sys_user_status = 1
+        ) UNION ALL
+        (
+            SELECT C.article_id AS articleId,
+                   C.article_title AS articleTitle,
+                   comments_reply_content AS content,
+                   from_sys_user_id AS sysUserId,
+                   sys_user_nickname AS sysUserNickname,
+                   sys_user_icon AS sysUserIcon,
+                   A.created As created,
+                   'reply' AS type
+            FROM sys_comments_reply A
+            LEFT JOIN sys_article_comments B
+            ON A.sys_article_comments_id = B.sys_article_comments_id
+            LEFT JOIN sys_article C
+            ON B.article_id = C.article_id
+            LEFT JOIN sys_user D
+            ON D.sys_user_id = A.from_sys_user_id
+            WHERE from_sys_user_id &lt;&gt; ${sysUserId}
+            AND C.article_id IN
+            (
+                SELECT article_id FROM sys_article
+                WHERE sys_user_id = #{sysUserId}
+            )
+            AND D.sys_user_type = 1
+            AND D.sys_user_status = 1
+        ) ORDER BY created DESC
+    </select>
+
+    <!-- 消息模块点赞相关列表详情 -->
+    <select id="getMessagePraiseLists" resultType="java.util.HashMap">
+        (
+            SELECT A.article_id AS articleId,
+                   article_title AS articleTitle,
+                   A.sys_user_id AS sysUserId,
+                   sys_user_nickname AS sysUserNickname,
+                   sys_user_icon AS sysUserIcon,
+                   A.created AS created,
+                   'article' AS type
+            FROM sys_article_praise A
+            LEFT JOIN sys_article B
+            ON A.article_id = B.article_id
+            LEFT JOIN sys_user C
+            ON C.sys_user_id = A.sys_user_id
+            WHERE A.sys_user_id &lt;&gt; ${sysUserId}
+            AND B.article_id IN
+            (
+                SELECT article_id FROM sys_article
+                WHERE sys_user_id = #{sysUserId}
+            )
+            AND C.sys_user_type = 1
+            AND C.sys_user_status = 1
+        ) UNION ALL
+        (
+            SELECT C.article_id AS articleId,
+                   article_title AS articleTitle,
+                   A.sys_user_id AS sysUserId,
+                   sys_user_nickname AS sysUserNickname,
+                   sys_user_icon AS sysUserIcon,
+                   A.created AS created,
+                   'comment' AS type
+            FROM sys_comments_praise A
+            LEFT JOIN sys_article_comments B
+            ON A.sys_article_comments_id = B.sys_article_comments_id
+            LEFT JOIN sys_article C
+            ON B.article_id = C.article_id
+            LEFT JOIN sys_user D
+            ON A.sys_user_id = D.sys_user_id
+            WHERE A.sys_user_id &lt;&gt; ${sysUserId}
+            AND C.article_id IN
+            (
+                SELECT article_id FROM sys_article
+                WHERE sys_user_id = #{sysUserId}
+            )
+            AND D.sys_user_type = 1
+            AND D.sys_user_status = 1
+        ) UNION ALL
+        (
+            SELECT E.article_id AS articleId,
+                   article_title AS articleTitle,
+                   A.sys_user_id AS sysUserId,
+                   sys_user_nickname AS sysUserNickname,
+                   sys_user_icon AS sysUserIcon,
+                   A.created AS created,
+                   'reply' AS type
+            FROM sys_reply_praise A
+            LEFT JOIN sys_user B
+            ON A.sys_user_id = B.sys_user_id
+            LEFT JOIN sys_comments_reply C
+            ON A.sys_comments_reply_id = C.sys_comments_reply_id
+            LEFT JOIN sys_article_comments D
+            ON C.sys_article_comments_id = D.sys_article_comments_id
+            LEFT JOIN sys_article E
+            ON D.article_id = E.article_id
+            WHERE A.sys_user_id &lt;&gt; ${sysUserId}
+            AND E.article_id IN
+            (
+                SELECT article_id FROM sys_article
+                WHERE sys_user_id = #{sysUserId}
+            )
+            AND B.sys_user_type = 1
+            AND B.sys_user_status = 1
+        ) ORDER BY created DESC
+    </select>
 </mapper>

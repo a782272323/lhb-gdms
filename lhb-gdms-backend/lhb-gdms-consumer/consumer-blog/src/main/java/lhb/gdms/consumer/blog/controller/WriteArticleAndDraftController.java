@@ -13,7 +13,9 @@ import lhb.gdms.consumer.blog.domain.cover.SysArticleCover;
 import lhb.gdms.consumer.blog.domain.cover.SysDraftCover;
 import lhb.gdms.consumer.blog.domain.vo.ArticleVO;
 import lhb.gdms.consumer.blog.mapper.OtherMapper;
+import lhb.gdms.consumer.blog.mapper.SysArticleMapper;
 import lhb.gdms.consumer.blog.mapper.SysDraftMapper;
+import lhb.gdms.consumer.blog.mapper.SysLabelMapper;
 import lhb.gdms.consumer.blog.service.SysArticleService;
 import lhb.gdms.consumer.blog.service.SysDraftService;
 import lhb.gdms.feign.cloud.QiniuFeign;
@@ -59,6 +61,12 @@ public class WriteArticleAndDraftController {
 
     @Autowired
     private SysDraftMapper sysDraftMapper;
+
+    @Autowired
+    private SysArticleMapper sysArticleMapper;
+
+    @Autowired
+    private SysLabelMapper sysLabelMapper;
 
     /**
      * 用户写文章内容时上传的图片
@@ -256,5 +264,31 @@ public class WriteArticleAndDraftController {
             return BaseResult.error(HttpConstant.ERROR_MESSAGE);
         }
         return BaseResult.ok(HttpConstant.DELETE_MESSAGE);
+    }
+
+    /**
+     * 根据文章id获取文章详情
+     * @param articleId
+     * @return
+     */
+    @PrintlnLog(description = "根据文章id获取文章详情-controller")
+    @GetMapping("/blog/write/article/list/{articleId}")
+    public BaseResult getArticleList(@PathVariable("articleId") Long articleId) {
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("articleList", sysArticleMapper.getArticleListById(articleId));
+        return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, map);
+    }
+
+    /**
+     * 根据标签id获取标签信息
+     * @param labelId
+     * @return
+     */
+    @PrintlnLog(description = "根据标签id获取标签信息-controller")
+    @GetMapping("/blog/write/article/label/{labelId}")
+    public BaseResult getLabelDetails(@PathVariable("labelId") Long labelId) {
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("labelDetails", sysLabelMapper.getLabelInfoById(labelId));
+        return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, map);
     }
 }

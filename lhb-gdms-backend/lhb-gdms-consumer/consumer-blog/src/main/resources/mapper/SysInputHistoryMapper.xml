@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lhb.gdms.consumer.blog.mapper.SysInputHistoryMapper">
+    <resultMap id="map1" type="lhb.gdms.commons.domain.entity.SysInputHistoryEntity">
+        <id column="sys_input_history_id" property="sysInputHistoryId"/>
+        <result column="sys_input_history_content" property="sysInputHistoryContent"/>
+        <result column="sys_user_id" property="sysUserId"/>
+        <result column="created" property="created"/>
+        <result column="updated" property="updated"/>
+    </resultMap>
+
+    <!-- 添加 -->
+    <insert id="insert">
+        INSERT INTO sys_input_history
+            (
+             sys_input_history_content,
+             sys_user_id,
+             created,
+             updated
+            ) VALUES
+            (
+             #{entity.sysInputHistoryContent},
+             #{entity.sysUserId},
+             #{entity.created},
+             #{entity.updated}
+            )
+    </insert>
+
+    <!-- 根据搜索内容搜索数据 -->
+    <select id="selectOneByKeyWord" resultMap="map1">
+        SELECT * FROM sys_input_history
+        WHERE sys_user_id = #{entity.sysUserId}
+        AND sys_input_history_content = #{entity.sysInputHistoryContent}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteOneById">
+        DELETE FROM sys_input_history
+        WHERE sys_input_history_id = #{id}
+    </delete>
+
+    <!-- 获取输入框历史数据列表 -->
+    <select id="getInputHistoryLists" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_input_history
+        WHERE sys_user_id = #{entity.sysUserId}
+    </select>
+
+    <!-- 获取五条数据中最小的id -->
+    <select id="getMinIdBySysUserId" resultType="java.lang.Long">
+        SELECT MIN(sys_input_history_id)
+        FROM sys_input_history
+        WHERE sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 获取输入框历史数据列表 -->
+    <select id="getInputHistoryAll" resultMap="map1">
+        SELECT * FROM sys_input_history
+        WHERE sys_user_id = #{sysUserId}
+        ORDER BY updated DESC
+    </select>
+
+    <!-- 编辑修改时间 -->
+    <update id="update">
+        UPDATE sys_input_history
+        SET updated = #{entity.updated}
+        WHERE sys_input_history_content = #{entity.sysInputHistoryContent}
+        AND sys_user_id = #{entity.sysUserId}
+    </update>
+
+    <!-- 清空搜索框历史记录 -->
+    <delete id="clearInputHistory">
+        DELETE FROM sys_input_history
+        WHERE sys_user_id = #{sysUserId}
+    </delete>
+</mapper>

@@ -54,4 +54,10 @@
         WHERE article_id = #{entity.articleId}
         AND sys_user_id = #{entity.sysUserId}
     </delete>
+
+    <!-- 根据用户id查询用户点赞总数 -->
+    <select id="getUserArticlePraise" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_article_praise
+        WHERE sys_user_id = #{sysUserId}
+    </select>
 </mapper>

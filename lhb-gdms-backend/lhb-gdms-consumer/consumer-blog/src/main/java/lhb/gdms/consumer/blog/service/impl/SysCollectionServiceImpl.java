@@ -67,4 +67,14 @@ public class SysCollectionServiceImpl extends BaseServiceImpl<SysCollectionEntit
         List<Map<String, Object>> list = otherMapper.getArticleCollectionInfoByTwoId(articleId, sysCollectionId);
         return list != null && list.size() > 0 ? true : false;
     }
+
+    /**
+     * 根据用户id查询用户创建的收藏集总数
+     * @param sysUserId
+     * @return
+     */
+    @Override
+    public Integer getHomeUserCollectionCountAll(Long sysUserId) {
+        return sysCollectionMapper.getHomeUserCollectionCountAll(sysUserId);
+    }
 }

@@ -55,4 +55,10 @@
              #{entity.updated}
             )
     </insert>
+
+    <!-- 根据用户id查询用户发表的回复总数 -->
+    <select id="getHomeUserReplyCountAll" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_comments_reply
+        WHERE from_sys_user_id = #{sysUserId}
+    </select>
 </mapper>

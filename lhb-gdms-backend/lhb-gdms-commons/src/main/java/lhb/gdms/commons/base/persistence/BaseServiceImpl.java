@@ -28,6 +28,8 @@ public class BaseServiceImpl<T extends BaseDateEntity, M extends BaseMapper<T>> 
     @Autowired
     protected M mapper;
 
+    private Integer zero = 0;
+
     @Override
     public List<T> select() {
         return mapper.select();
@@ -125,6 +127,12 @@ public class BaseServiceImpl<T extends BaseDateEntity, M extends BaseMapper<T>> 
     @Override
     public Integer deleteOneByKeyWord(T t) {
         return mapper.deleteOneByKeyWord(t);
+    }
+
+    @Override
+    public Integer deleteOneById(Long id) {
+        int r = mapper.deleteOneById(id);
+        return r > zero ? r : zero;
     }
 
     /**

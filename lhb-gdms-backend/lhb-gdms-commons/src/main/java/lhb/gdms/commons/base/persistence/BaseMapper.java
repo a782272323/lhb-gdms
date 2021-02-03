@@ -87,6 +87,13 @@ public interface BaseMapper<T extends BaseDateEntity> {
     Integer deleteOneByKeyWord(@Param("entity") T t);
 
     /**
+     * 通过主键id实现单个删除操作
+     * @param id
+     * @return
+     */
+    Integer deleteOneById(@Param("id") Long id);
+
+    /**
      * 批量删除
      * @param ids
      */

@@ -84,6 +84,13 @@ public interface BaseService<T extends BaseDateEntity> {
     public Integer deleteOneByKeyWord(T t);
 
     /**
+     * 通过主键id实现单个删除操作
+     * @param id
+     * @return
+     */
+    public Integer deleteOneById(Long id);
+
+    /**
      * 批量删除
      * @param ids
      */

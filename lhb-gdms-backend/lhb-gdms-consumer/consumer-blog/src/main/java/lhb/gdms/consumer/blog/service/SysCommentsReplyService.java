@@ -10,4 +10,11 @@ import lhb.gdms.commons.domain.entity.SysCommentsReplyEntity;
  * @time 08:41
  */
 public interface SysCommentsReplyService extends BaseService<SysCommentsReplyEntity> {
+
+    /**
+     * 根据用户id查询用户发表的回复总数
+     * @param sysUserId
+     * @return
+     */
+    Integer getHomeUserReplyCountAll(Long sysUserId);
 }

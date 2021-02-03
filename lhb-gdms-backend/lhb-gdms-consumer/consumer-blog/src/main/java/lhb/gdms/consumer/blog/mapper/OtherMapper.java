@@ -163,4 +163,25 @@ public interface OtherMapper {
      */
     Integer deleteReplyPraise(@Param("sysCommentsReplyId") Long sysCommentsReplyId,
                               @Param("sysUserId") Long sysUserId);
+
+    /**
+     * 用户主页点赞列表
+     * @param userId
+     * @return
+     */
+    List<Map<String, Object>> getHomePraiseLists(@Param("userId") Long userId);
+
+    /**
+     * 消息模块评论相关列表详情
+     * @param sysUserId
+     * @return
+     */
+    List<Map<String, Object>> getMessageCommentsLists(@Param("sysUserId") Long sysUserId);
+
+    /**
+     * 消息模块点赞相关列表详情
+     * @param sysUserId
+     * @return
+     */
+    List<Map<String, Object>> getMessagePraiseLists(@Param("sysUserId") Long sysUserId);
 }

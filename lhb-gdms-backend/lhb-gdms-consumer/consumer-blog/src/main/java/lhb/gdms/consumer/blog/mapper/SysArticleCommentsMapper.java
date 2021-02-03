@@ -18,7 +18,7 @@ import java.util.Map;
 public interface SysArticleCommentsMapper extends BaseMapper<SysArticleCommentsEntity> {
 
     /**
-     * 查询评论数量
+     * 通过文章id查询评论数量
      * @param articleId
      * @return
      */
@@ -46,4 +46,11 @@ public interface SysArticleCommentsMapper extends BaseMapper<SysArticleCommentsE
      * @return
      */
     List<SysArticleCommentsEntity> getCommentsInfoByArticleId(@Param("articleId") Long articleId);
+
+    /**
+     * 根据用户id获取用户发表的评论总数
+     * @param sysUserId
+     * @return
+     */
+    Integer getHomeUserCommentsCountAll(@Param("sysUserId") Long sysUserId);
 }

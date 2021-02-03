@@ -25,4 +25,19 @@ public interface SysArticlePraiseService extends BaseService<SysArticlePraiseEnt
      * @return
      */
     public boolean findInfoById(Long articleId, Long sysUserId);
+
+    /**
+     * 根据用户id和文章id查询点赞总数
+     * @param articleId
+     * @param sysUserId
+     * @return
+     */
+    public Integer getArticlePraiseCountBySysUserId(Long articleId, Long sysUserId);
+
+    /**
+     * 根据用户id查询用户点赞总数
+     * @param sysUserId
+     * @return
+     */
+    public Integer getUserArticlePraise(Long sysUserId);
 }

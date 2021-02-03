@@ -115,7 +115,8 @@ public class HomePageArticleController {
         Long userId = sysArticleEntity.getSysUserId();
         Map<String, Object> map = Maps.newHashMap();
         map.put("userDetails", sysUserMapper.getUserInfoByUserId(userId));
-        map.put("userPriseAll", sysArticleService.getArticlePriseAll(userId));
+//        map.put("userPriseAll", sysArticleService.getArticlePriseAll(userId));
+        map.put("userPriseAll", sysArticlePraiseService.getUserArticlePraise(userId));
         map.put("userBrowseAll", sysArticleService.getArticleBrowseAll(userId));
         List<Map<String, Object>> list = sysArticleMapper.getArticleBySysUserId(userId);
         list.stream().forEach(item -> {
@@ -391,6 +392,38 @@ public class HomePageArticleController {
         return sysCommentsReplyService.insert(entity) <= 0
                 ? BaseResult.error(HttpConstant.ERROR_MESSAGE)
                 : BaseResult.ok("评论成功!");
+    }
+
+    /**
+     * 删除单个文章
+     * @param articleId
+     * @return
+     */
+    @PrintlnLog(description = "删除单个文章-controller")
+    @DeleteMapping("/blog/home-page-article/article/{articleId}")
+    public BaseResult deleteArticle(@PathVariable("articleId") Long articleId) {
+        return sysArticleService.deleteOneById(articleId) > 0
+                ? BaseResult.ok(HttpConstant.DELETE_MESSAGE)
+                : BaseResult.error(HttpConstant.ERROR_MESSAGE);
+    }
+
+    /**
+     * 编辑文章
+     * @param articleId
+     * @return
+     */
+    @PrintlnLog(description = "编辑文章-controller")
+    @PutMapping("/blog/home-page-article/article/{articleId}")
+    public BaseResult editArticle(@PathVariable("articleId") Long articleId,
+                                  @RequestBody SysArticleEntity entity,
+                                  Authentication authentication) throws Exception{
+        Long sysUserId = securityOauth2Utils.getUserId(authentication);
+        entity.setArticleId(articleId);
+        entity.setSysUserId(sysUserId);
+        entity.setUpdated(new Date());
+        return sysArticleService.update(entity) > 0
+                ? BaseResult.ok("文章发布成功!")
+                : BaseResult.error(HttpConstant.ERROR_MESSAGE);
     }
 
 }

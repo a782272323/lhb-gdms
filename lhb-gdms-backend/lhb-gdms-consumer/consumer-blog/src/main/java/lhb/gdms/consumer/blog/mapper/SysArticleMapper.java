@@ -18,7 +18,7 @@ import java.util.Map;
 public interface SysArticleMapper extends BaseMapper<SysArticleEntity> {
 
     /**
-     * 根据id查看单个文章详情
+     * 根据文章id查看单个文章详情
      * @param articleId
      * @return
      */
@@ -80,4 +80,45 @@ public interface SysArticleMapper extends BaseMapper<SysArticleEntity> {
      */
     List<Map<String, Object>> getArticleBySysUserId(@Param("sysUserId") Long sysUserId);
 
+    /**
+     * 按照首页文章发布时间降序排序-推荐
+     * @return
+     */
+    List<Map<String, Object>> getHomeArticleLists();
+
+    /**
+     * 根据标签id查看首页文章详情，按照时间降序排序-动态标签
+     * @return
+     */
+    List<Map<String, Object>> getHomeArticleListsByLabelId(@Param("labelId") Long labelId);
+
+    /**
+     * 根据用户id查询文章总数
+     * @param sysUserId
+     * @return
+     */
+    Integer getHomeUserArticleCount(@Param("sysUserId") Long sysUserId);
+
+    /**
+     * 用户主页评论列表
+     * @param userId
+     * @return
+     */
+    List<Map<String, Object>> getHomeCommentsLists(@Param("userId") Long userId);
+
+    /**
+     * 搜索文章
+     * @param search
+     * @param articleType
+     * @return
+     */
+    List<Map<String, Object>> searchArticleLists(@Param("search") String search,
+                                                 @Param("articleType") String articleType);
+
+    /**
+     * 搜索文章内容根据文章id
+     * @param articleId
+     * @return
+     */
+    String searchArticleContent(@Param("articleId") Long articleId);
 }

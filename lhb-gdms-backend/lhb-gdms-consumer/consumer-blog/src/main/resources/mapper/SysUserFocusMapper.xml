@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lhb.gdms.consumer.blog.mapper.SysUserFocusMapper">
+    <resultMap id="map1" type="lhb.gdms.commons.domain.entity.SysUserFocusEntity">
+        <id column="sys_user_focus_id" property="sysUserFocusId"/>
+        <result column="sys_user_id" property="sysUserId"/>
+        <result column="form_sys_user_id" property="formSysUserId"/>
+        <result column="created" property="created"/>
+        <result column="updated" property="updated"/>
+    </resultMap>
+
+    <select id="getFocusPersonLists" resultType="java.util.HashMap">
+        SELECT sys_user_focus_id AS sysUserFocusId,
+               a.form_sys_user_id AS formSysUserId,
+               a.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               sys_user_type AS sysUserType,
+               sys_user_status AS sysUserStatus,
+               sys_user_icon AS sysUserIcon,
+               a.created,
+               a.updated
+        FROM sys_user_focus AS a, sys_user AS b
+        WHERE a.form_sys_user_id = b.sys_user_id
+        AND a.sys_user_id = #{sysUserId}
+        AND sys_user_status = 1
+        AND sys_user_type = 1
+        ORDER BY a.created DESC
+    </select>
+
+    <!-- 粉丝数据列表 -->
+    <select id="getFocusFansLists" resultType="java.util.HashMap">
+        SELECT sys_user_focus_id AS sysUserFocusId,
+               a.form_sys_user_id AS formSysUserId,
+               a.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               sys_user_type AS sysUserType,
+               sys_user_status AS sysUserStatus,
+               sys_user_icon AS sysUserIcon,
+               a.created,
+               a.updated
+        FROM sys_user_focus AS a, sys_user AS b
+        WHERE a.sys_user_id = b.sys_user_id
+        AND a.form_sys_user_id = #{sysUserId}
+        AND sys_user_status = 1
+        AND sys_user_type = 1
+        ORDER BY a.created DESC
+    </select>
+
+    <!-- 根据两个id查询 -->
+    <select id="getFocusInfoByTwoId" resultMap="map1">
+        SELECT * FROM sys_user_focus
+        WHERE form_sys_user_id = #{formSysUserId}
+        AND sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 通过主键id实现删除 -->
+    <delete id="deleteOneById">
+        DELETE FROM sys_user_focus
+        WHERE sys_user_focus_id = #{id}
+    </delete>
+
+    <!-- 关注用户 -->
+    <insert id="insert">
+        INSERT INTO sys_user_focus
+            (
+             form_sys_user_id,
+             sys_user_id,
+             created,
+             updated
+            )
+            VALUES
+            (
+             #{entity.formSysUserId},
+             #{entity.sysUserId},
+             #{entity.created},
+             #{entity.updated}
+            )
+    </insert>
+
+    <!-- 根据用户id查询用户关注的人数 -->
+    <select id="getHomeUserFocusPersonCountAll" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_user_focus
+        WHERE sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 根据用户id查询用户粉丝数 -->
+    <select id="getHomeUserFocusFansCountAll" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_user_focus
+        WHERE form_sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 用户主页取消对用户的关注 -->
+    <delete id="deleteOneByKeyWord">
+        DELETE FROM sys_user_focus
+        WHERE sys_user_id = #{entity.sysUserId}
+        AND form_sys_user_id = #{entity.formSysUserId}
+    </delete>
+</mapper>

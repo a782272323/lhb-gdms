@@ -50,4 +50,25 @@ public class SysArticlePraiseServiceImpl extends BaseServiceImpl<SysArticlePrais
         }
         return false;
     }
+
+    /**
+     * 根据用户id和文章id查询点赞总数
+     * @param articleId
+     * @param sysUserId
+     * @return
+     */
+    @Override
+    public Integer getArticlePraiseCountBySysUserId(Long articleId, Long sysUserId) {
+        return sysArticlePraiseMapper.getArticlePraiseCountBySysUserId(articleId, sysUserId);
+    }
+
+    /**
+     * 根据用户id查询用户点赞总数
+     * @param sysUserId
+     * @return
+     */
+    @Override
+    public Integer getUserArticlePraise(Long sysUserId) {
+        return sysArticlePraiseMapper.getUserArticlePraise(sysUserId);
+    }
 }

@@ -36,6 +36,8 @@
                         sys_user_key,
                         sys_user_introduction
         FROM sys_user WHERE sys_user_id = ${entity.sysUserId}
+        AND sys_user_status = 1
+        AND sys_user_type = 1
     </select>
 
     <!-- 门户网站个人中心-修改用户基础信息 -->
@@ -64,11 +66,98 @@
         SELECT sys_user_nickname
         FROM sys_user
         WHERE sys_user_id = #{sysUserId}
+        AND sys_user_status = 1
+        AND sys_user_type = 1
     </select>
 
     <!-- 根据用户id查询用户详情 -->
     <select id="getUserInfoByUserId" resultMap="sysUserMap1">
         SELECT * FROM sys_user
         WHERE sys_user_id = #{sysUserId}
+        AND sys_user_status = 1
+        AND sys_user_type = 1
+    </select>
+
+    <!-- 获取主页用户信息通过用户id -->
+    <select id="getHomeUserInfoById" resultType="java.util.HashMap">
+        SELECT  sys_user_id AS sysUserId,
+                sys_user_nickname AS sysUserNickname,
+                sys_user_phone AS sysUserPhone,
+                sys_user_email AS sysUserEmail,
+                sys_user_area_code AS sysUserAreaCode,
+                sys_user_sex AS sysUserSex,
+                sys_user_status AS sysUserStatus,
+                sys_user_username AS sysUserUsername,
+                sys_user_type AS sysUserType,
+                sys_user_icon AS sysUserIcon,
+                sys_user_key AS sysUserKey,
+                sys_user_introduction AS sysUserIntroduction,
+                created,
+                updated
+        FROM sys_user
+        WHERE sys_user_id = #{sysUserId}
+        AND sys_user_status = 1
+        AND sys_user_type = 1
+    </select>
+
+    <!-- 用户主页动态数据 -->
+    <select id="getHomeDynamicInfo" resultType="java.util.HashMap">
+        (
+            SELECT a.form_sys_user_id AS id,
+                   b.sys_user_nickname AS `name`,
+                   a.created AS created,
+                   'user' AS type
+            FROM sys_user_focus a
+            LEFT JOIN sys_user b
+            ON a.form_sys_user_id = b.sys_user_id
+            WHERE a.sys_user_id = #{userId}
+            AND sys_user_status = 1
+            AND sys_user_type = 1
+        ) UNION ALL
+        (
+            SELECT a.label_id AS id,
+                   b.label_name AS `name`,
+                   a.created AS created,
+                   'label' AS type
+            FROM sys_label_focus a
+            LEFT JOIN sys_label b
+            ON a.label_id = b.label_id
+            WHERE sys_user_id = #{userId}
+        )
+        ORDER BY created DESC
+    </select>
+
+    <!-- 搜索用户 -->
+    <select id="searchUserLists" resultType="java.util.HashMap">
+        SELECT sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               sys_user_icon AS sysUserIcon,
+               created AS created,
+               updated AS updated
+        FROM sys_user
+        WHERE sys_user_nickname LIKE CONCAT(CONCAT('%', #{sysUserNickname}), '%')
+        AND sys_user_type = 1
+        AND sys_user_status = 1
+        ORDER BY created DESC
+    </select>
+
+    <!-- 重置密码 -->
+    <update id="resetPassword">
+        UPDATE sys_user
+        SET sys_user_password = #{entity.sysUserPassword},
+            updated = #{entity.updated}
+        WHERE sys_user_id = #{entity.sysUserId}
+    </update>
+
+    <!-- 通过手机号码查询用户信息 -->
+    <select id="getUserInfoByPhone" resultMap="sysUserMap1">
+        SELECT * FROM sys_user
+        WHERE sys_user_phone = #{phone}
+    </select>
+
+    <!-- 通过邮箱号码查询用户信息 -->
+    <select id="getUserInfoByEmail" resultMap="sysUserMap1">
+        SELECT * FROM sys_user
+        WHERE sys_user_email = #{email}
     </select>
 </mapper>

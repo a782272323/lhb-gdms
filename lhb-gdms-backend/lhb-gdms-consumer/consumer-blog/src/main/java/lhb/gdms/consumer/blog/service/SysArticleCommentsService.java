@@ -18,4 +18,11 @@ public interface SysArticleCommentsService extends BaseService<SysArticleComment
      * @return
      */
     Boolean getCommentsListsBySysUserIdAndArticleId(Long articleId, Long sysUserId);
+
+    /**
+     * 根据用户id查询用户发表的评论总数
+     * @param sysUserId
+     * @return
+     */
+    Integer getHomeUserCommentsCountAll(Long sysUserId);
 }

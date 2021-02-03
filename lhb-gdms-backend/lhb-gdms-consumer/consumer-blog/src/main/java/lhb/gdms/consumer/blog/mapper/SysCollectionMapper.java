@@ -66,4 +66,11 @@ public interface SysCollectionMapper extends BaseMapper<SysCollectionEntity> {
      * @return
      */
     Integer getCollectionArticleCount(@Param("sysCollectionId") Long sysCollectionId);
+
+    /**
+     * 根据用户id查询用户创建的收藏集总数
+     * @param sysUserId
+     * @return
+     */
+    Integer getHomeUserCollectionCountAll(@Param("sysUserId") Long sysUserId);
 }
