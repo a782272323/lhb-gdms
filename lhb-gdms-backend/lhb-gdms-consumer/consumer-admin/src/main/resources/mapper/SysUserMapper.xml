@@ -29,4 +29,151 @@
         WHERE sys_user_key = #{entity.sysUserKey}
     </select>
 
+    <!-- 用户列表数据详情 -->
+    <select id="getUserDetails" resultType="java.util.HashMap">
+        SELECT A.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               sys_user_phone AS sysUserPhone,
+               sys_user_email AS sysUserEmail,
+               sys_user_sex AS sysUserSex,
+               sys_user_username AS sysUserUsername,
+               sys_user_icon AS sysUserIcon,
+               sys_user_key AS sysUserKey,
+               sys_user_introduction AS sysUserIntroduction,
+               COUNT(DISTINCT B.article_id) AS articleCount,
+               COALESCE(SUM(DISTINCT article_browse_sum), 0) AS articleBrowseSum,
+               COUNT(DISTINCT sys_article_praise_id) AS articlePraise,
+               A.created AS created,
+               A.updated AS updated
+        FROM sys_user A
+        LEFT JOIN sys_article B ON A.sys_user_id = B.sys_user_id
+        LEFT JOIN sys_article_praise C ON A.sys_user_id = C.sys_user_id
+        WHERE sys_user_type = 1
+        AND sys_user_status = 1
+        GROUP BY A.sys_user_id
+        ORDER BY ${vo.keyWord} ${vo.orderBy}
+    </select>
+
+    <!-- 搜索用户 -->
+    <select id="searchUserDetails" resultType="java.util.HashMap">
+        SELECT A.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               sys_user_phone AS sysUserPhone,
+               sys_user_email AS sysUserEmail,
+               sys_user_sex AS sysUserSex,
+               sys_user_username AS sysUserUsername,
+               sys_user_icon AS sysUserIcon,
+               sys_user_key AS sysUserKey,
+               sys_user_introduction AS sysUserIntroduction,
+               COUNT(DISTINCT B.article_id) AS articleCount,
+               COALESCE(SUM(DISTINCT article_browse_sum), 0) AS articleBrowseSum,
+               COUNT(DISTINCT sys_article_praise_id) AS articlePraise,
+               A.created AS created,
+               A.updated AS updated
+        FROM sys_user A
+        LEFT JOIN sys_article B ON A.sys_user_id = B.sys_user_id
+        LEFT JOIN sys_article_praise C ON A.sys_user_id = C.sys_user_id
+        WHERE sys_user_type = 1
+        AND sys_user_status = 1
+        <if test="searchVO.sysUserNickname != null and searchVO.sysUserNickname != ''">
+            AND sys_user_nickname LIKE CONCAT(CONCAT('%', #{searchVO.sysUserNickname}), '%')
+        </if>
+        <if test="searchVO.sysUserUsername != null and searchVO.sysUserUsername != ''">
+            AND sys_user_username LIKE CONCAT(CONCAT('%', #{searchVO.sysUserUsername}), '%')
+        </if>
+        <if test="searchVO.sysUserPhone != null and searchVO.sysUserPhone != ''">
+            AND sys_user_phone LIKE CONCAT(CONCAT('%', #{searchVO.sysUserPhone}), '%')
+        </if>
+        <if test="searchVO.sysUserEmail != null and searchVO.sysUserEmail != ''">
+            AND sys_user_email LIKE CONCAT(CONCAT('%', #{searchVO.sysUserEmail}), '%')
+        </if>
+        GROUP BY A.sys_user_id
+        ORDER BY ${queryVO.keyWord} ${queryVO.orderBy}
+    </select>
+
+    <!-- 根据用户id查看单个用户信息 -->
+    <select id="getUserList" resultType="java.util.HashMap">
+        SELECT A.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               sys_user_phone AS sysUserPhone,
+               sys_user_email AS sysUserEmail,
+               sys_user_sex AS sysUserSex,
+               sys_user_username AS sysUserUsername,
+               sys_user_icon AS sysUserIcon,
+               sys_user_key AS sysUserKey,
+               sys_user_introduction AS sysUserIntroduction,
+               COUNT(DISTINCT B.article_id) AS articleCount,
+               COALESCE(SUM(DISTINCT article_browse_sum), 0) AS articleBrowseSum,
+               COUNT(DISTINCT sys_article_praise_id) AS articlePraise,
+               A.created AS created,
+               A.updated AS updated
+        FROM sys_user A
+        LEFT JOIN sys_article B ON A.sys_user_id = B.sys_user_id
+        LEFT JOIN sys_article_praise C ON A.sys_user_id = C.sys_user_id
+        WHERE sys_user_type = 1
+        AND sys_user_status = 1
+        AND A.sys_user_id = #{sysUserId}
+        GROUP BY A.sys_user_id
+    </select>
+
+    <!-- 根据用户id查询系统管理员信息 -->
+    <select id="getSystemAdminInfoById" resultType="java.util.HashMap">
+        SELECT sys_user_id AS sysUerId,
+               sys_user_nickname AS sysUserNickname,
+               sys_user_username AS sysUserUsername,
+               sys_user_icon AS sysUserIcon,
+               sys_user_key AS sysUserKey,
+               updated AS updated,
+               created AS created
+        FROM sys_user
+        WHERE sys_user_id = #{sysUserId}
+        AND sys_user_type = 2
+        AND sys_user_status = 1
+    </select>
+
+    <!-- 门户网站总用户数和总文章数量 -->
+    <select id="getAllUserAndArticleLists" resultType="java.util.HashMap">
+        (
+            SELECT COUNT(DISTINCT article_id) AS count,
+                   'article' AS type
+            FROM sys_article
+        ) UNION ALL
+        (
+            SELECT COUNT(DISTINCT sys_user_id) AS count,
+                   'user' AS type
+            FROM sys_user
+            WHERE sys_user_type = 1
+            AND sys_user_status = 1
+        )
+    </select>
+
+    <!-- 按时间段查询新增用户数 -->
+    <select id="getUserCountByTime" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT sys_user_id) AS articleCount
+        FROM sys_user
+        WHERE 1 = 1
+        <if test="timeType != null and timeType == 'days'">
+            AND created > DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        </if>
+        <if test="timeType != null and timeType == 'weeks'">
+            AND created > DATE_SUB(CURDATE(), INTERVAL 1 WEEK)
+        </if>
+        <if test="timeType != null and timeType == 'months'">
+            AND created > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+        </if>
+        <if test="timeType != null and timeType == 'years'">
+            AND created > DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+        </if>
+    </select>
+
+    <!-- 根据年和月获取用户数量 -->
+    <select id="getUserListsByYearAndMonth" resultType="java.util.HashMap">
+        SELECT COUNT(DISTINCT sys_user_id) AS '用户数量',
+               #{monthStr} AS month
+        FROM sys_user
+        WHERE DATE_FORMAT(created, '%Y') = #{year}
+        AND DATE_FORMAT(created, '%m') = #{month}
+        AND sys_user_type = 1
+        AND sys_user_status = 1
+    </select>
 </mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="lhb.gdms.consumer.admin.mapper.ArticleMapper">
+    <!-- 获取文章发布总数 -->
+    <select id="getArticleCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_article
+        WHERE sys_user_id = #{sysUserId}
+    </select>
+
+    <!-- 获取文章列表 -->
+    <select id="getArticleLists" resultType="java.util.HashMap">
+        SELECT A.article_id AS articleId,
+               article_title AS articleTitle,
+               article_content AS articleContent,
+               article_type AS articleType,
+               A.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               A.label_id AS labelId,
+               label_name AS labelName,
+               article_browse_sum AS articleBrowseSum,
+               COUNT(DISTINCT sys_article_praise_id) AS articlePraise,
+               COUNT(DISTINCT sys_comments_praise_id) AS commentsCount,
+               COUNT(DISTINCT sys_reply_praise_id) AS replyCount,
+               A.created AS created,
+               A.updated AS updated
+        FROM sys_article A
+        LEFT JOIN sys_user B ON A.sys_user_id = B.sys_user_id
+        LEFT JOIN sys_label C ON A.label_id = C.label_id
+        LEFT JOIN sys_article_praise D ON A.article_id = D.article_id
+        LEFT JOIN sys_article_comments E ON A.article_id = E.article_id
+        LEFT JOIN sys_comments_praise F ON E.sys_article_comments_id = F.sys_article_comments_id
+        LEFT JOIN sys_comments_reply G ON G.sys_article_comments_id = E.sys_article_comments_id
+        LEFT JOIN sys_reply_praise H ON H.sys_comments_reply_id = G.sys_comments_reply_id
+        WHERE B.sys_user_type = 1
+        AND B.sys_user_status = 1
+        GROUP BY A.article_id
+        ORDER BY ${queryVO.keyWord} ${queryVO.orderBy}
+    </select>
+
+    <!-- 搜索文章 -->
+    <select id="searchArticleLists" resultType="java.util.HashMap">
+        SELECT A.article_id AS articleId,
+               article_title AS articleTitle,
+               article_content AS articleContent,
+               article_type AS articleType,
+               A.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               A.label_id AS labelId,
+               label_name AS labelName,
+               article_browse_sum AS articleBrowseSum,
+               COUNT(DISTINCT sys_article_praise_id) AS articlePraise,
+               COUNT(DISTINCT sys_comments_praise_id) AS commentsCount,
+               COUNT(DISTINCT sys_reply_praise_id) AS replyCount,
+               A.created AS created,
+               A.updated AS updated
+        FROM sys_article A
+        LEFT JOIN sys_user B ON A.sys_user_id = B.sys_user_id
+        LEFT JOIN sys_label C ON A.label_id = C.label_id
+        LEFT JOIN sys_article_praise D ON A.article_id = D.article_id
+        LEFT JOIN sys_article_comments E ON A.article_id = E.article_id
+        LEFT JOIN sys_comments_praise F ON E.sys_article_comments_id = F.sys_article_comments_id
+        LEFT JOIN sys_comments_reply G ON G.sys_article_comments_id = E.sys_article_comments_id
+        LEFT JOIN sys_reply_praise H ON H.sys_comments_reply_id = G.sys_comments_reply_id
+        WHERE B.sys_user_type = 1
+        AND B.sys_user_status = 1
+        <if test="searchVO.sysUserNickname != null and searchVO.sysUserNickname != ''">
+            AND sys_user_nickname LIKE CONCAT(CONCAT('%', #{searchVO.sysUserNickname}), '%')
+        </if>
+        <if test="searchVO.articleTitle != null and searchVO.articleTitle != ''">
+            AND article_title LIKE CONCAT(CONCAT('%', #{searchVO.articleTitle}), '%')
+        </if>
+        <if test="searchVO.labelName != null and searchVO.labelName != ''">
+            AND label_name LIKE CONCAT(CONCAT('%', #{searchVO.labelName}), '%')
+        </if>
+        GROUP BY A.article_id
+        ORDER BY ${queryVO.keyWord} ${queryVO.orderBy}
+    </select>
+
+    <!-- 根据文章id查询文章详情 -->
+    <select id="getArticleList" resultType="java.util.HashMap">
+        SELECT A.article_id AS articleId,
+               article_title AS articleTitle,
+               article_content AS articleContent,
+               article_type AS articleType,
+               article_img_url AS articleImgUrl,
+               article_img_key AS articleImgKey,
+               A.sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               A.label_id AS labelId,
+               label_name AS labelName,
+               article_browse_sum AS articleBrowseSum,
+               COUNT(DISTINCT sys_article_praise_id) AS articlePraise,
+               COUNT(DISTINCT sys_comments_praise_id) AS commentsCount,
+               COUNT(DISTINCT sys_reply_praise_id) AS replyCount,
+               A.created AS created,
+               A.updated AS updated
+        FROM sys_article A
+        LEFT JOIN sys_user B ON A.sys_user_id = B.sys_user_id
+        LEFT JOIN sys_label C ON A.label_id = C.label_id
+        LEFT JOIN sys_article_praise D ON A.article_id = D.article_id
+        LEFT JOIN sys_article_comments E ON A.article_id = E.article_id
+        LEFT JOIN sys_comments_praise F ON E.sys_article_comments_id = F.sys_article_comments_id
+        LEFT JOIN sys_comments_reply G ON G.sys_article_comments_id = E.sys_article_comments_id
+        LEFT JOIN sys_reply_praise H ON H.sys_comments_reply_id = G.sys_comments_reply_id
+        WHERE B.sys_user_type = 1
+        AND B.sys_user_status = 1
+        AND A.article_id = #{articleId}
+        GROUP BY A.article_id
+    </select>
+
+    <!-- 按时间段查询新增文章数 -->
+    <select id="getArticleCountByTime" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT article_id) AS articleCount
+        FROM sys_article
+        WHERE 1 = 1
+        <if test="timeType != null and timeType == 'days'">
+            AND created > DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        </if>
+        <if test="timeType != null and timeType == 'weeks'">
+            AND created > DATE_SUB(CURDATE(), INTERVAL 1 WEEK)
+        </if>
+        <if test="timeType != null and timeType == 'months'">
+            AND created > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+        </if>
+        <if test="timeType != null and timeType == 'years'">
+            AND created > DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+        </if>
+    </select>
+
+    <!-- 根据年和月获取文章数量 -->
+    <select id="getArticleListsByYearAndMonth" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT article_id)
+        FROM sys_article
+        WHERE DATE_FORMAT(created, '%Y') = #{year}
+        AND DATE_FORMAT(created, '%m') = #{month}
+    </select>
+</mapper>

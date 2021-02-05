@@ -8,8 +8,10 @@ import lhb.gdms.commons.domain.entity.SysUserEntity;
 import lhb.gdms.commons.utils.BaseResult;
 import lhb.gdms.commons.utils.RedisUtils;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
+import lhb.gdms.configuration.utils.SecurityOauth2Utils;
 import lhb.gdms.provider.user.domain.vo.LoginInfoVO;
 import lhb.gdms.provider.user.domain.vo.LoginParamVO;
+import lhb.gdms.provider.user.mapper.SysUserMapper;
 import lhb.gdms.provider.user.service.AdminLoginService;
 import lhb.gdms.provider.user.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
@@ -65,6 +67,12 @@ public class AdminLoginController {
     @Autowired
     private SysUserService sysUserService;
 
+    @Autowired
+    private SecurityOauth2Utils securityOauth2Utils;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
+
     /**
      * 用户登录
      * @param loginParamVO
@@ -91,16 +99,16 @@ public class AdminLoginController {
      * @return
      */
     @GetMapping("/user/info/admin")
-    public BaseResult adminInfo(Authentication authentication) {
+    public BaseResult adminInfo(Authentication authentication) throws Exception{
+        Long sysUserId = securityOauth2Utils.getUserId(authentication);
         SysUserEntity sysUserEntity = new SysUserEntity();
-        sysUserEntity.setSysUserUsername(authentication.getName());
-        SysUserEntity entity = sysUserService.selectOneByKeyWord(sysUserEntity);
-        logger.debug(entity.toString());
-        LoginInfoVO loginInfoVO = new LoginInfoVO();
-        loginInfoVO.setName(authentication.getName());
-        loginInfoVO.setAvatar(entity.getSysUserIcon());
-        loginInfoVO.setRoles("System Admin");
-        return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, loginInfoVO);
+        sysUserEntity.setSysUserId(sysUserId);
+        SysUserEntity entity = sysUserMapper.getListById(sysUserId);
+        LoginInfoVO vo = new LoginInfoVO();
+        vo.setName(entity.getSysUserUsername());
+        vo.setAvatar(entity.getSysUserIcon());
+        vo.setRoles("System Admin");
+        return BaseResult.ok().put(HttpConstant.OK, HttpConstant.OK_MESSAGE, ResponseConstant.DATA, vo);
     }
 
     /**

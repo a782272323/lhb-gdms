@@ -21,7 +21,7 @@ public class QueryVO implements Serializable {
      */
     private Integer limit;
     /**
-     * 排序关键字
+     * 排序关键字段
      */
     private String keyWord;
     /**

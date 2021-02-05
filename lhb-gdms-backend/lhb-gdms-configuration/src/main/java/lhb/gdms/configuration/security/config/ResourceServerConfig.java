@@ -75,8 +75,19 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 // 获取用户信息
                 .antMatchers("/user/info/portal").hasAnyAuthority("Average User")
                 // 仅后台管理网站能访问的
+                // 头像管理模块
                 .antMatchers("/admin/system/icon/**").hasAnyAuthority("System Admin")
+                // 标签管理模块
                 .antMatchers("/admin/system/label/**").hasAnyAuthority("System Admin")
+                // 用户管理-普通用户模块
+                .antMatchers("/admin/average/user/**").hasAnyAuthority("System Admin")
+                // 博客管理-博客总览模块
+                .antMatchers("/admin/blog/overview/**").hasAnyAuthority("System Admin")
+                // 个人信息模块
+                .antMatchers("/admin/system/person/**").hasAnyAuthority("System Admin")
+                // 首页模块
+                .antMatchers("/admin/home/**").hasAnyAuthority("System Admin")
+                // 获取token用的
                 .antMatchers("/user/info/admin").hasAnyAuthority("System Admin")
                 // 不需要权限的接口/放行的接口
                 .antMatchers("/web/**").permitAll()

@@ -119,12 +119,9 @@ public class PortalLoginController {
     @GetMapping("/user/info/portal")
     public BaseResult portalInfo(Authentication authentication) throws Exception{
         Long sysUserId = securityOauth2Utils.getUserId(authentication);
-        logger.debug("用户id = " + sysUserId);
         SysUserEntity sysUserEntity = new SysUserEntity();
         sysUserEntity.setSysUserId(sysUserId);
         SysUserEntity entity = sysUserMapper.getListById(sysUserId);
-
-        logger.debug(entity.toString());
         LoginInfoVO loginInfoVO = new LoginInfoVO();
         loginInfoVO.setName(entity.getSysUserUsername());
         loginInfoVO.setAvatar(entity.getSysUserIcon());

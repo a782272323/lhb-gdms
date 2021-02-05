@@ -67,12 +67,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 后台管理网站用户登录处理
         if (entity.getSysUserType() == 2) {
             log.debug("后台管理网站用户登录,oauth2");
-            UserDetails userDetails =
-                    User.withUsername(entity.getSysUserUsername())
-                            .password(entity.getSysUserPassword())
-                            // 授权
-                            .authorities("System Admin")
-                            .build();
+            UserDetails userDetails = null;
+            try {
+                userDetails =
+                        User.withUsername(MapperUtils.obj2json(entity))
+                                .password(entity.getSysUserPassword())
+                                // 授权
+                                .authorities("System Admin")
+                                .build();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             return userDetails;
         }
