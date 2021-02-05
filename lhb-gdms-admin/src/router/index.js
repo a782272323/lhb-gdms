@@ -144,7 +144,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/blog/index'),
         name: 'Blog',
-        meta: { title: '博客审核', requireAuth: true }
+        meta: { title: '博客总览', requireAuth: true }
       }
     ]
   },
@@ -166,13 +166,13 @@ export const asyncRoutes = [
         component: () => import('@/views/system/labelAdmin'),
         name: 'LabelAdmin',
         meta: { title: '标签管理', requireAuth: true }
-      },
-      {
-        path: 'sysMessage',
-        component: () => import('@/views/system/sysMessage'),
-        name: 'SysMessage',
-        meta: { title: '系统通知', requireAuth: true }
       }
+      // {
+      //   path: 'sysMessage',
+      //   component: () => import('@/views/system/sysMessage'),
+      //   name: 'SysMessage',
+      //   meta: { title: '系统通知', requireAuth: true }
+      // }
     ]
   }
 ]

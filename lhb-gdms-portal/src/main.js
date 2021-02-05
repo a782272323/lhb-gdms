@@ -20,6 +20,10 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
+// 引入复制内容到剪贴板功能
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
+
 /**
  * If you don't want to use mock-server 如果您不想使用 模拟服务器
  * you want to use MockJs for mock api

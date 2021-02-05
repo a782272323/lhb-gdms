@@ -1396,7 +1396,6 @@
   .main {
     background-color: #ECF0F1;
     width: 100%;
-    /*min-height: 1200px;*/
     padding-top: 25px;
     margin-bottom: 50px;
 

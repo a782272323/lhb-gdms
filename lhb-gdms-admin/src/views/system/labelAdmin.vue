@@ -7,13 +7,16 @@
             <el-col :span="24" :offset="0">
               <el-form :inline="true">
                 <el-form-item>
-                  <el-input
-                    v-model.trim="sysLabelFormParams.labelName"
-                    placeholder="输入标签名称进行搜索......"
-                    name="labelName"
-                    style="width: 200px;border: 1px solid #409EFF"
+                  <el-tooltip content="输入标签名称进行搜索......" placement="bottom" effect="light">
+                    <el-input
+                      v-model.trim="sysLabelFormParams.labelName"
+                      placeholder="输入标签名称进行搜索......"
+                      name="labelName"
+                      style="width: 200px;border: 1px solid #409EFF"
+                      clearable
                     >
-                  </el-input>
+                    </el-input>
+                  </el-tooltip>
                 </el-form-item>
                 <el-form-item>
                   <el-button
@@ -32,6 +35,16 @@
                     @click="Add"
                   >
                     添加标签
+                  </el-button>
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    class="filter-item"
+                    type="primary"
+                    @click="reload"
+                  >
+                    <svg-icon icon-class="refresh00"></svg-icon>
+                    刷新
                   </el-button>
                 </el-form-item>
               </el-form>
@@ -109,7 +122,7 @@
         <el-dialog
           :visible.sync="dialogAdd"
           title="添加标签"
-          width="40%"
+          width="30%"
           center
           >
           <div align="center">
@@ -138,7 +151,7 @@
             label-width="80px"
             :model="sysLabelFormParams"
             >
-            <el-form-item style="margin-top: 20px;width: 410px;" label="标签名称" prop="labelName">
+            <el-form-item style="margin-top: 20px;" label="标签名称" prop="labelName">
               <el-input class="border01" v-model.trim="sysLabelFormParams.labelName"></el-input>
             </el-form-item>
             <el-form-item>
@@ -213,7 +226,7 @@
   import { getLists, query, insertLabel, updateLabelIcon, updateLabelName, deleteLabel } from '../../api/system/labelAdmin'
   import pictureCheck from '../commons/pictureCheck'
     export default {
-        name: 'LabelAdmin',
+      name: 'LabelAdmin',
       components: { pictureCheck },
       data() {
           return {
@@ -310,6 +323,7 @@
               this.$message.error(res.message)
             }
           }).catch(err => {
+            this.loading = false
             this.$message.error(err)
           })
         },
@@ -473,6 +487,10 @@
           }).catch(() => {
             this.$message.success('已取消删除')
           })
+        },
+        // 刷新页面
+        reload() {
+          window.location.reload()
         }
       }
     }

@@ -10,6 +10,13 @@
                 type="primary"
                 @click="Add"
                 >添加头像</el-button>
+              <el-button
+                type="primary"
+                @click="reload"
+              >
+                <svg-icon icon-class="refresh00"></svg-icon>
+                刷新
+              </el-button>
             </el-col>
           </el-row>
         </div>
@@ -67,7 +74,7 @@
           <el-dialog
             :visible.sync="dialogAdd"
             title="添加头像"
-            width="40%"
+            width="30%"
             center>
             <div align="center">
               <el-upload
@@ -301,6 +308,10 @@
         checkPicture(url) {
           console.log('查看图片 url = ' + url)
           this.$refs.pictureCheck.check(url)
+        },
+        // 刷新页面
+        reload() {
+          window.location.reload()
         }
       }
     }

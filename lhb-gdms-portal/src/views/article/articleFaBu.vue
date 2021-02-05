@@ -15,7 +15,13 @@
         </div>
         <div style="margin-top: 50px;">
           分享到:
-          <el-button style="margin-left: 10px;color: black;" type="success" plain round>
+          <el-button
+            style="margin-left: 10px;color: black;"
+            type="success"
+            plain
+            round
+            @click="copyLinkToShareArticle"
+            >
             <svg-icon icon-class="link00"></svg-icon>
             复制链接
           </el-button>
@@ -50,11 +56,12 @@
               sysUserId: '',
               labelId: ''
             }
-          ]
+          ],
+          // 外链分享
+          shareLinkUrl: ''
         }
       },
       created() {
-        console.log('文章id = ' + this.$route.query.articleId)
         this.refreshPage()
       },
       methods: {
@@ -88,6 +95,22 @@
               this.$message.error(res.message)
             }
           })
+        },
+        // 复制链接分享文章
+        copyLinkToShareArticle() {
+          this.shareLinkUrl = 'http://localhost:8527/#/articleDetails?articleId=' + this.$route.query.articleId
+          console.log('s = ' + this.shareLinkUrl)
+          this.$copyText(this.shareLinkUrl).then(res => {
+            this.onCopy()
+          }).catch(() => {
+            this.onError()
+          })
+        },
+        onCopy() {
+          this.$message.success('文章链接已经复制到剪贴板!')
+        },
+        onError() {
+          this.$message.error('抱歉,复制失败,请稍后重试!')
         }
       }
     }

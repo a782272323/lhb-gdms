@@ -103,12 +103,28 @@
             </el-popover>
           </div>
           <!-- 举报反馈 -->
+<!--          <div style="border-radius: 50%;height: 40px;width: 40px;margin-top: 15px;background-color: #fff;">-->
+<!--            <el-badge type="info">-->
+<!--              <el-button size="mini" circle>-->
+<!--                <svg-icon style="width: 25px;height: 25px;margin-top: 0px;" icon-class="jubao00"></svg-icon>-->
+<!--              </el-button>-->
+<!--            </el-badge>-->
+<!--          </div>-->
+          <div>
+            <h5>分享</h5>
+          </div>
           <div style="border-radius: 50%;height: 40px;width: 40px;margin-top: 15px;background-color: #fff;">
-            <el-badge type="info">
-              <el-button size="mini" circle>
-                <svg-icon style="width: 25px;height: 25px;margin-top: 0px;" icon-class="jubao00"></svg-icon>
-              </el-button>
-            </el-badge>
+            <el-tooltip content="复制链接" placement="bottom" effect="light">
+              <el-badge type="info">
+                <el-button
+                  size="mini"
+                  circle
+                  @click="copyLinkToShareArticle"
+                  >
+                  <svg-icon style="width: 25px;height: 25px;margin-top: 0px;" icon-class="link01"></svg-icon>
+                </el-button>
+              </el-badge>
+            </el-tooltip>
           </div>
         </div>
         <!-- 文章内容 -->
@@ -1196,6 +1212,22 @@
             sysUserId: id
           }
         })
+      },
+      // 复制链接分享文章
+      copyLinkToShareArticle() {
+        this.shareLinkUrl = 'http://localhost:8527/#/articleDetails?articleId=' + this.$route.query.articleId
+        console.log('s = ' + this.shareLinkUrl)
+        this.$copyText(this.shareLinkUrl).then(res => {
+          this.onCopy()
+        }).catch(() => {
+          this.onError()
+        })
+      },
+      onCopy() {
+        this.$message.success('文章链接已经复制到剪贴板!')
+      },
+      onError() {
+        this.$message.error('抱歉,复制失败,请稍后重试!')
       }
     }
   }
