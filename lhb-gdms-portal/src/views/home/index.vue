@@ -562,7 +562,7 @@
       },
       // 取消文章的点赞
       removeArticlePraise(item) {
-        const confirm = '此操作将文章取消 ' + item.articleTitle + ' 的点赞,是否继续'
+        const confirm = '此操作将取消文章 《' + item.articleTitle + '》 的点赞,是否继续'
         this.$confirm(confirm, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #fff">
+  <div style="background-color: #fff" align="center">
     <!-- 导航栏区域 -->
     <div class="navbar" align="center">
       <el-row :gutter="24">
@@ -10,96 +10,98 @@
             <p style="float: right" @click="linkToHome">Bin 博客平台</p>
           </div>
         </el-col>
-        <el-col :span="3">
-          <el-button style="margin-top: 17px" type="success" plain round @click="openCoverImgDialog">添加封面图片</el-button>
+        <el-col :span="4">
+          <el-button style="margin-top: 17px;float: left;" type="success" plain round @click="openCoverImgDialog">添加封面图片</el-button>
         </el-col>
-        <el-col :span="3">
-          <el-button style="margin-top: 17px" type="success" plain round @click="saveDraft">保存到草稿箱</el-button>
+        <el-col :span="4">
+          <el-button style="margin-top: 17px;float: left;" type="success" plain round @click="saveDraft">保存到草稿箱</el-button>
         </el-col>
-        <el-col :span="3">
-          <el-button style="margin-top: 17px" type="success" plain round @click="changeCompiler">
+        <el-col :span="4">
+          <el-button style="margin-top: 17px;float: left;" type="success" plain round @click="changeCompiler">
             <span v-if="this.compilerType === 'tinyMCE'">切换为Markdown编译器</span>
             <span v-if="this.compilerType === 'Markdown'">切换为富文本编译器</span>
           </el-button>
         </el-col>
-        <el-col :span="3">
-          <el-popover
-            width="400"
-            placement="bottom-start"
-            title="发布文章"
-            trigger="click"
-          >
-            <el-divider></el-divider>
-            <el-button style="margin-top: 17px" type="success" plain round slot="reference" @click="clickFaBu">
-              发布
-            </el-button>
-            <!-- 使用当前标签 -->
-            <div v-if="this.isLabel === true">
-              <el-row :gutter="24">
-                <el-col :span="6">
-                  <h4 style="color: black;">
-                    当前标签 :
-                  </h4>
-                </el-col>
-                <el-col :span="2">
-                  <el-image style="margin-top: 10px;width: 40px;height: 40px;border-radius: 10px" :src="EditLabelIconUrl"></el-image>
-                </el-col>
-                <el-col :span="10">
-                  <h4 style="color: black;">{{ EditLabelName }}</h4>
-                </el-col>
-                <el-col :span="4">
-                  <el-button style="margin-top: 20px;" type="success" size="mini" plain round @click="chooseNewLabel">
-                    重新选择
-                  </el-button>
-                </el-col>
-              </el-row>
+        <el-col :span="4">
+          <div style="float: right;">
+            <el-popover
+              width="400"
+              placement="bottom-start"
+              title="发布文章"
+              trigger="click"
+            >
               <el-divider></el-divider>
-            </div>
-            <!-- 搜索标签 -->
-            <div v-if="this.isLabel === false">
-              <el-input
-                v-model="labelKeyWord"
-                ref="keyWord"
-                placeholder="搜索标签......"
-                type="text"
-                clearable
-                style="width: 120px;margin-right: 10px"
-              />
-              <el-button type="success" @click="queryLabel">搜索</el-button>
-              <el-button type="success" @click="chooseOldLabel">查看原本标签</el-button>
-              <el-table
-                :data="labelList"
-                style="margin-top: 10px"
-                max-height="250px"
-                fit
-                border
-                stripe
-                highlight-current-row
-                @current-change="clickCurrentChange"
-              >
-                <el-table-column fixed label="标签图标" prop="labelIconUrl" align="center" width="120">
-                  <template slot-scope="scope">
-                    <div class="block">
-                      <el-image style="width: 30px;height: 30px;border-radius: 10px" :src="scope.row.labelIconUrl"></el-image>
-                    </div>
-                  </template>
-                </el-table-column>
-                <el-table-column fixed label="标签名称" prop="labelName" align="center">
-                  <template slot-scope="scope">
-                    <span> {{ scope.row.labelName }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-            <div style="margin-top: 10px" align="center">
-              <el-button type="success" @click="submitFaBu">确定并发布</el-button>
-            </div>
-          </el-popover>
+              <el-button style="margin-top: 17px" type="success" plain round slot="reference" @click="clickFaBu">
+                发布
+              </el-button>
+              <!-- 使用当前标签 -->
+              <div v-if="this.isLabel === true">
+                <el-row :gutter="24">
+                  <el-col :span="6">
+                    <h4 style="color: black;">
+                      当前标签 :
+                    </h4>
+                  </el-col>
+                  <el-col :span="2">
+                    <el-image style="margin-top: 10px;width: 40px;height: 40px;border-radius: 10px" :src="EditLabelIconUrl"></el-image>
+                  </el-col>
+                  <el-col :span="10">
+                    <h4 style="color: black;">{{ EditLabelName }}</h4>
+                  </el-col>
+                  <el-col :span="4">
+                    <el-button style="margin-top: 20px;" type="success" size="mini" plain round @click="chooseNewLabel">
+                      重新选择
+                    </el-button>
+                  </el-col>
+                </el-row>
+                <el-divider></el-divider>
+              </div>
+              <!-- 搜索标签 -->
+              <div v-if="this.isLabel === false">
+                <el-input
+                  v-model="labelKeyWord"
+                  ref="keyWord"
+                  placeholder="搜索标签......"
+                  type="text"
+                  clearable
+                  style="width: 120px;margin-right: 10px"
+                />
+                <el-button type="success" @click="queryLabel">搜索</el-button>
+                <el-button type="success" @click="chooseOldLabel">查看原本标签</el-button>
+                <el-table
+                  :data="labelList"
+                  style="margin-top: 10px"
+                  max-height="250px"
+                  fit
+                  border
+                  stripe
+                  highlight-current-row
+                  @current-change="clickCurrentChange"
+                >
+                  <el-table-column fixed label="标签图标" prop="labelIconUrl" align="center" width="120">
+                    <template slot-scope="scope">
+                      <div class="block">
+                        <el-image style="width: 30px;height: 30px;border-radius: 10px" :src="scope.row.labelIconUrl"></el-image>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column fixed label="标签名称" prop="labelName" align="center">
+                    <template slot-scope="scope">
+                      <span> {{ scope.row.labelName }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div style="margin-top: 10px" align="center">
+                <el-button type="success" @click="submitFaBu">确定并发布</el-button>
+              </div>
+            </el-popover>
+          </div>
         </el-col>
         <!-- 个人中心区域 -->
-        <el-col :span="3">
+        <el-col :span="4">
           <div>
-            <el-dropdown class="avatar-container right-menu-item hover-effect" slot="dropdown">
+            <el-dropdown class="right-menu-item hover-effect" slot="dropdown">
               <div class="avatar-wrapper">
                 <img :src="this.imageUrl+'?imageView2/1/w/80/h/80'" class="user-avatar">
                 <span style="float: right;margin-left: 10px;margin-top: 10px;color: #2ECC71">个人中心
@@ -676,11 +678,11 @@
 <style lang="scss" scoped>
   .navbar {
     height: 70px;
-    width: 100%;
+    width: 980px;
     background-color: #fff;
 
     .logo {
-      float: right;
+      float: left;
       width: 150px;
       height: 50px;
       margin-top: 15px;
@@ -717,28 +719,24 @@
       }
     }
 
-    .avatar-container {
-      margin-right: 30px;
+    .avatar-wrapper {
+      float: right;
+      margin-top: 15px;
+      position: relative;
 
-      .avatar-wrapper {
-        float: right;
-        margin-top: 15px;
-        position: relative;
+      .user-avatar {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+      }
 
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
-
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
-        }
+      .el-icon-caret-bottom {
+        cursor: pointer;
+        position: absolute;
+        right: -20px;
+        top: 25px;
+        font-size: 12px;
       }
     }
   }

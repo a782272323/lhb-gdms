@@ -866,11 +866,15 @@
       linkToLabelDetails(item) {
         // 防止单击el-image导致页面卡死
         document.body.style = null
-        const routeUrl = this.$router.resolve({
-          name: 'LabelDetails',
-          query: { labelId: item.labelId, labelName: item.labelName }
-        })
-        window.open(routeUrl.href, '_blank')
+        if (this.isLogin === false) {
+          this.linkToLogin()
+        } else {
+          const routeUrl = this.$router.resolve({
+            name: 'LabelDetails',
+            query: { labelId: item.labelId, labelName: item.labelName }
+          })
+          window.open(routeUrl.href, '_blank')
+        }
       },
       // 取消标签的关注
       removeFocusLabelButton(item) {
@@ -894,14 +898,18 @@
       },
       // 添加关注
       submitFocus(item) {
-        insertLabelFocus(item.labelId).then(res => {
-          if (res.code === 200) {
-            this.checkLogin()
-            this.$message.success(res.message)
-          } else {
-            this.$message.error(res.message)
-          }
-        })
+        if (this.isLogin === false) {
+          this.linkToLogin()
+        } else {
+          insertLabelFocus(item.labelId).then(res => {
+            if (res.code === 200) {
+              this.checkLogin()
+              this.$message.success(res.message)
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        }
       }
     }
   }

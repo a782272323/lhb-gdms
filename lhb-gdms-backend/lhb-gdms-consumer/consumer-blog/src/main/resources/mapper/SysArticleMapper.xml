@@ -283,4 +283,29 @@
         SELECT article_content AS articleContent FROM sys_article
         WHERE article_id = #{articleId}
     </select>
+
+    <!-- 登录用户关注的人发布的文章 -->
+    <select id="getUserFocusArticleLists" resultType="java.util.HashMap">
+        SELECT A.article_id AS articleId,
+               article_title AS articleTitle,
+               article_img_url AS articleImgUrl,
+               article_browse_sum AS articleBrowseSum,
+               COUNT(DISTINCT sys_article_praise_id) AS articlePraiseCount,
+               A.label_id AS labelId,
+               label_name AS labelName,
+               form_sys_user_id AS sysUserId,
+               sys_user_nickname AS sysUserNickname,
+               A.created AS created,
+               A.updated AS updated
+        FROM sys_article A
+        LEFT JOIN sys_label B ON A.label_id = B.label_id
+        LEFT JOIN sys_user C ON A.sys_user_id = C.sys_user_id
+        LEFT JOIN sys_user_focus D ON D.form_sys_user_id = C.sys_user_id
+        LEFT JOIN sys_article_praise E ON E.article_id = A.article_id
+        WHERE D.sys_user_id = #{sysUserId}
+        AND C.sys_user_type = 1
+        AND C.sys_user_status = 1
+        GROUP BY A.article_id
+        ORDER BY A.created DESC, A.updated DESC
+    </select>
 </mapper>

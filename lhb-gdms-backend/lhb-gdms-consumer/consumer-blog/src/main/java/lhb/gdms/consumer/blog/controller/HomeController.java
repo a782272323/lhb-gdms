@@ -105,7 +105,7 @@ public class HomeController {
         }
         // 关注
         else if (labelType.equals(focus) && sysUserId.longValue() != i.longValue()) {
-
+            list = sysArticleService.getUserFocusArticleLists(sysUserId);
         }
         // 动态标签
         else if (StringUtils.isNotBlank(labelType)) {

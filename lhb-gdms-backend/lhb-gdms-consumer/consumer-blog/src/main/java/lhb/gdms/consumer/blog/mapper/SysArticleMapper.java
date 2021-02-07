@@ -121,4 +121,11 @@ public interface SysArticleMapper extends BaseMapper<SysArticleEntity> {
      * @return
      */
     String searchArticleContent(@Param("articleId") Long articleId);
+
+    /**
+     * 登录用户关注的人发布的文章
+     * @param sysUserId
+     * @return
+     */
+    List<Map<String, Object>> getUserFocusArticleLists(@Param("sysUserId") Long sysUserId);
 }

@@ -24,7 +24,6 @@ public class MybatisConfig {
             @Override
             public void customize(org.apache.ibatis.session.Configuration configuration) {
                 logger.debug("MySQL数据库检查返回结果:Mybatis连接成功");
-                System.out.println("MySQL数据库检查返回结果:Mybatis连接成功");
                 configuration.setObjectWrapperFactory(new MapWrapperFactory());
             }
         };

@@ -1,174 +1,174 @@
 <template>
-  <el-row class="navbar">
-    <el-col :span="4">
-      <!-- logo区域 -->
-      <div class="logo">
-        <img class="logo-img" src="../../img/Blog02.png" @click="linkToHome"/>
-        <p style="float: right" @click="linkToHome">Bin 博客平台</p>
-      </div>
-    </el-col>
-    <el-col :span="14">
-      <!-- 导航栏功能模块区域 -->
-      <div class="switch">
-        <div style="float: left">
-          <el-menu
-            class="switch-menu"
-            mode="horizontal"
-            :default-active="this.$route.path"
-            active-text-color="#2ECC71"
-            >
-            <el-menu-item index="/home" @click="linkToHome">
-              <i class="el-icon-s-home"></i> 首页
-            </el-menu-item>
-<!--            <el-menu-item v-if="login === true" index="/blog" @click="linkToBlog">-->
-<!--              <div v-if="this.$route.path === '/blog'">-->
-<!--                <svg-icon icon-class="Blog03-#2ECC71"></svg-icon> 我的主页-->
-<!--              </div>-->
-<!--              <div v-if="this.$route.path !== '/blog' ">-->
-<!--                <svg-icon icon-class="Blog03"></svg-icon> 我的主页-->
-<!--              </div>-->
-<!--            </el-menu-item>-->
-            <el-menu-item v-if="login === true" index="/message" @click="linkToMessage">
-              <i class="el-icon-bell"></i> 消息
-            </el-menu-item>
-          </el-menu>
-        </div>
-        <div class="switch-input">
-          <el-popover
-            width="300"
-            v-if="isInputHistory === true"
-            placement="bottom"
-            trigger="click"
-            >
-            <div
-              v-for="(item, index) in inputHistoryLists"
-              :key="index"
-              >
-              <el-card style="width: 270px;height: 50px; float: left;margin-bottom: 10px;" shadow="hover">
-                <el-row :gutter="24">
-                  <el-col :span="2">
-                    <svg-icon
-                      style="float: left;height: 30px;width: 30px;margin-top: -10px;margin-left: -15px;"
-                      icon-class="history00">
-                    </svg-icon>
-                  </el-col>
-                  <el-col :span="16">
-                    <el-link
-                      style="float: left;margin-top: -25px;margin-left: 10px;color: black;"
-                      type="info"
-                      :underline="false"
-                      @click="linkToHomeSearch(item)"
-                      >
-                      <h2>{{ item.sysInputHistoryContent }}</h2>
-                    </el-link>
-                  </el-col>
-                  <el-col :span="2" :offset="1">
-                    <el-button
-                      style="float: left;margin-top: -10px;margin-bottom: 20px;"
-                      size="mini"
-                      type="danger"
-                      icon="el-icon-delete"
-                      circle
-                      plain
-                      @click="removeInputHistory(item)">
-                    </el-button>
-                  </el-col>
-                </el-row>
-              </el-card>
-            </div>
-            <el-input
-              slot="reference"
-              style="width: 250px;"
-              placeholder="探索Bin博客(文章/标签/用户)"
-              v-model.trim="searchContent"
-              @keyup.enter.native="linkToHomeSort"
-              clearable
-            >
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input>
-          </el-popover>
-          <el-input
-            slot="reference"
-            v-if="isInputHistory === false"
-            style="width: 250px;"
-            placeholder="探索Bin博客(文章/标签/用户)"
-            v-model.trim="searchContent"
-            @keyup.enter.native="linkToHomeSort"
-            clearable
-          >
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-          <el-button
-            type="success"
-            icon="el-icon-search"
-            plain
-            circle
-            @click="linkToHomeSort"
-            :disabled="searchContent === ''"
-            ></el-button>
-        </div>
-        <!-- 个人中心区域 -->
-        <!--    <div class="person-center" >-->
-        <div class="right-menu" >
-<!--          <el-button  class="right-menu-button" type="success" plain round>写文章</el-button>-->
-          <el-button class="right-menu-button" type="success" plain round @click="linkToArticle">写文章</el-button>
-          <!-- 未登录 -->
-          <div v-if="!login" style="float:left;">
-            <el-button class="right-menu-button" @click="linkToLogin" type="success" plain round>登录</el-button>
-            <el-button class="right-menu-button" @click="linkToRegistered" type="success" plain round>注册</el-button>
+  <div class="navbar" align="center">
+    <div class="navbar-content">
+      <el-row :gutter="24" class="navbar">
+        <el-col :span="4">
+          <!-- logo区域 -->
+          <div class="logo">
+            <img class="logo-img" src="../../img/Blog02.png" @click="linkToHome"/>
+            <p style="float: right" @click="linkToHome">Bin 博客平台</p>
           </div>
-          <!-- 已经登录 -->
-          <el-dropdown v-if="login" class="avatar-container right-menu-item hover-effect" slot="dropdown">
-            <!-- 头像 -->
-            <div class="avatar-wrapper">
-<!--              <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">-->
-              <img :src="this.imageUrl+'?imageView2/1/w/80/h/80'" class="user-avatar">
-              <span style="float: right;margin-left: 10px;margin-top: -5px;color: #2ECC71">个人中心
-              </span>
-            </div>
-            <el-dropdown-menu slot="dropdown">
-              <router-link to="/">
-                <el-dropdown-item><i class="el-icon-s-home"></i>首页</el-dropdown-item>
-              </router-link>
-              <router-link to="/message">
-                <el-dropdown-item><i class="el-icon-bell"></i>消息</el-dropdown-item>
-              </router-link>
-<!--              <div @click="linkToBlog">-->
-<!--                <el-dropdown-item divided><svg-icon icon-class="Blog03"></svg-icon> 我的主页</el-dropdown-item>-->
-<!--              </div>-->
-              <router-link to="/blog">
-                <el-dropdown-item divided><svg-icon icon-class="Blog03"></svg-icon> 我的主页</el-dropdown-item>
-              </router-link>
-              <router-link to="/article">
-                <el-dropdown-item><i class="el-icon-edit"></i>写文章</el-dropdown-item>
-              </router-link>
-              <router-link to="/caoGao">
-                <el-dropdown-item><svg-icon icon-class="caoGao01"></svg-icon> 草稿箱</el-dropdown-item>
-              </router-link>
-              <router-link to="/focus">
-                <el-dropdown-item><svg-icon icon-class="focus00"></svg-icon> 关注</el-dropdown-item>
-              </router-link>
-              <router-link to="/collection">
-                <el-dropdown-item><svg-icon icon-class="collection00"></svg-icon> 收藏集</el-dropdown-item>
-              </router-link>
-              <router-link to="/labelFocus">
-                <el-dropdown-item><svg-icon icon-class="label00"></svg-icon> 标签管理</el-dropdown-item>
-              </router-link>
-              <router-link to="/profile/index">
-                <el-dropdown-item divided><svg-icon icon-class="system00"></svg-icon> 设置</el-dropdown-item>
-              </router-link>
-              <el-dropdown-item @click.native="logout">
-                <span style="display:block;"><svg-icon icon-class="logout00"></svg-icon> 注销</span>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </div>
-    </el-col>
-<!--    <el-col :span="5">-->
-
-<!--    </el-col>-->
-  </el-row>
+        </el-col>
+        <el-col :span="20">
+          <!-- 导航栏功能模块区域 -->
+          <el-row :gutter="24">
+            <!-- 导航栏选择区域 -->
+            <el-col :span="switchMenuColSpan">
+              <el-menu
+                class="switch-menu"
+                mode="horizontal"
+                :default-active="this.$route.path"
+                active-text-color="#2ECC71"
+              >
+                <el-menu-item index="/home" @click="linkToHome">
+                  <i class="el-icon-s-home"></i> 首页
+                </el-menu-item>
+                <!--            <el-menu-item v-if="login === true" index="/blog" @click="linkToBlog">-->
+                <!--              <div v-if="this.$route.path === '/blog'">-->
+                <!--                <svg-icon icon-class="Blog03-#2ECC71"></svg-icon> 我的主页-->
+                <!--              </div>-->
+                <!--              <div v-if="this.$route.path !== '/blog' ">-->
+                <!--                <svg-icon icon-class="Blog03"></svg-icon> 我的主页-->
+                <!--              </div>-->
+                <!--            </el-menu-item>-->
+                <el-menu-item v-if="login === true" index="/message" @click="linkToMessage">
+                  <i class="el-icon-bell"></i> 消息
+                </el-menu-item>
+              </el-menu>
+            </el-col>
+            <!-- 输入框搜索区域 -->
+            <el-col :span="switchInputColSpan">
+              <div class="switch-input">
+                <el-popover
+                  width="300"
+                  v-if="isInputHistory === true"
+                  placement="bottom"
+                  trigger="click"
+                >
+                  <div
+                    v-for="(item, index) in inputHistoryLists"
+                    :key="index"
+                  >
+                    <el-card style="width: 270px;height: 50px; float: left;margin-bottom: 10px;" shadow="hover">
+                      <el-row :gutter="24">
+                        <el-col :span="2">
+                          <svg-icon
+                            style="float: left;height: 30px;width: 30px;margin-top: -10px;margin-left: -15px;"
+                            icon-class="history00">
+                          </svg-icon>
+                        </el-col>
+                        <el-col :span="16">
+                          <el-link
+                            style="float: left;margin-top: -25px;margin-left: 10px;color: black;"
+                            type="info"
+                            :underline="false"
+                            @click="linkToHomeSearch(item)"
+                          >
+                            <h2>{{ item.sysInputHistoryContent }}</h2>
+                          </el-link>
+                        </el-col>
+                        <el-col :span="2" :offset="1">
+                          <el-button
+                            style="float: left;margin-top: -10px;margin-bottom: 20px;"
+                            size="mini"
+                            type="danger"
+                            icon="el-icon-delete"
+                            circle
+                            plain
+                            @click="removeInputHistory(item)">
+                          </el-button>
+                        </el-col>
+                      </el-row>
+                    </el-card>
+                  </div>
+                  <el-input
+                    slot="reference"
+                    style="width: 250px;"
+                    placeholder="探索Bin博客(文章/标签/用户)"
+                    v-model.trim="searchContent"
+                    @keyup.enter.native="linkToHomeSort"
+                    clearable
+                  >
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                  </el-input>
+                </el-popover>
+                <el-input
+                  slot="reference"
+                  v-if="isInputHistory === false"
+                  style="width: 240px;"
+                  placeholder="探索Bin博客(文章/标签/用户)"
+                  v-model.trim="searchContent"
+                  @keyup.enter.native="linkToHomeSort"
+                  clearable
+                >
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+                <el-link
+                  type="success"
+                  :underline="false"
+                  @click="linkToHomeSort"
+                  :disabled="searchContent === ''"
+                  >
+                  <svg-icon style="width: 25px;height: 25px;" icon-class="search00"></svg-icon>
+                </el-link>
+              </div>
+            </el-col>
+            <!-- 个人中心区域 -->
+            <el-col :span="rightMenuSpan">
+              <div class="right-menu" >
+                <el-button class="right-menu-button" type="success" plain round @click="linkToArticle">写文章</el-button>
+                <!-- 未登录 -->
+                <div v-if="!login" style="float:left;">
+                  <el-button class="right-menu-button" @click="linkToLogin" type="success" plain round>登录</el-button>
+                  <el-button class="right-menu-button" @click="linkToRegistered" type="success" plain round>注册</el-button>
+                </div>
+                <!-- 已经登录 -->
+                <el-dropdown v-if="login" class="right-menu-item hover-effect" slot="dropdown">
+                  <!-- 头像 -->
+                  <div class="avatar-wrapper">
+                    <img :src="this.imageUrl+'?imageView2/1/w/80/h/80'" class="user-avatar">
+                    <span style="float: right;margin-left: 10px;margin-top: -5px;color: #2ECC71">个人中心</span>
+                  </div>
+                  <el-dropdown-menu slot="dropdown">
+                    <router-link to="/">
+                      <el-dropdown-item><i class="el-icon-s-home"></i>首页</el-dropdown-item>
+                    </router-link>
+                    <router-link to="/message">
+                      <el-dropdown-item><i class="el-icon-bell"></i>消息</el-dropdown-item>
+                    </router-link>
+                    <router-link to="/blog">
+                      <el-dropdown-item divided><svg-icon icon-class="Blog03"></svg-icon> 我的主页</el-dropdown-item>
+                    </router-link>
+                    <router-link to="/article">
+                      <el-dropdown-item><i class="el-icon-edit"></i>写文章</el-dropdown-item>
+                    </router-link>
+                    <router-link to="/caoGao">
+                      <el-dropdown-item><svg-icon icon-class="caoGao01"></svg-icon> 草稿箱</el-dropdown-item>
+                    </router-link>
+                    <router-link to="/focus">
+                      <el-dropdown-item><svg-icon icon-class="focus00"></svg-icon> 关注</el-dropdown-item>
+                    </router-link>
+                    <router-link to="/collection">
+                      <el-dropdown-item><svg-icon icon-class="collection00"></svg-icon> 收藏集</el-dropdown-item>
+                    </router-link>
+                    <router-link to="/labelFocus">
+                      <el-dropdown-item><svg-icon icon-class="label00"></svg-icon> 标签管理</el-dropdown-item>
+                    </router-link>
+                    <router-link to="/profile/index">
+                      <el-dropdown-item divided><svg-icon icon-class="system00"></svg-icon> 设置</el-dropdown-item>
+                    </router-link>
+                    <el-dropdown-item @click.native="logout">
+                      <span style="display:block;"><svg-icon icon-class="logout00"></svg-icon> 注销</span>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -206,7 +206,11 @@ export default {
           sysInputHistoryContent: '',
           sysUserId: ''
         }
-      ]
+      ],
+      // 动态网格布局
+      switchMenuColSpan: 4,
+      switchInputColSpan: 5,
+      rightMenuSpan: 15
     }
   },
   created() {
@@ -214,6 +218,8 @@ export default {
     // 如果已经登录系统则使用刷新详情的数据
     if (this.login === true) {
       this.refreshPage()
+      this.switchMenuColSpan = 7
+      this.rightMenuSpan = 12
     }
     if (this.$route.query.search !== undefined) {
       this.searchContent = this.$route.query.search
@@ -289,29 +295,33 @@ export default {
     },
     // 搜索按钮跳转搜索页面
     linkToHomeSort() {
-      if (this.login === true) {
-        insertInputHistory(this.searchContent).then(res => {
-          if (res.code === 200) {
-            this.refreshPage()
-            const routeUrl = this.$router.resolve({
-              name: 'HomeSearch',
-              query: {
-                search: this.searchContent
-              }
-            })
-            window.open(routeUrl.href, '_blank')
-          } else {
-            this.$message.error(res.message)
-          }
-        })
+      if (this.searchContent === '') {
+        this.$message.error('搜索内容不能为空!')
       } else {
-        const routeUrl = this.$router.resolve({
-          name: 'HomeSearch',
-          query: {
-            search: this.searchContent
-          }
-        })
-        window.open(routeUrl.href, '_blank')
+        if (this.login === true) {
+          insertInputHistory(this.searchContent).then(res => {
+            if (res.code === 200) {
+              this.refreshPage()
+              const routeUrl = this.$router.resolve({
+                name: 'HomeSearch',
+                query: {
+                  search: this.searchContent
+                }
+              })
+              window.open(routeUrl.href, '_blank')
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        } else {
+          const routeUrl = this.$router.resolve({
+            name: 'HomeSearch',
+            query: {
+              search: this.searchContent
+            }
+          })
+          window.open(routeUrl.href, '_blank')
+        }
       }
     },
     // 历史记录内容点击跳转搜索页面
@@ -360,8 +370,15 @@ export default {
     background: #fff;
     box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
+    .navbar-content {
+      width: 980px;
+      height: 70px;
+      background-color: #fff;
+    }
+
     .logo {
-      float: right;
+      float: left;
+      /*float: right;*/
       width: 150px;
       height: 50px;
       margin-top: 15px;
@@ -378,32 +395,35 @@ export default {
     }
 
     .switch {
+      float: left;
       margin-top: 10px;
       /*background-color: #C03639;*/
-      width: 980px;
+      width: 800px;
       height: 60px;
 
-      .switch-menu {
-        /*background-color: #ECF0F1;*/
-        margin-right: 20px;
-        max-width: 330px;
-      }
 
-      .switch-input {
-        float: left;
-        margin-top: 13px;
-        width: 300px;
-      }
 
     }
 
-    .right-menu {
-      margin-left: 60px;
+    .switch-menu {
       float: left;
+      margin-top: 10px;
+      height: 60px;
+      /*background-color: #ECF0F1;*/
+    }
+
+    .switch-input {
+      float: left;
+      margin-top: 23px;
+      width: 300px;
+    }
+
+    .right-menu {
+      margin-top: 10px;
+      float: right;
       height: 70px;
-      width: auto;
       line-height: 50px;
-      /*background-color: #2c3e50;*/
+      width: auto;
 
       &:focus {
         outline: none;
@@ -433,28 +453,24 @@ export default {
         }
       }
 
-      .avatar-container {
-        margin-right: 30px;
+      .avatar-wrapper {
+        float: right;
+        margin-top: 15px;
+        position: relative;
 
-        .avatar-wrapper {
-          float: right;
-          margin-top: 15px;
-          position: relative;
+        .user-avatar {
+          cursor: pointer;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
 
-          .user-avatar {
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-          }
-
-          .el-icon-caret-bottom {
-            cursor: pointer;
-            position: absolute;
-            right: -20px;
-            top: 25px;
-            font-size: 12px;
-          }
+        .el-icon-caret-bottom {
+          cursor: pointer;
+          position: absolute;
+          right: -20px;
+          top: 25px;
+          font-size: 12px;
         }
       }
     }

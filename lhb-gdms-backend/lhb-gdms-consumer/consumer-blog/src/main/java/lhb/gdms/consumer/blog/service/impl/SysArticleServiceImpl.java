@@ -77,7 +77,6 @@ public class SysArticleServiceImpl extends BaseServiceImpl<SysArticleEntity, Sys
         list.stream().forEach(item -> {
             Long articleId = Long.parseLong(item.get("articleId").toString());
             int articlePraise = sysArticlePraiseMapper.getArticlePraiseCountBySysUserId(articleId, sysUserId);
-            logger.debug("articlePraise = " + articlePraise);
             sum.updateAndGet(v -> v + articlePraise);
         });
         return sum.get();
@@ -210,6 +209,30 @@ public class SysArticleServiceImpl extends BaseServiceImpl<SysArticleEntity, Sys
     public String searchArticleContent(Long articleId) {
         String articleContent = sysArticleMapper.searchArticleContent(articleId);
         return HtmlToTextUtils.getContent(articleContent);
+    }
+
+    /**
+     * 登录用户关注的人发布的文章
+     * @param sysUserId
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> getUserFocusArticleLists(Long sysUserId) {
+        List<Map<String, Object>> list = sysArticleMapper.getUserFocusArticleLists(sysUserId);
+        Long i = Long.valueOf(-1);
+
+        list.stream().forEach(item -> {
+            Long articleId = Long.parseLong(item.get("articleId").toString());
+            // 获取文章评论数量
+            item.put("articleCommentsCount", otherService.getArticleCommentsCountAll(articleId));
+            // 判断是否是当前用户点赞
+            if (sysUserId.longValue() != i.longValue()) {
+                item.put("isPraise", sysArticlePraiseService.findInfoById(articleId, sysUserId));
+            } else {
+                item.put("isPraise", false);
+            }
+        });
+        return list;
     }
 
     /**

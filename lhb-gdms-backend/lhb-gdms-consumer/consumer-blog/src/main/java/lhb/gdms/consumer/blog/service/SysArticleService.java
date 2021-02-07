@@ -107,4 +107,11 @@ public interface SysArticleService extends BaseService<SysArticleEntity> {
      * @return
      */
     public String searchArticleContent(Long articleId);
+
+    /**
+     * 登录用户关注的人发布的文章
+     * @param sysUserId
+     * @return
+     */
+    public List<Map<String, Object>> getUserFocusArticleLists(Long sysUserId);
 }

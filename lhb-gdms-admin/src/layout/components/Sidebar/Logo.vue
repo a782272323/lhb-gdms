@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       title: 'Bin博客 | 后台管理系统',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      logo: 'http://img.782272323.cn/Blog02.ico'
     }
   }
 }

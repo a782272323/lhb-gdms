@@ -38,4 +38,63 @@ public class SysPermissionEntity extends BaseDateEntity {
      */
     private Long parentId;
 
+    public Long getPermissionId() {
+        return permissionId;
+    }
+
+    public void setPermissionId(Long permissionId) {
+        this.permissionId = permissionId;
+    }
+
+    public String getPermissionDescription() {
+        return permissionDescription;
+    }
+
+    public void setPermissionDescription(String permissionDescription) {
+        this.permissionDescription = permissionDescription;
+    }
+
+    public String getPermissionName() {
+        return permissionName;
+    }
+
+    public void setPermissionName(String permissionName) {
+        this.permissionName = permissionName;
+    }
+
+    public String getPermissionNameZh() {
+        return permissionNameZh;
+    }
+
+    public void setPermissionNameZh(String permissionNameZh) {
+        this.permissionNameZh = permissionNameZh;
+    }
+
+    public Integer getPermissionStatus() {
+        return permissionStatus;
+    }
+
+    public void setPermissionStatus(Integer permissionStatus) {
+        this.permissionStatus = permissionStatus;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    @Override
+    public String toString() {
+        return "SysPermissionEntity{" +
+                "permissionId=" + permissionId +
+                ", permissionDescription='" + permissionDescription + '\'' +
+                ", permissionName='" + permissionName + '\'' +
+                ", permissionNameZh='" + permissionNameZh + '\'' +
+                ", permissionStatus=" + permissionStatus +
+                ", parentId=" + parentId +
+                '}';
+    }
 }
