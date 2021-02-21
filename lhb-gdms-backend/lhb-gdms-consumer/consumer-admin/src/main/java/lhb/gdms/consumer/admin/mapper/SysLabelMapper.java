@@ -38,4 +38,6 @@ public interface SysLabelMapper extends BaseMapper<SysLabelEntity> {
      * @return
      */
     Integer queryCount(String labelName);
+
+
 }

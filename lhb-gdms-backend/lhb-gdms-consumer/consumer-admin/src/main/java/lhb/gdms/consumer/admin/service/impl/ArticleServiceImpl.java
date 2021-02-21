@@ -101,4 +101,15 @@ public class ArticleServiceImpl implements ArticleService {
     public Integer getArticleCountByTime(String timeType) {
         return articleMapper.getArticleCountByTime(timeType);
     }
+
+    /**
+     * 查看是否有文章引用标签
+     * @param labelId
+     * @return
+     */
+    @Override
+    public boolean isLabelUsed(Long labelId) {
+        List<Map<String, Object>> list = articleMapper.checkLabelInArticle(labelId);
+        return list != null && list.size() > 0 ? true : false;
+    }
 }

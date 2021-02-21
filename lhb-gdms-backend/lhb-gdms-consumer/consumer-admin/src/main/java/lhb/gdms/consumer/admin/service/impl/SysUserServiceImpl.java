@@ -185,4 +185,15 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserEntity, SysUserMa
         }
         return list;
     }
+
+    /**
+     * 查看是否有用户关注标签
+     * @param labelId
+     * @return
+     */
+    @Override
+    public boolean isLabelUse(Long labelId) {
+        List<Map<String, Object>> list = sysUserMapper.checkLabelInUser(labelId);
+        return list != null && list.size() > 0 ? true : false;
+    }
 }

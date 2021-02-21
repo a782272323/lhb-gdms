@@ -80,4 +80,11 @@ public interface SysUserMapper extends BaseMapper<SysUserEntity> {
     Map<String, Object> getUserListsByYearAndMonth(@Param("year") String year,
                                                          @Param("month") String month,
                                                          @Param("monthStr") String monthStr);
+
+    /**
+     * 查看是否有用户关注标签
+     * @param labelId
+     * @return
+     */
+    List<Map<String, Object>> checkLabelInUser(@Param("labelId") Long labelId);
 }

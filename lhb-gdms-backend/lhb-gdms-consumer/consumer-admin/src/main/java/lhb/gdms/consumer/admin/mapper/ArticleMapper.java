@@ -62,4 +62,11 @@ public interface ArticleMapper {
      */
     Integer getArticleListsByYearAndMonth(@Param("year") String year,
                                           @Param("month")String month);
+
+    /**
+     * 查看是否有文章引用标签
+     * @param labelId
+     * @return
+     */
+    List<Map<String, Object>> checkLabelInArticle(@Param("labelId") Long labelId);
 }

@@ -134,4 +134,10 @@
         WHERE DATE_FORMAT(created, '%Y') = #{year}
         AND DATE_FORMAT(created, '%m') = #{month}
     </select>
+
+    <!-- 查看是否有文章引用标签 -->
+    <select id="checkLabelInArticle" resultType="java.util.HashMap">
+        SELECT * FROM sys_article
+        WHERE label_id = #{labelId}
+    </select>
 </mapper>

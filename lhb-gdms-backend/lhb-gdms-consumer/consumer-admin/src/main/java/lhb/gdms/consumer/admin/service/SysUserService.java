@@ -87,4 +87,11 @@ public interface SysUserService extends BaseService<SysUserEntity> {
      * @return
      */
     public List<Map<String, Object>> getArticleAndUserCurveLists(String year);
+
+    /**
+     * 查看是否有用户关注标签
+     * @param labelId
+     * @return
+     */
+    public boolean isLabelUse(Long labelId);
 }

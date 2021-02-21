@@ -64,4 +64,11 @@ public interface ArticleService {
      * @return
      */
     public Integer getArticleCountByTime(String timeType);
+
+    /**
+     * 查看是否有文章引用标签
+     * @param labelId
+     * @return
+     */
+    public boolean isLabelUsed(Long labelId);
 }

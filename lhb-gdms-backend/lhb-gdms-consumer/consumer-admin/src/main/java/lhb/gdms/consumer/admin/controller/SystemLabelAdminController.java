@@ -10,7 +10,9 @@ import lhb.gdms.commons.utils.ImageUtils;
 import lhb.gdms.commons.utils.TimeUtils;
 import lhb.gdms.configuration.aop.config.PrintlnLog;
 import lhb.gdms.consumer.admin.mapper.SysLabelMapper;
+import lhb.gdms.consumer.admin.service.ArticleService;
 import lhb.gdms.consumer.admin.service.SysLabelService;
+import lhb.gdms.consumer.admin.service.SysUserService;
 import lhb.gdms.feign.cloud.QiniuFeign;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -46,6 +48,12 @@ public class SystemLabelAdminController {
 
     @Autowired
     private QiniuFeign qiniuFeign;
+
+    @Autowired
+    private ArticleService articleService;
+
+    @Autowired
+    private SysUserService sysUserService;
 
     /**
      * 新增标签
@@ -217,7 +225,12 @@ public class SystemLabelAdminController {
         labelEntity.setLabelId(labelId);
         SysLabelEntity entity = sysLabelService.selectOneById(labelEntity);
 
-        // todo 查看是否有人使用或者有文章
+        if (articleService.isLabelUsed(labelId) == true) {
+            return BaseResult.error("该标签下存在不文章，不能删除!");
+        }
+        if (sysUserService.isLabelUse(labelId) == true) {
+            return BaseResult.error("该标签有人关注，不能删除!");
+        }
         if (sysLabelService.deleteOneByKeyWord(labelEntity) > 0) {
             qiniuFeign.deleteOne(entity.getLabelIconKey());
             return BaseResult.ok(HttpConstant.DELETE_MESSAGE);

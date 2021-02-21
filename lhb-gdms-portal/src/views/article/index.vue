@@ -42,10 +42,10 @@
                       当前标签 :
                     </h4>
                   </el-col>
-                  <el-col :span="2">
+                  <el-col :span="3">
                     <el-image style="margin-top: 10px;width: 40px;height: 40px;border-radius: 10px" :src="EditLabelIconUrl"></el-image>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="9">
                     <h4 style="color: black;">{{ EditLabelName }}</h4>
                   </el-col>
                   <el-col :span="4">
@@ -65,9 +65,10 @@
                   type="text"
                   clearable
                   style="width: 120px;margin-right: 10px"
+                  @keyup.enter.native="queryLabel"
                 />
                 <el-button type="success" @click="queryLabel">搜索</el-button>
-                <el-button type="success" @click="chooseOldLabel">查看原本标签</el-button>
+                <el-button v-if="EditLabelId >= 0" type="success" @click="chooseOldLabel">查看原本标签</el-button>
                 <el-table
                   :data="labelList"
                   style="margin-top: 10px"

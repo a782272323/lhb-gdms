@@ -176,4 +176,10 @@
         AND sys_user_type = 1
         AND sys_user_status = 1
     </select>
+
+    <!-- 查看是否有用户关注标签 -->
+    <select id="checkLabelInUser" resultType="java.util.HashMap">
+        SELECT * FROM sys_label_focus
+        WHERE label_id = #{labelId}
+    </select>
 </mapper>
