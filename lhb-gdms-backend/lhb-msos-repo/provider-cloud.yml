@@ -50,8 +50,8 @@ mybatis:
   type-aliases-package: lhb.gdms.commons.domain, lhb.gdms.provider.cloud.domain
 
 qiniu:
-  accessKey: 259AULjEKP59GIukAP3FLhXgwFLW6-QpkHIqlqJH
-  secretKey: Ojc6iA4DVmk-dtNa2_moXp6OzAkVW-qcSsOW9RDj
+  accessKey: xx
+  secretKey: xx
   # 存储空间名称
   bucket: lhb-msos
   # 访问,根据机房位置从官网获取
@@ -64,8 +64,8 @@ qiniu:
 # 阿里云短信配置
 aliyun:
   sms:
-    accessKeyId: LTAI4G41jXBbTTfdv2EF37U9
-    accessKeySecret: 5xdDuoptWjKykui2BkpsspTSijn2tL
+    accessKeyId: xx
+    accessKeySecret: xx
     # 云通信产品api
     product: Dysmsapi
     # 产品域名
